@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yc.mapper.AuthorMapper">
+	<!-- 检验用户登录
+	<select id="userLogin" parameterType="">
+		select uname,upassword from user where uname=#{uname} and upassword=#{upassword}
+	</select> -->
+	
+	<insert id="addAuthor" parameterType="Author" useGeneratedKeys="true" keyProperty="aid">
+		insert into author(uid,aname,pan_name,aage,agrade,acard,atel) 
+		values(#{uid},#{aname},#{pan_name},#{aage},#{agrade},#{acard},#{atel});
+	</insert>
+	
+	<!-- 查找所有的作者 -->
+	<select id="findAllAuthor" parameterType="Author" resultMap="AuthorResultMap">
+		select aid,uid,aname,pan_name,aage,agrade,acard,atel from author
+	</select>
+	
+	<!-- 根据aid查找所有作者 -->
+	<select id="findAllAuthorByaid" parameterType="Author" resultMap="AuthorResultMap">
+		select aid,uid,aname,pan_name,aage,agrade,acard,atel from author
+		where aid=#{aid}
+	</select>
+	
+	<!-- 删除作者 -->
+	<delete id="delAuthor" parameterType="Author">
+		delete author.*,novel.* 
+		from novel left join author
+		on novel.aid=author.aid
+		where novel.aid in (#{aid})
+	</delete>
+	
+	<!--作家登录 -->
+	<select id="AuthorLogger" parameterType="User" resultType="User">
+		select *
+		from user
+		inner join author
+		on user.uid=author.uid
+		where user.u_number=#{user.u_number}
+	</select>
+	
+	
+	<!-- 分页查询作者 -->
+	<select id="findAuthorByPage" parameterType="Author" resultMap="AuthorResultMap">
+		select aid,uid,aname,pan_name,aage,agrade,acard,atel from author limit #{start},#{end}
+	</select>
+	
+	<!-- 根据用户id查找作者信息 -->
+	<select id="findAuthorByuid" parameterType="Author" resultMap="AUMap">
+		select author.* 
+		from user 
+		inner join author
+		on user.uid=author.uid
+		where user.uid=#{user.uid}
+	</select>
+
+	<update id="updataAuthor" parameterType="Author">
+		update author 
+		set pan_name=#{pan_name},aage=#{aage},acard=#{acard},atel=#{atel} 
+		where aid=#{aid}
+	</update>
+	
+	<resultMap type="Author" id="AUMap">
+				<id property="aid" column="aid" />
+				<result property="uid" column="uid" />
+				<result property="aname" column="aname" />
+				<result property="pan_name" column="pan_name" />
+				<result property="aage" column="aage" />
+				<result property="agrade" column="agrade" />
+				<result property="acard" column="acard" />
+				<result property="atel" column="atel" />
+		<association property="user" javaType="User">
+			<id property="uid" column="uid" />
+		</association>
+	</resultMap>
+	
+	
+	<resultMap type="Author" id="AuthorResultMap">
+		<id property="aid" column="aid" />
+		<result property="uid" column="uid" />
+		<result property="aname" column="aname" />
+		<result property="pan_name" column="pan_name" />
+		<result property="aage" column="aage" />
+		<result property="agrade" column="agrade" />
+		<result property="acard" column="acard" />
+		<result property="atel" column="atel" />
+	</resultMap>
+</mapper>

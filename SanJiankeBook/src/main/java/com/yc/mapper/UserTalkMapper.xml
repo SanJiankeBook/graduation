@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yc.mapper.UserTalkMapper">
+	 
+	<insert id="adduserTalk" parameterType="UserTalk" >
+		insert into user_talk(nid,uid,utdate,utcontent)
+		values(#{nid},#{uid},#{utdate},#{utcontent});
+	</insert>
+
+	
+	<!-- 查询所有评论 -->
+	<select id="findAllTalk" parameterType="UserTalk" resultType="UserTalk">
+		select * from  user_talk where nid=#{nid};
+	</select>
+	
+	<!-- 分页查询 -->
+	<select id="findUserByPage" parameterType="UserTalk" resultType="UserTalk">
+		select ut.utdate,ut.utcontent,u.uname from  user_talk ut,user u 
+		where ut.uid=u.uid and
+ 		ut.nid=#{nid} ORDER BY ut.utdate DESC limit #{start},#{end} 
+	</select>
+	
+
+</mapper>

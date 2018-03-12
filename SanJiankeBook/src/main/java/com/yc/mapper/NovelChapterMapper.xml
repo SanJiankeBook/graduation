@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yc.mapper.NovelChapterMapper">
+	
+	<insert id="insertNovel" parameterType="NovelChapter" >
+		insert into novel_chapter(nid,cname,caddress,standby_1,standby_2)
+		values(#{nid},#{cname},#{caddress},#{standby_1},#{standby_2});
+	</insert>
+	
+	<select id="allChapter" resultType="NovelChapter" parameterType="Novel">
+		select * from novel_chapter where nid=#{nid} and standby_1='通过'
+	</select>
+	<!-- 查询所有待审核的小说章节 -->
+	<select id="findAllcheckNovelChapter" parameterType="NovelChapter" resultMap="UncheckNovelChapter">
+		select * from novel_chapter where novel_chapter.standby_1='待审核'
+	</select>
+	<!-- 审核小说章节 -->
+	<select id="checkNovelChapter" parameterType="NovelChapter" resultMap="UncheckNovelChapter">
+		select cid,novel.nid,npicture,tname,nname,cname,caddress,novel_chapter.standby_1
+		from novel_type
+		inner join novel
+		on novel.tid=novel_type.tid
+		inner join novel_chapter
+		on novel_chapter.nid=novel.nid
+		where novel_chapter.standby_1='待审核'
+		limit #{start},#{end}
+	</select>
+	
+	<!-- 审核小说章节的详情 -->
+	<select id="showDetails" parameterType="NovelChapter" resultMap="UncheckNovelChapter" >
+		select cid,novel.nid,npicture,tname,nname,cname,caddress,novel_chapter.standby_1
+		from novel_type
+		inner join novel
+		on novel.tid=novel_type.tid
+		inner join novel_chapter
+		on novel_chapter.nid=novel.nid
+		where novel_chapter.cid=#{cid}
+	</select>
+	
+	<!-- 通过待审核的章节 -->
+	<update id="passChapter" parameterType="NovelChapter">
+		update novel_chapter set standby_1='通过' where cid in (#{cid});
+	</update>
+	
+	<!-- 不通过待审核的章节 -->
+	<update id="unpassChapter" parameterType="NovelChapter">
+		update novel_chapter set standby_1='未通过' where cid in (#{cid});
+	</update>
+	
+	<resultMap type="NovelChapter" id="UncheckNovelChapter">
+		<id property="cid"  column="cid" />
+		<result property="nid" column="nid" />
+		<result property="npicture" column="npicture" />
+		<result property="tname" column="tname" />
+		<result property="nname" column="nname" />
+		<result property="cname" column="cname" />
+		<result property="caddress" column="caddress" />
+		<result property="standby_1" column="standby_1" />
+	</resultMap>
+	
+	<!-- 得到章节编号 -->
+	<select id="getNovelChapterId" resultType="java.lang.Double" parameterType="NovelChapter">
+		select max(standby_2) from novel_chapter where nid=#{nid};
+	</select>
+	
+	<!-- 查看小说章节内容 -->
+	<select id="showContent" parameterType="NovelChapter" resultMap="UncheckNovelChapter">
+		select cid,novel_chapter.nid,cname,caddress,novel_chapter.standby_1,novel_chapter.standby_2,novel_type.tname,novel.nname
+		from novel_type
+		inner join novel
+		on novel.tid=novel_type.tid
+		inner join novel_chapter
+		on novel_chapter.nid=novel.nid
+		where cid=#{cid} 
+	</select>
+	
+	
+</mapper>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yc.mapper.UserBookMapper">
+	<insert id="addUserBookPT" parameterType="UserBook">
+		insert into user_book(nid,uid,ubdate)
+		values(#{nid},#{uid},#{ubdate});
+	</insert>
+	
+	<select id="getUserbookPT" parameterType="UserBook" resultType="UserBook">
+		select * from user_book where nid=#{nid} and uid=#{uid}
+	</select>
+	
+	<select id="finduserbookByUid" parameterType="UserBook" resultType="UserBook">
+		select * from user_book where uid=#{uid}
+	</select>
+	
+	<select id="finduserbookInfo1" parameterType="UserBook" resultType="UserBook">
+		select author.pan_name,user_book.ubdate,user_book.nid from
+			user_book inner join author
+		on user_book.uid=author.uid  where  user_book.uid=#{uid}
+		limit #{start},#{end}
+	</select>
+	
+	<select id="finduserbookInfo2" parameterType="UserBook" resultType="Novel">
+		select  novel.nid,novel.nname,novel_type.tname,novel.npicture,novel.ndescription,
+		novel.nstatus from
+		user_book inner join novel
+		on novel.nid=user_book.nid 
+		inner join novel_type
+		on novel_type.tid=novel.tid
+		where user_book.uid=#{uid}
+		limit #{start},#{end}
+	</select>
+	
+	<delete id="delUserbookInfo" parameterType="UserBook"  >
+		delete from user_book where uid=#{uid}
+		 and nid in
+		 <foreach item="item" index="index" collection="list1" open="(" separator="," close=")">
+		 		#{item}
+		 </foreach>
+	</delete>
+	
+</mapper>
