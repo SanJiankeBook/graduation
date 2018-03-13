@@ -222,7 +222,7 @@ create table user_book(
 	uid int not null,						
 	ubdate varchar(30),						
 	standby_1 varchar(100),
-	standby_2 varchar(100),
+	standby_2 int,
 	standby_3 varchar(100),
 	foreign key (uid) references user(uid),
 	foreign key (nid) references novel(nid)
