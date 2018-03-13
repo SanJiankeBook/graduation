@@ -1,5 +1,4 @@
-
-﻿function setCookie(c_name,value,expiredays){
+function setCookie(c_name,value,expiredays){
     var exdate=new Date();
     exdate.setDate(exdate.getDate()+365);
     document.cookie=c_name+ "=" +escape(value)+";expires="+exdate.toGMTString()+";path=/";
