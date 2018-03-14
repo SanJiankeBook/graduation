@@ -134,10 +134,10 @@ public class NovelController {
 		logger.info("mybook....");
 		if(request.getSession().getAttribute("users")!=null){
 			//List<NovelType> list1 = novelTypebizImpl.showType(noveltype); // 小说类型
-			model.addAttribute("list1",list1);
+			model.addAttribute("list",list1);
 			return "userbook";
 		}else{
-			model.addAttribute("list1",list1);
+			model.addAttribute("list",list1);
 			return "userlogin";
 		}
 	}
@@ -157,7 +157,7 @@ public class NovelController {
     	logger.info("tosousuo.....");
     	model.addAttribute("novel",novel.getNname());
     	List<NovelType> list1 = novelTypebizImpl.showType(noveltype); // 小说类型
-		model.addAttribute("list1",list1);
+		model.addAttribute("list",list1);
     	return "findnovel";
     }
     //搜索
@@ -166,7 +166,10 @@ public class NovelController {
     public String quearyNovel(@RequestParam String text,HttpServletRequest request){
     	logger.info("quearyNovel.....");
     	Novel novel=new Novel();
-    	String nname=text.substring(0,1)+"%";
+    	String nname=null;
+    	if(text!=null && text!=""){
+    	     nname=text.substring(0,1)+"%";
+    	}
     	novel.setNname(nname);
     	novel.setPan_name(nname);
     	String page=request.getParameter("page");    
@@ -341,7 +344,7 @@ public class NovelController {
     public String toAuthorlogger(Model model){
     	logger.info("toAuthorlogger...");
     	List<NovelType> list1 = novelTypebizImpl.showType(noveltype); // 小说类型
-		model.addAttribute("list1",list1);
+		model.addAttribute("list",list1);
     	return "Authorlogger";
     }
     //已有账号注册成为作家
@@ -403,7 +406,7 @@ public class NovelController {
     @RequestMapping(value="/forgivepassword")
     public String forgivepassword(Model model){
     	List<NovelType> list1 = novelTypebizImpl.showType(noveltype); // 小说类型
-		model.addAttribute("list1",list1);
+		model.addAttribute("list",list1);
     	return "forgivepassword";
     }
     
@@ -426,9 +429,9 @@ public class NovelController {
 			novel.setStandby_1("待审核");
 			this.novelbiz.InsertNovel(novel);
 			model.addAttribute("novel",novel);
-			return  "redirect:http://localhost:8081/SanJiankeBook/";
+			return  "forward:toindex_zpd";
     	}else{
-    		return "redirect:http://localhost:8081/SanJiankeBook/";
+    		return "forward:toindex_zpd";
     	}
     	
     }

@@ -15,7 +15,7 @@
 <head>
 <base href="<%=basePath%>">	
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>作者专区_三剑客文学</title>
+<title>IT类专业书籍</title>
 <link rel="stylesheet"
 	href="<%=request.getContextPath()%>/css/style.css" />
 <script type="text/javascript"
@@ -115,7 +115,7 @@
 		    	if(row.nid!=null){
 		    		window.location="editNovel/"+row.nid;
 				}else{
-					alert("请选择其中一天信息");
+					alert("请选择其中一本书");
 				}
 		    }
 		}
@@ -146,16 +146,16 @@
 			<ul>
 				<li><a href="toindex_zpd">首页</a></li>
 					<li><a rel="nofollow" href="mybook">我的书架</a></li>
-				<li><a href="toindex_Type/${list1[0].tname}">${list1[0].tname}</a></li>
-				<li><a href="toindex_Type/${list1[1].tname}">${list1[1].tname}</a></li>
-				<li><a href="toindex_Type/${list1[2].tname}">${list1[2].tname}</a></li>
-				<li><a href="toindex_Type/${list1[3].tname}">${list1[3].tname}</a></li>
-				<li><a href="toindex_Type/${list1[4].tname}">${list1[4].tname}</a></li>
-				<li><a href="toindex_Type/${list1[5].tname}">${list1[5].tname}</a></li>
-				<li><a href="authorPrefectrue">作者专区</a></li>
-				<li><a href="toindex_type">排行榜单</a></li>
-				<li><a href="jsp/quanben.jsp/">全本小说</a></li>
-				<li><a rel="nofollow" href="readRecord.jsp">阅读记录</a></li>
+					<li><a href="toindex_Type/${list[0].tname}">${list[0].tname}</a></li>
+					<li><a href="toindex_Type/${list[1].tname}">${list[1].tname}</a></li>
+					<li><a href="toindex_Type/${list[2].tname}">${list[2].tname}</a></li>
+					<li><a href="toindex_Type/${list[3].tname}">${list[3].tname}</a></li>
+					<li><a href="toindex_Type/${list[4].tname}">${list[4].tname}</a></li>
+					<li><a href="toindex_Type/${list[5].tname}">${list[5].tname}</a></li>
+					<li><a href="authorPrefectrue1">作者专区</a></li>
+					<li><a href="toindex_type">排行榜单</a></li>
+					<li><a href="quanben">全本小说</a></li>
+					<li><a rel="nofollow" href="jsp/readRecord.jsp">阅读记录</a></li>
 			</ul>
 		</div>
 		
@@ -170,7 +170,7 @@
 							<h2 id="atel">你的联系方式：${author[0].atel }</h2>
 							<input type="submit" name="editor" value="作者信息编辑" />
 						</form>
-						<a href="/SanJiankeBook/creat" style="font-size:40px;color:#FF0000">创作新小说</a>
+						<a href="creat" style="font-size:40px;color:#FF0000">创作新小说</a>
 					</div>
 					
 

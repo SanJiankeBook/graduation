@@ -228,60 +228,60 @@ public class ZpdNovelController {
 		model.addAttribute("list", list);
 		model.addAttribute("novel", novel);
 
-		// 根据点击数最高的显示小说信息
-		for (int r = 0; r < list.size(); r++) {
-			List<Novel> n = new ArrayList<Novel>();
-			List<Novel> n1 = new ArrayList<Novel>();
-			List<Novel> n2 = new ArrayList<Novel>();
-			List<Novel> n3 = new ArrayList<Novel>();
-			List<Novel> n4 = new ArrayList<Novel>();
-			List<Novel> n5 = new ArrayList<Novel>();
-			List<Author> author = authorbizImpl.Show_Author(r);
-			switch (r) {
-			case 0:
-				n = rutils.RankInformation(r);
-				if (rutils.RankInformation(r) != null) {
-					model.addAttribute("author", author);
-					model.addAttribute("n", n);
-					break;
-				}
-			case 1:
-				n1 = rutils.RankInformation(r);
-				if (rutils.RankInformation(r) != null) {
-					model.addAttribute("author", author);
-					model.addAttribute("n1", n1);
-					break;
-				}
-			case 2:
-				n2 = rutils.RankInformation(r);
-				if (rutils.RankInformation(r) != null) {
-					model.addAttribute("author", author);
-					model.addAttribute("n2", n2);
-					break;
-				}
-			case 3:
-				n3 = rutils.RankInformation(r);
-				if (rutils.RankInformation(r) != null) {
-					model.addAttribute("author", author);
-					model.addAttribute("n3", n3);
-					break;
-				}
-			case 4:
-				n4 = rutils.RankInformation(r);
-				if (rutils.RankInformation(r) != null) {
-					model.addAttribute("author", author);
-					model.addAttribute("n4", n4);
-					break;
-				}
-			case 5:
-				n5 = rutils.RankInformation(r);
-				if (rutils.RankInformation(r) != null) {
-					model.addAttribute("author", author);
-					model.addAttribute("n5", n5);
-					break;
-				}
-			}
-		}
+//		// 根据点击数最高的显示小说信息
+//		for (int r = 0; r < list.size(); r++) {
+//			List<Novel> n = new ArrayList<Novel>();
+//			List<Novel> n1 = new ArrayList<Novel>();
+//			List<Novel> n2 = new ArrayList<Novel>();
+//			List<Novel> n3 = new ArrayList<Novel>();
+//			List<Novel> n4 = new ArrayList<Novel>();
+//			List<Novel> n5 = new ArrayList<Novel>();
+//			List<Author> author = authorbizImpl.Show_Author(r);
+//			switch (r) {
+//			case 0:
+//				n = rutils.RankInformation(r);
+//				if (rutils.RankInformation(r) != null) {
+//					model.addAttribute("author", author);
+//					model.addAttribute("n", n);
+//					break;
+//				}
+//			case 1:
+//				n1 = rutils.RankInformation(r);
+//				if (rutils.RankInformation(r) != null) {
+//					model.addAttribute("author", author);
+//					model.addAttribute("n1", n1);
+//					break;
+//				}
+//			case 2:
+//				n2 = rutils.RankInformation(r);
+//				if (rutils.RankInformation(r) != null) {
+//					model.addAttribute("author", author);
+//					model.addAttribute("n2", n2);
+//					break;
+//				}
+//			case 3:
+//				n3 = rutils.RankInformation(r);
+//				if (rutils.RankInformation(r) != null) {
+//					model.addAttribute("author", author);
+//					model.addAttribute("n3", n3);
+//					break;
+//				}
+//			case 4:
+//				n4 = rutils.RankInformation(r);
+//				if (rutils.RankInformation(r) != null) {
+//					model.addAttribute("author", author);
+//					model.addAttribute("n4", n4);
+//					break;
+//				}
+//			case 5:
+//				n5 = rutils.RankInformation(r);
+//				if (rutils.RankInformation(r) != null) {
+//					model.addAttribute("author", author);
+//					model.addAttribute("n5", n5);
+//					break;
+//				}
+//			}
+//		}
 		
 		//作品推荐
 		List<Novel> novel2=this.novelbiz.NovelRecommend();
@@ -316,8 +316,8 @@ public class ZpdNovelController {
 		 */
 		Novel nname = (Novel) list.get(0);
 		String name = nname.getNname();
-		RedisUtils redis = new RedisUtils();
-		redis.Ranking(name);
+//		RedisUtils redis = new RedisUtils();
+//		redis.Ranking(name);
 
 		return "Novel2";
 	}
@@ -420,7 +420,7 @@ public class ZpdNovelController {
 	@RequestMapping(value="/showUser")
 	public String showUser(Model model,HttpServletRequest request){
 		List<NovelType> list1 = novelTypebizImpl.showType(noveltype); // 小说类型
-		model.addAttribute("list1",list1);
+		model.addAttribute("list",list1);
 		if(request.getSession().getAttribute("users")!=null){
 			User user=(User) request.getSession().getAttribute("users");
 			List<User> listuser=this.userbiz.findUserInfo(user);
@@ -741,7 +741,7 @@ public class ZpdNovelController {
 	public String authorPrefectrue(HttpServletRequest request,HttpServletResponse response,Model model) throws IOException{
 		logger.info("authorPrefectrue.....");
 		List<NovelType> list1 = novelTypebizImpl.showType(noveltype); // 小说类型
-		model.addAttribute("list1",list1);
+		model.addAttribute("list",list1);
 		List<Author> list=new ArrayList<Author>();	
 		HttpSession session = request.getSession(); //session==null的话会报错，所以判断的时候要信判断session能不能为空
 		User uuser=(User)(session.getAttribute("users"));
@@ -919,7 +919,7 @@ public class ZpdNovelController {
 	@RequestMapping(value="/toregister")
 	public String register(Model model){
 		List<NovelType> list1 = novelTypebizImpl.showType(noveltype); // 小说类型
-		model.addAttribute("list1",list1);
+		model.addAttribute("list",list1);
 		return "register";
 	}
 	
@@ -937,5 +937,12 @@ public class ZpdNovelController {
 			return new ResponseEntity<byte[]>(content,headers, HttpStatus.CREATED);
 		   
 	}
+	//第二次大改    创造书本按钮  
+	//前往创造书籍界面
+	@RequestMapping(value="/nove-create")
+	public String noveCreate(){
+	    return "forward:creatnovel";
+	}
+	
 
 }

@@ -41,18 +41,18 @@
 <div class="clear"></div>
 <div class="nav">
 			<ul>
-				<li><a href="toindex_zpd">首页</a></li>
-				<li><a rel="nofollow" href="bookcase.jsp">我的书架</a></li>
-				<li><a href="1-1.jsp">玄幻奇幻</a></li>
-				<li><a href="2-1.jsp">武侠仙侠</a></li>
-				<li><a href="3-1.jsp">都市言情</a></li>
-				<li><a href="4-1.jsp">历史军事</a></li>
-				<li><a href="5-1.jsp">科幻灵异</a></li>
-				<li><a href="6-1.jsp">网游竞技</a></li>
-				<li><a href="7-1.jsp">女频频道</a></li>
-				<li><a href="rank.jsp">排行榜单</a></li>
-				<li><a href="quanben.jsp">全本小说</a></li>
-				<li><a rel="nofollow" href="readRecord.jsp">阅读记录</a></li>
+		<li><a href="toindex_zpd">首页</a></li>
+					<li><a rel="nofollow" href="mybook">我的书架</a></li>
+					<li><a href="toindex_Type/${list[0].tname}">${list[0].tname}</a></li>
+					<li><a href="toindex_Type/${list[1].tname}">${list[1].tname}</a></li>
+					<li><a href="toindex_Type/${list[2].tname}">${list[2].tname}</a></li>
+					<li><a href="toindex_Type/${list[3].tname}">${list[3].tname}</a></li>
+					<li><a href="toindex_Type/${list[4].tname}">${list[4].tname}</a></li>
+					<li><a href="toindex_Type/${list[5].tname}">${list[5].tname}</a></li>
+					<li><a href="authorPrefectrue1">作者专区</a></li>
+					<li><a href="toindex_type">排行榜单</a></li>
+					<li><a href="quanben">全本小说</a></li>
+					<li><a rel="nofollow" href="jsp/readRecord.jsp">阅读记录</a></li>
 			</ul>
 		</div>
        <br />

@@ -15,7 +15,7 @@
 
 
 
-<title>三剑客小说网</title>
+<title>IT类专业书籍</title>
 
 <script type="text/javascript" src="js/xiaoshuo.js"></script>
 <script type="text/javascript" src="js/jquery-1.12.4.js"></script>
@@ -75,9 +75,7 @@
 		<div class="ywtop">
 			<div class="ywtop_con" id="top">
 				<div class="ywtop_sethome">
-					<a
-						onclick="this.style.behavior='url(#default#homepage)';this.setHomePage('http://www.bixia.org');"
-						href="#">将本站设为首页</a>
+					
 				</div>
 				<div class="ywtop_addfavorite">
 					<a
@@ -132,7 +130,7 @@
 
 		<div class="header">
 			<div class="header_logo">
-				<a href="toindex_zpd">三剑客文学</a>
+				<a href="toindex_zpd">IT类专业书籍</a>
 			</div>
 			<div class="header_search">
 				<script>
@@ -467,8 +465,7 @@
 			<div class="footer">
 				<div class="footer_link"></div>
 				<div class="footer_cont">
-					<p>本站所有小说为转载作品，所有章节均由网友上传，转载至本站只是为了宣传本书让更多读者欣赏。</p>
-					<p>Copyright © 2017三剑客文学</p>
+					<p>Copyright © 2018 IT类专业书籍</p>
 					<script>
 						footer();
 					</script>

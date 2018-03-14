@@ -31,12 +31,12 @@
 		<form action="InsertNovel" method="post" enctype="multipart/form-data">
 		类型：<select id="tid"  name="tid">
 		</select><br/>
-		小说名字：<input type="text" name="nname" id="nname"/><br/>
-		小说描述：<textarea cols=60 rows=4 name="ndescription" id="ndescription" style="font-size:9pt;line-height:100%"></textarea>
+		书籍名字：<input type="text" name="nname" id="nname"/><br/>
+		书籍描述：<textarea cols=60 rows=4 name="ndescription" id="ndescription" style="font-size:9pt;line-height:100%"></textarea>
 		<!-- style="border:2px dashed red;" -->
 		<div >
             <p>
-                小说封面图片选取：<input type="file" name="pdfsUrl" id="xdaTanFileImg" onchange="xmTanUploadImg(this)" />
+                书籍封面图片选取：<input type="file" name="pdfsUrl" id="xdaTanFileImg" onchange="xmTanUploadImg(this)" />
                 <input type="file" name="pdfsUrl" id="xdaTanFileImg" onchange="xmTanUploadImg(this)"  style="display:none"/>
                 <input type="button" value="隐藏图片" onclick="document.getElementById('xmTanImg').style.display = 'none';"/>
                 <input type="button" value="显示图片" onclick="document.getElementById('xmTanImg').style.display = 'block';"/>

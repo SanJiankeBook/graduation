@@ -108,4 +108,9 @@ create table user(
 )ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 insert into admin(adnumber,adpassword) values(1001,'a');
-commit
+commit;
+select * from user;
+select * from author
+select * from admin
+select * from novel for update
+delete from novel
