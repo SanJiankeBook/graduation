@@ -1,0 +1,374 @@
+BODY{
+	SCROLLBAR-FACE-COLOR: #ffffff;
+	FONT-SIZE: 9pt;
+	SCROLLBAR-HIGHLIGHT-COLOR: #9e9e9e;
+	SCROLLBAR-SHADOW-COLOR: #9e9e9e;
+	COLOR: #000000;
+	SCROLLBAR-3DLIGHT-COLOR: #ffffff;
+	SCROLLBAR-ARROW-COLOR: #9e9e9e;
+	SCROLLBAR-TRACK-COLOR: #eaeaea;
+	FONT-FAMILY: "verdana", "arial", "helvetica", "Tahoma";
+	SCROLLBAR-DARKSHADOW-COLOR: #eaeaea;
+	margin-top: 0px;
+	margin-bottom: 0px;
+
+}
+
+TD {
+	FONT-SIZE: 9pt;
+	FONT-FAMILY: verdana, arial, helvetica, Tahoma;
+}
+
+DIV {
+	FONT-SIZE: 9pt;
+	FONT-FAMILY: verdana, arial, helvetica, Tahoma
+}
+
+FORM {
+	FONT-SIZE: 9pt;
+	FONT-FAMILY: verdana, arial, helvetica, Tahoma
+}
+
+SELECT {
+	FONT-SIZE: 9pt
+}
+
+OPTION {
+	FONT-SIZE: 9pt
+}
+
+input {
+	FONT-SIZE: 9pt;
+	FONT-FAMILY: verdana, arial, helvetica, Tahoma
+}
+
+P {
+	FONT-SIZE: 9pt;
+	FONT-FAMILY: verdana, arial, helvetica, Tahoma
+}
+
+BR {
+	FONT-SIZE: 9pt;
+	FONT-FAMILY: verdana, arial, helvetica, Tahoma
+}
+
+textarea {
+	font-size: 9pt;
+	FONT-FAMILY: verdana, arial, helvetica, Tahoma
+}
+
+A:visited {
+	FONT-SIZE: 9pt;
+	  COLOR: #330099;  
+	FONT-FAMILY: "verdana", "arial", "helvetica", "Tahoma";
+	TEXT-DECORATION: none
+}
+
+A:link {
+	FONT-SIZE: 9pt;
+	 COLOR: #0033CC; 
+	FONT-FAMILY: "verdana", "arial", "helvetica", "Tahoma";
+	TEXT-DECORATION: none
+}
+
+A:hover {
+	FONT-SIZE: 9pt;
+	COLOR: #ff0000;
+	FONT-FAMILY: "verdana", "arial", "helvetica", "Tahoma";
+	TEXT-DECORATION: none
+}
+
+.informat01 {
+	FONT-SIZE: 9pt;
+	FONT-FAMILY: verdana, arial, helvetica, Tahoma;
+	BACKGROUND-COLOR: #efefef
+}
+
+.i02 {
+	BORDER-RIGHT: 1px solid;
+	BORDER-TOP: 1px solid;
+	FONT-SIZE: 9pt;
+	BORDER-LEFT: 1px solid;
+	COLOR: #000000;
+	BORDER-BOTTOM: 1px solid;
+	FONT-FAMILY: "verdana", "arial", "helvetica", "Tahoma";
+	BACKGROUND-COLOR: #efefef
+}
+
+.i03 {
+	BORDER-TOP-WIDTH: 1px;
+	PADDING-RIGHT: 1px;
+	PADDING-LEFT: 1px;
+	BORDER-LEFT-WIDTH: 1px;
+	FONT-SIZE: 9pt;
+	BORDER-LEFT-COLOR: #ffffff;
+	BORDER-BOTTOM-WIDTH: 1px;
+	BORDER-BOTTOM-COLOR: #c0c0c0;
+	PADDING-BOTTOM: 1px;
+	BORDER-TOP-COLOR: #ffffff;
+	PADDING-TOP: 1px;
+	HEIGHT: 20px;
+	BACKGROUND-COLOR: #efefef;
+	BORDER-RIGHT-WIDTH: 1px;
+	BORDER-RIGHT-COLOR: #c0c0c0
+}
+
+.i04 {
+	BORDER-RIGHT: 1px solid;
+	BORDER-TOP: 1px solid;
+	FONT-SIZE: 9pt;
+	BACKGROUND: none transparent scroll repeat 0% 0%;
+	BORDER-LEFT: 1px solid;
+	COLOR: #000000;
+	BORDER-BOTTOM: 1px solid;
+	FONT-FAMILY: "verdana", "arial", "helvetica", "Tahoma"
+}
+
+.i04a {
+	BORDER-RIGHT: 0;
+	BORDER-TOP: 0;
+	FONT-SIZE: 9pt;
+	BACKGROUND: none transparent scroll repeat 0% 0%;
+	BORDER-LEFT: 0;
+	COLOR: #000000;
+	BORDER-BOTTOM: 0;
+	FONT-FAMILY: "verdana", "arial", "helvetica", "Tahoma"
+}
+
+.i05 {
+	BORDER-RIGHT: 1px solid;
+	BORDER-TOP: 1px solid;
+	FONT-SIZE: 9pt;
+	BORDER-LEFT: 1px solid;
+	COLOR: #000000;
+	BORDER-BOTTOM: 1px solid;
+	FONT-FAMILY: "verdana", "arial", "helvetica", "Tahoma";
+	BACKGROUND-COLOR: #d9d9d9
+}
+
+.txtOver {
+	BORDER-RIGHT: 1px solid;
+	BORDER-TOP: 1px solid;
+	BORDER-LEFT: 1px solid;
+	BORDER-BOTTOM: 1px solid;
+	border-color:#333333;
+}
+
+.txtLeave {
+	BORDER-RIGHT: 1px solid;
+	BORDER-TOP: 1px solid;
+	BORDER-LEFT: 1px solid;
+	BORDER-BOTTOM: 1px solid;
+	border-color:#CCCCCC;
+}
+
+.button {
+	BORDER-RIGHT: #333333 1px ridge;
+	PADDING-RIGHT: 1px;
+	BORDER-TOP: #ffffff 1px ridge;
+	PADDING-LEFT: 1px;
+	FONT-SIZE: 10pt;
+	PADDING-BOTTOM: 1px;
+	BORDER-LEFT: #ffffff 1px ridge;
+	COLOR: #000000;
+	PADDING-TOP: 1px;
+	BORDER-BOTTOM: #000000 1px ridge;
+	HEIGHT: 22px;
+	BACKGROUND-COLOR: #f1f1f1
+}
+
+.textbox {
+	BORDER-RIGHT: 0px solid;
+	BORDER-TOP: 0px solid;
+	FONT-SIZE: 12px;
+	BORDER-LEFT: 0px solid;
+	COLOR: #000000;
+	BORDER-BOTTOM: 1px solid;
+	FONT-FAMILY: "Verdana", "宋体";
+	HEIGHT: 20px;
+	BACKGROUND-COLOR: #eeeeee;
+	TEXT-DECORATION: none
+}
+
+.textare {
+	height: 125px;
+	width: 100%;
+	border: 0px solid;
+}
+
+.select {
+	width: 100px;
+	border: 1px solid #D4D0C8;
+}
+
+.texta {
+	height: auto;
+	width: 100%;
+	border: 1px solid #D4D0C8;
+}
+
+.text1 {
+	font-size: 9pt;
+	width: 100%;
+	border: 1px solid #D4D0C8;
+	height: 30px;
+}
+
+.text2 {
+	font-size: 9pt;
+	width: 35px;
+	border: 1px solid #D4D0C8;
+	height: 13px;
+}
+
+.text3 {
+	font-size: 9pt;
+	width: 95%;
+	border: 1px solid #D4D0C8;
+	height: 20px;
+}
+
+.text4 {
+	font-size: 9pt;
+	border: 1px solid #D4D0C8;
+}
+
+.style1 {
+	color: #008040
+}
+
+.style2 {
+	color: #000000
+}
+
+.style3 {
+	color: #FF0000
+}
+
+.tb {
+	border-collapse: collapse
+}
+
+IMG {
+	BORDER-TOP-WIDTH: 0px;
+	DISPLAY: block;
+	BORDER-LEFT-WIDTH: 0px;
+	BORDER-BOTTOM-WIDTH: 0px;
+	BORDER-RIGHT-WIDTH: 0px
+}
+
+.inp_L1 {
+	background-image: url(../images/bg_x.jpg);
+	background-repeat: no-repeat;
+	BORDER-TOP-WIDTH: 0px;
+	BACKGROUND-POSITION: -4px -55px;
+	BORDER-LEFT-WIDTH: 0px;
+	BORDER-BOTTOM-WIDTH: 0px;
+	WIDTH: 82px;
+	COLOR: #464646;
+	LINE-HEIGHT: 23px;
+	HEIGHT: 23px;
+	BORDER-RIGHT-WIDTH: 0px
+}
+
+.inp_L2 {
+	background-image: url(../images/bg_x.jpg);
+	background-repeat: no-repeat;
+	BORDER-TOP-WIDTH: 0px;
+	BACKGROUND-POSITION: -4px -80px;
+	BORDER-LEFT-WIDTH: 0px;
+	BORDER-BOTTOM-WIDTH: 0px;
+	WIDTH: 82px;
+	COLOR: #464646;
+	LINE-HEIGHT: 23px;
+	HEIGHT: 23px;
+	BORDER-RIGHT-WIDTH: 0px
+}
+
+.prompt {
+	font-size: 10.5pt;
+	color: #FF0000;
+}
+
+.table {
+	font-size: 9pt;
+	border-top: 1pt solid #FFFFFF;
+	border-right: none;
+	border-bottom: 1pt solid #FFFFFF;
+	border-left: none;
+}
+
+.tableTitle {
+	font-size: 12pt;
+	font-weight: normal;
+	color: #FFFFFF;
+}
+
+th {
+	background-color: #0099CC;
+	font-size: 10.5pt;
+	font-weight: bold;
+	color: #FFFFFF;
+}
+
+.fontColor {
+	font-size: 9pt;
+	color: #0066CC;
+}
+
+.btn1 {
+	background-image: url(../images/bg_x.jpg);
+	background-repeat: no-repeat;
+	BORDER-TOP-WIDTH: 0px;
+	BACKGROUND-POSITION: -4px -55px;
+	BORDER-LEFT-WIDTH: 0px;
+	BORDER-BOTTOM-WIDTH: 0px;
+	WIDTH: 100px;
+	COLOR: #464646;
+	LINE-HEIGHT: 22px;
+	HEIGHT: 23px;
+	BORDER-RIGHT-WIDTH: 0px
+}
+
+.btn2 {
+	background-image: url(../images/bg_x.jpg);
+	background-repeat: no-repeat;
+	BORDER-TOP-WIDTH: 0px;
+	BACKGROUND-POSITION: -4px -80px;
+	BORDER-LEFT-WIDTH: 0px;
+	BORDER-BOTTOM-WIDTH: 0px;
+	WIDTH: 100px;
+	COLOR: #464646;
+	LINE-HEIGHT: 22px;
+	HEIGHT: 23px;
+	BORDER-RIGHT-WIDTH: 0px
+}
+
+.content {
+	width: 100%;
+	font-size: 9pt;
+	border: 1px solid #D4D0C8;
+	overflow: visible;
+	line-height:13pt;
+}
+
+.txaNoneBorder {
+	width: 100%;
+	border: none;
+	font-size: 9pt;
+	overflow: visible;
+	line-height:13pt;
+	height:20px;
+}
+
+.qstable {
+	border: 1pt solid #D4D0C8;
+}
+
+.qutd {
+	border: 1pt solid #D4D0C8;
+}
+
+.yellow {
+	color: FF9900;
+}

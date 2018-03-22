@@ -1,0 +1,69 @@
+#bigbox{
+	
+	align:center;
+}
+
+#bigbox .checkingtitle{
+	color:blue;
+}
+
+
+#bigbox #beizhu{
+	margin-top:10px;
+	width:98%;
+}
+
+#bigbox #checkClassInfo{
+	overflow-y:scroll;
+}
+
+#bigbox #remarktitle{
+	float:left;
+	width:100px;
+}
+
+#remarktitle p{
+	height:40px;
+	line-height:40px;
+}
+
+#bigbox #remarkinfo{
+	float:left;
+	width:400px;
+}
+
+#bigbox #remarkcommit{
+	float:left;
+	width:200px;
+}
+
+#bigbox #findCheckingResultInfo #findCheckingResultInfoes{
+	overflow:scroll;
+	width:1000px;
+	height:300px;
+}
+
+.classmouseover{
+	color:gray;
+	background:white;
+}
+
+.classmouseout{
+	color:#FFFFFF;
+	background:#0099CC;
+}
+
+.classmouseout1{
+	color:black;
+	background:#fef4d9;
+}
+
+.tronmouseover{
+	background:#93BBDF;
+}
+
+.tronmouseout{
+	background:#EDECEB;
+}
+
+

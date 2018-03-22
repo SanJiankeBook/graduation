@@ -1,0 +1,151 @@
+<style type="text/css">
+<!--
+.STYLE1 {
+	font-size: 18px;
+	font-weight: bold;
+}
+-->
+</style>
+
+
+
+
+<script type="text/javascript">
+	$(function() {$.getJSON("/Examination2.0/exam_findGrade.action",
+						{
+							type : "writ"
+						},
+						function(data) {
+							$.each(data,function(i, item) {
+												console.info("item[0]:"+item[0]);
+												//console.info("paperType:"+item[0].paperType);
+												if(item[0]==undefined){
+													return false;
+												}
+												var paperType = item[0].paperType;
+												var userName = item[0].userName; //姓名
+												localStorage.setItem("toExamineeWritinggrad_examineeName",
+																userName);
+
+												var id = item[0].arr[0][0].writingPaper.id//试卷ID 
+												
+												localStorage
+														.setItem("wpid", id);
+												localStorage
+														.setItem(
+																"toExamineeWritinggrad_wpid",
+																id);
+												localStorage.setItem(
+														"writtingPaper_wpid",
+														id);
+
+												var waid = item[0].arr[0][0].id;
+												
+												localStorage.setItem("waid",
+														waid);
+												localStorage
+														.setItem(
+																"toExamineeWritinggrad_waid",
+																waid);
+
+												var score = item[0].arr[0][0].score//成绩 
+												localStorage
+														.setItem(
+																"toExamineeWritinggrad_score",
+																score);
+
+												var paperName = item[0].arr[0][0].writingPaper.paperName//试卷名字 
+
+												var examineeClass = item[0].arr[0][0].writingPaper.examineeClass//班级 
+												localStorage
+														.setItem(
+																"toExamineeWritinggrad_examineeClass",
+																examineeClass);
+
+												var examDate = item[0].arr[0][0].writingPaper.examDate//考试时间 
+												var str = '';
+												if (paperType == "writ") {
+													str += '<input name="type" type="radio" value="writ" checked="checked">笔试<input type="radio" name="type" value="lab">机试';
+												} else {
+													str += '<input name="type" type="radio" value="writ">笔试<input type="radio" name="type" value="lab" checked="checked">机试';
+												}
+												$("#choose").html(str);
+												var htm = '';
+												htm += '<tr ><th bordercolor="#7EA6DC">试卷编号  </th><th bordercolor="#7EA6DC">试卷名称 </th><th bordercolor="#7EA6DC">班级 </th><th bordercolor="#7EA6DC">姓名 </th><th bordercolor="#7EA6DC">成绩 </th><th bordercolor="#7EA6DC">考试日期 </th><th bordercolor="#7EA6DC">操作试卷</th></tr>';
+												
+
+												for (var i = 0; i <= item[0].arr.length - 1; i++) {
+													htm += '<tr bgcolor="#EDECEB" onMouseOver="this.bgColor=\'#93BBDF\';" onMouseOut="this.bgColor=\'#EDECEB\';" align="center">';
+													htm += '<td>'
+															+ item[0].arr[i][0].writingPaper.id
+															+ '</td>';
+													htm += '<td>'
+															+ item[0].arr[i][0].writingPaper.paperName
+															+ '</td>';
+													htm += '<td>'
+															+ item[0].arr[i][0].writingPaper.examineeClass
+															+ '</td>';
+													htm += '<td>' + userName
+															+ '</td>';
+													htm += '<td>'
+															+ item[0].arr[i][0].score
+															+ '</td>';
+													htm += '<td>'
+															+ item[0].arr[i][0].writingPaper.examDate
+															+ '</td>';
+													htm += '<td align="center">';
+													opid = item[0].arr[i][0].writingPaper.id;
+													//console.info("opid::::"+opid);
+													
+													ec = item[0].arr[i][0].writingPaper.examineeClass;
+													ename = userName;
+													htm += '<a onClick="javascript:oop(id,ec,name)" href="#" title="查看评卷后的详细结果">考试信息</a>';
+													htm += '\\';
+													htm+='<a href="/Examination2.0/student/examineewritpaper.html?paperId='+item[0].arr[i][0].writingPaper.id+'&examClass='+item[0].arr[i][0].writingPaper.examineeClass+'&examineeName='+encodeURI(userName)+'&paid='+item[0].arr[i][0].id+'" title="查看考生的答卷">浏览答卷</a></td></tr>';
+													//htm += '<a onClick="javascript:oopen(id,ec,name)" href="/Examination2.0/student/examineewritpaper.html?id='+id+'&ec='+ec+'&name='+name+' " title="查看考生的答卷">浏览答卷</a></td></tr>';
+												}
+												$("#table").html(htm);
+											});
+						});
+	});
+
+	function oop(opid, ec, ename) {
+		window.open("/Examination2.0/student/showexamineewritinggrade.html");
+		//window.open("/Examination2.0/student/showexamineewritinggrade.html","笔试考试","fullscreen=no,scrollbars=yes");
+		//?paperId="+opid+"&examClass='"+ec+"'&examineeName='"+ename+"'
+	}
+
+	function oopen(opid, ec, ename) {
+		window.open("/Examination2.0/student/examineewritpaper.html");
+		//window.open("/Examination2.0/student/showexamineewritinggrade.html","笔试考试","fullscreen=no,scrollbars=yes");
+		//?paperId="+opid+"&examClass='"+ec+"'&examineeName='"+ename+"'
+	}
+</script>
+
+
+<div align="left"></div>
+<form id="form1" name="form1" method="post"
+	action="/Examination2.0/exam_findGrade.action&type=writ">
+	<table id="table_1" width="90%" align="center" border="0"
+		align="center" cellpadding="0" cellspacing="0">
+		<tr>
+			<td align="center">
+				<table width="90%" height="113" border="0" cellpadding="0"
+					cellspacing="0">
+					<tr>
+						<td width="90%" valign="middle"></td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td><br> <span class="fontColor">温馨提示:</span>
+				老师没有评卷的试卷，目前查不到成绩<br> <br>
+				<table id="table" width="90%" border="1" align="center"
+					cellpadding="1" bordercolor="#FFFFFF" cellspacing="0">
+
+				</table></td>
+		</tr>
+	</table>
+</form>
+

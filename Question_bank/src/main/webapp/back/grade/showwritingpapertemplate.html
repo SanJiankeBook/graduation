@@ -1,0 +1,494 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script type="text/javascript" src="../../js/ajax.js"></script>
+<!-- <script type="text/javascript" language="javascript"
+	src="../../js/whir.js"></script> -->
+<link href="../../css/szindex.css" rel="stylesheet"
+	type="text/css">
+<link id="easyuiTheme" rel="stylesheet" type="text/css" href="../../jslib/themes/default/easyui.css">
+<!-- <script src="http://lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.js"></script> -->
+<script type="text/javascript" src="../ckeditor/ckeditor.js"></script>
+<style>
+.textareaTest {
+	width: 95%;
+	min-height: 20px;
+	max-height: 600px;
+	_height: 120px;
+	padding: 3px;
+	outline: 0;
+	border:1px solid;
+	border-color:#D4D0C8;
+	font-size: 12px;
+	line-height: 24px;
+	padding: 2px;
+	word-wrap: break-word;
+	overflow-x: hidden;
+	overflow-y: auto;
+	font-weight:bold;
+}
+</style>
+<script type="text/javascript">
+!window.jQuery && document.write('<script src=../../js/jquery-1.9.1.js><\/script>');
+</script>
+<script type="text/javascript" src="../../jslib/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../jslib/jeasyui.common.js"></script>
+<script type="text/javascript" src="../../jslib/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript">
+	var questionId = "";
+	var examineeClass = "";
+	$(function() {
+		//从浏览器中取id（从localstorage或cookie中取）
+		var wpid = window.localStorage ? localStorage.getItem("wpid") : Cookie
+				.read("wpid");
+		//根据id查找试卷信息
+		$
+				.ajax({
+					url : "/Examination2.0/dataarraylist_showWritingPaperPagesDetailTemplate.action",
+					type : "post",
+					datatype : "json",
+					data : {
+						"wpid" : wpid
+					},
+					success : showPageInfoDetail
+				});
+
+	});
+	function showPageInfoDetail(data) {
+		var pageInfoDetails =   data;
+		if (pageInfoDetails.responseCode == 0) {
+			var paperId = pageInfoDetails.obj.id;
+			questionId = pageInfoDetails.obj.questionId;
+			//alert(questionId.charAt(questionId.length-1));
+			if (questionId.charAt(questionId.length - 1) == ",") {
+				questionId = questionId.substring(0, questionId.length - 1)
+			} else {
+				questionId = questionId;
+			}
+			questionId = "[" + questionId + "]";
+			//alert("questionId:"+questionId);
+			$("#paperId").val(paperId);
+
+		}
+		//根据ids查询考试题
+		$.ajax({
+			url : "/Examination2.0/dataarraylist_findQuestionByids.action",
+			type : "post",
+			datatype : "json",
+			data : {
+				"questionId" : questionId
+			},
+			success : showAllQuestion
+		});
+	}
+	//显示班级下拉框
+	function showAllExamineeClass(data) {
+		var examieeClassNames =   data;
+		if (examieeClassNames.responseCode == 0) {
+			var examineeClassStr = "";
+			for ( var i = 0; i < examieeClassNames.obj.length; i++) {
+				if (examineeClass == examieeClassNames.obj[i]) {
+					examineeClassStr += "<option value='"+examineeClass+"' selected='selected'>"
+							+ examieeClassNames.obj[i] + "</option>"
+				} else {
+					examineeClassStr += "<option value='"+examieeClassNames.obj[i]+"'>"
+							+ examieeClassNames.obj[i] + "</option>"
+				}
+			}
+			$("#examineeClassStr").html(examineeClassStr);
+
+		}
+	}
+	//根据ids查询考试题
+	function showAllQuestion(data) {
+		var questionCount = 0;
+		var questionStr = "";
+		var allQuestion =   data;
+		if (allQuestion.responseCode == 0) {
+			$
+					.each(
+							allQuestion.obj,
+							function(i, question) {
+								//alert("question:"+question.question)
+								questionStr += '<input type="hidden" name="answer_'
+										+ (i + 1)
+										+ '" id="answer_'
+										+ (i + 1)
+										+ '" value="' + question.answer + '">';
+								questionStr += '<table width="100%" border="0" cellspacing="0" cellpadding="0" id="questionTable'
+										+ (i + 1)
+										+ '"> <tr>	<td  align="right"></td><td width="7%"> 	<p align="center">&nbsp;</p></td><td height="27" colspan="3" align="center">&nbsp;</td></tr>';
+								questionStr += '<tr><td valign="top"><span id=""><input name="titleCheck_'
+										+ (i + 1)
+										+ '" id="titleCheck_'
+										+ (i + 1)
+										+ '" type="checkbox" value="'
+										+ question.id
+										+ '" /></span></td><td width="20%" valign="top"><b>'
+										+ (i + 1)
+										+ ' . </b>'+(question.questionType=="1"?"单选题":"复选题")+'</td><td height="10%" colspan="3"><input onMouseOver="this.className=\'inp_L2\';" onMouseOut="this.className=\'inp_L1\'"name="delete" type="button" class="\inp_L1\" id="modify"onClick="updatewritingpaperinfo('
+										+ (i + 1)
+										+ ')" value="编辑"><a name="Food'
+										+ (i + 1)
+										+ '"> </a><div style="display:none" id="timu_'+(i + 1)+'"><textarea disabled="disabled" class="textareaTest" name="txtQuestion_'+(i+1)+'" id="txtQuestion_'+(i+1)+'" contenteditable="true">'+question.question+'</textarea></div><div id="timu2_'+(i + 1)+'">'+question.question+'</div></td></tr>';
+								questionStr += '<tr><td></td><td></td><td colspan="3">&nbsp;';
+								if (question.image != null) {
+									questionStr += '<span class="fontColor"> 图片说明:</span><br><div align="left"><img src="" alt=""><br /></div></td></tr>';
+								}
+								questionStr += '<tr><td></td><td rowspan="4">&nbsp;</td><td width="9%" valign="top"><input type="checkbox"  name="answerA_'
+										+ (i + 1)
+										+ '" id="answerA_'
+										+ (i + 1)
+										+ '" value="A">A.<br></td><td colspan="2"><div style="display:none" id="xuangxiangA_'+(i + 1)+'"> <textarea disabled="disabled" class="textareaTest" name="txtA_'+(i+1)+'" id="txtA_'+(i+1)+'" contenteditable="true">'+question.optionA+'</textarea></div><div id="xuangxiangA2_'+(i + 1)+'">'+question.optionA+'</div></td></tr>';
+								questionStr += '<tr><td></td><td width="9%" valign="top"><input type="checkbox"  name="answerB_'
+										+ (i + 1)
+										+ '" id="answerB_'
+										+ (i + 1)
+										+ '"value="B">B.</td><td colspan="2"><div style="display:none" id="xuangxiangB_'+(i + 1)+'"><textarea disabled="disabled" class="textareaTest" name="txtB_'+(i+1)+'" id="txtB_'+(i+1)+'" contenteditable="true">'+question.optionB+'</textarea></div><div id="xuangxiangB2_'+(i + 1)+'">'+question.optionB+'</div></td></tr>';
+								questionStr += '<tr><td></td><td width="9%" valign="top"><input type="checkbox"  name="answerC_'
+										+ (i + 1)
+										+ '" id="answerC_'
+										+ (i + 1)
+										+ '"value="C">C.</td><td colspan="2"><div style="display:none" id="xuangxiangC_'+(i + 1)+'"><textarea disabled="disabled" class="textareaTest" name="txtC_'+(i+1)+'" id="txtC_'+(i+1)+'" contenteditable="true">'+question.optionC+'</textarea></div><div id="xuangxiangC2_'+(i + 1)+'">'+question.optionC+'</div></td></tr>';
+								questionStr += '<tr><td></td><td width="9%" valign="top"><input type="checkbox"  name="answerD_'
+										+ (i + 1)
+										+ '" id="answerD_'
+										+ (i + 1)
+										+ '"value="D">D.</td><td colspan="2"><div style="display:none" id="xuangxiangD_'+(i + 1)+'"><textarea disabled="disabled" class="textareaTest" name="txtD_'+(i+1)+'" id="txtD_'+(i+1)+'" contenteditable="true">'+question.optionD+'</textarea></div><div id="xuangxiangD2_'+(i + 1)+'">'+question.optionD+'</div></td></tr>';
+								questionStr += '<tr> <td></td><td  height="100%">&nbsp;</td><td height="100%" colspan="3"><input style="display:none"  onMouseOver="this.className=\'inp_L2\';"onMouseOut="this.className=\'inp_L1\'" name="modify" type="button" class="inp_L1" id="btnUpdate_'
+										+ (i + 1)
+										+ '" onClick="updateQuestionInfo('
+										+ (i + 1)
+										+ ','
+										+ question.id
+										+ ')" value="修 改">';
+								
+								questionStr += '<input onMouseOver="this.className=\'inp_L2\';" onMouseOut="this.className=\'inp_L1\'"name="delete" type="button" class="\inp_L1\" id="modify" onClick="deleteManyQuestions('
+										+ question.id
+										+ ')" value="删 除">&nbsp;&nbsp;<a href="#top">TOP</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font class="fontColor">题库编号：'
+										+ question.id + '</font></td></tr>';
+								questionStr += '<tr><td height="10" colspan="5"><br></td></tr>';
+								questionStr += '</table>';
+								questionCount++;
+								
+							});
+			//把试卷信息表中的题的数量更新
+			$("#questionAmount").text(questionCount);
+			//显示侧栏第几题	
+			showtitleInfoStr(questionCount);
+			//给每一题根据答案让复选框自动选上
+			$("#questionInfoTab").html(questionStr);
+			
+			for ( var m = 1; m <= questionCount; m++) {
+				var answer = $.trim($("#answer_" + m).val());
+				var answerArray = answer.split("");
+				for ( var j = 0; j < answerArray.length; j++) {
+					if (answerArray[j] == 'A') {
+						$("#answerA_" + m).attr("checked", true);
+					} else if (answerArray[j] == 'B') {
+						$("#answerB_" + m).attr("checked", true);
+					} else if (answerArray[j] == 'C') {
+						$("#answerC_" + m).attr("checked", true);
+					} else if (answerArray[j] == 'D') {
+						$("#answerD_" + m).attr("checked", true);
+					}
+				}
+			}
+		/* 	$.ajax({
+				url : "",
+				type : "post",
+				datatype : "json",
+				data : {},
+				success:function(){
+					for ( var m = 1; m <= questionCount; m++) {
+					CKEDITOR.replace( eval("txtQuestion_"+m),{ height: '50px', width: '400px',toolbarStartupExpanded:false } );
+					CKEDITOR.replace( eval('txtA_'+m),{ height: '50px', width: '400px',toolbarStartupExpanded:false } );
+					CKEDITOR.replace(eval('txtB_'+m),{ height: '50px', width: '400px',toolbarStartupExpanded:false } );
+					CKEDITOR.replace(eval('txtC_'+m),{ height: '50px', width: '400px',toolbarStartupExpanded:false } );
+					CKEDITOR.replace(eval('txtD_'+m),{ height: '50px', width: '400px',toolbarStartupExpanded:false } );
+					}
+				}
+			}); */
+		} else {
+			alert("修改失败！");
+		}
+	}
+	//初始化编辑器
+	function updatewritingpaperinfo(m){
+		$("#timu_"+m).show();
+		$("#xuangxiangA_"+m).show();
+		$("#xuangxiangB_"+m).show();
+		$("#xuangxiangC_"+m).show();
+		$("#xuangxiangD_"+m).show();
+		
+		$("#timu2_"+m).hide();
+		$("#xuangxiangA2_"+m).hide();
+		$("#xuangxiangB2_"+m).hide();
+		$("#xuangxiangC2_"+m).hide();
+		$("#xuangxiangD2_"+m).hide();
+		$("#btnUpdate_"+m).show();
+		CKEDITOR.replace( eval("txtQuestion_"+m),{ height: '50px', width: '600px' } );
+		CKEDITOR.replace( eval('txtA_'+m),{ height: '50px', width: '600px' } );
+		CKEDITOR.replace(eval('txtB_'+m),{ height: '50px', width: '600px' } );
+		CKEDITOR.replace(eval('txtC_'+m),{ height: '50px', width: '600px' } );
+		CKEDITOR.replace(eval('txtD_'+m),{ height: '50px', width: '600px' } );
+		$("#txtQuestion_"+m).attr("disabled",false);
+		$("#txtA_"+m).attr("disabled",false);
+		$("#txtB_"+m).attr("disabled",false);
+		$("#txtC_"+m).attr("disabled",false);
+		$("#txtD_"+m).attr("disabled",false);
+	}
+	//根据id更新考试题
+	function updateQuestionInfo(index, id) {
+		//alert(id);
+		eval("var txtQuestion = CKEDITOR.instances.txtQuestion_"+index+".getData();");
+		eval("var optionA = CKEDITOR.instances.txtA_"+index+".getData();");
+		eval("var optionB = CKEDITOR.instances.txtB_"+index+".getData();");
+		eval("var optionC = CKEDITOR.instances.txtC_"+index+".getData();");
+		eval("var optionD = CKEDITOR.instances.txtD_"+index+".getData();");
+		/*  var txtQuestion = $.trim($("#txtQuestion_" + index).text());
+		var optionA = $.trim($("#txtA_" + index).text());
+		var optionB = $.trim($("#txtB_" + index).text());
+		var optionC = $.trim($("#txtC_" + index).text());
+		var optionD = $.trim($("#txtD_" + index).text()); */
+		var answer = ""; 
+		if ($("#answerA_" + index).is(":checked")) {
+			answer += $.trim($("#answerA_" + index).val());
+		}
+		if ($("#answerB_" + index).is(":checked")) {
+			answer += $.trim($("#answerB_" + index).val());
+		}
+		if ($("#answerC_" + index).is(":checked")) {
+			answer += $.trim($("#answerC_" + index).val());
+		}
+		if ($("#answerD_" + index).is(":checked")) {
+			answer += $.trim($("#answerD_" + index).val());
+		}
+		if(answer==""){
+			alert("修改失败，题目至少要有个答案！！！！");
+			return;
+		}
+		// alert("answer:"+answer);
+		$.ajax({
+			url : "/Examination2.0/dataarraylist_updateWritingQuestion.action",
+			type : "post",
+			datatype : "json",
+			data : {
+				"writingQuestion.id" : id,
+				"writingQuestion.question" : txtQuestion,
+				"writingQuestion.optionA" : optionA,
+				"writingQuestion.optionB" : optionB,
+				"writingQuestion.optionC" : optionC,
+				"writingQuestion.optionD" : optionD,
+				"writingQuestion.answer" : answer
+			},
+			success : showUpdateWritingQuestion
+		});
+	}
+	//根据id更新考试题显示是否成功
+	function showUpdateWritingQuestion(data) {
+		var info = data;
+		if (info.responseCode == 0) {
+			alert("修改成功！");
+		} else {
+			alert("修改失败！");
+		}
+
+	}
+	//显示侧栏第几题	
+	function showtitleInfoStr(countOfQuestion) {
+		var titleInfoStr = "";
+		for ( var i = 1; i <= countOfQuestion; i++) {
+			titleInfoStr += '&nbsp;&nbsp;&nbsp;&nbsp;<a href="#Food'+i+'"> 第 '
+					+ i + ' 题 </a><span id="span'+i+'"></span><br>';
+		}
+		$("#divQuestionCounts").html(titleInfoStr);
+	}
+
+	//更新试卷信息
+	$(function() {
+		$("#updateWritingPaperInfo")
+				.bind(
+						'click',
+						function() {
+							var id = $.trim($("#paperId").val());
+							var paperName = $.trim($("#paperName").val());
+							var examineeClass = $.trim($(
+									'#examineeClassStr option:selected').val());
+							var paperPwd = $.trim($("#paperPwd").val());
+							var examSubject = $.trim($("#examSubject").text());
+							//var examDate = $.trim($("#examDate").val());
+							var examDate=$('#examDate').datebox('getValue'); //测评日期
+							var countOfQuestion = $.trim($("#questionAmount")
+									.text());
+							var timesConsume = $.trim($("#timesConsume").val());
+							var operator = $.trim($("#operator").val());
+							var remark = $.trim($("#remark").val());
+							var paperStatus = $.trim($(
+									'#paperStatus option:selected').val());
+							var writingPaperJsonStr = '{"id":"' + id
+									+ '","paperName":"' + paperName
+									+ '","examineeClass":"' + examineeClass
+									+ '","paperPwd":"' + paperPwd
+									+ '","examSubject":"' + examSubject
+									+ '","examDate":"' + examDate
+									+ '","countOfQuestion":"' + countOfQuestion
+									+ '","timesConsume":"' + timesConsume
+									+ '","operator":"' + operator
+									+ '","remark":"' + remark
+									+ '","paperStatus":"' + paperStatus + '"}'
+							$
+									.ajax({
+										url : "/Examination2.0/dataarraylist_updateWritingPaperPagesDetail.action",
+										type : "post",
+										datatype : "json",
+										data : {
+											"writingPaperJsonStr" : writingPaperJsonStr,
+											"wpid" : id
+										},
+										success : showPageInfoDetail
+									});
+						});
+		function showPageInfoDetail(data) {
+			var info =  data ;
+			if (info.responseCode == 0) {
+				alert("修改成功！");
+			} else {
+				alert("修改失败！");
+			}
+
+		}
+	});
+	
+	//添加考试试题信息
+	function addQuestion(index,id){
+		$('#addwrite').css('display','block');
+		var  obj=$(window.parent.document).find('#edit').find('iframe');
+		obj.replaceWith($('#addwrite'));
+		//alert(index+"----"+id);		
+	}
+	
+	//直接删除哪一题或根据选择的多个id来删除题
+	function deleteManyQuestions(qid) {
+		var id = $.trim($("#paperId").val());
+		var countOfQuestion = $.trim($("#questionAmount").text());
+		var questionIdArr = questionId.substring(1, questionId.length - 1)
+				.split(',')
+		if (qid != -1) {
+			for ( var m = 0; m < countOfQuestion; m++) {
+				if (questionIdArr[m] == qid) {
+					questionIdArr.splice(m, 1);
+				}
+			}
+		} else {
+			for ( var i = 1; i <= countOfQuestion; i++) {
+				if ($("#titleCheck_" + i).is(":checked")) {
+					var titleCheckId = $.trim($("#titleCheck_" + i).val());
+					for ( var j = 0; j < countOfQuestion; j++) {
+						if (questionIdArr[j] == titleCheckId) {
+							//alert(questionIdArr[j]);
+							questionIdArr.splice(j, 1);
+						}
+					}
+				}
+			}
+
+		}
+		//用来重新显示删除后的试卷
+		$.ajax({ 
+					url : "/Examination2.0/writingPaper_updateWritingPaperQuestionId.action",
+					type : "post",
+					datatype : "json",
+					data : {
+						"writingPaper.questionId" : questionIdArr + ',',
+						"writingPaper.id" : id
+					},
+					success : showDeleteManyQuestionsInfo
+				});
+	}
+	//根据id显示删除后的试卷
+	function showDeleteManyQuestionsInfo(data) {
+		var info = data;
+		if (info.responseCode == 0) {
+			//alert("wpid:"+info.obj);
+			$
+					.ajax({
+						url : "/Examination2.0/dataarraylist_showWritingPaperPagesDetail.action",
+						type : "post",
+						datatype : "json",
+						data : {
+							"wpid" : info.obj
+						},
+						success : showPageInfoDetail
+					});
+		} else {
+			alert("删除失败！");
+		}
+	}
+	//导出txt文本
+	function exportText() {
+		var paperId = $.trim($("#paperId").val());
+		var flag = confirm("如果想将试卷的正确答案放在最后请点“确定”，如果想将正确答案跟在每道题的后面请点“取消”");
+		//放在最后
+		location.href = "/Examination2.0/exportWord_exportTxt.action?paperId="
+				+ paperId + "&answerAtLast=" + flag;
+	}
+	
+	$('#examDate').datebox({
+		onSelect: function(date){
+			var dateTime=date.getFullYear()+"-"+(date.getMonth()+1<10?'0'+(date.getMonth()+1):date.getMonth()+1)+"-"+(date.getDate()<10?'0'+date.getDate():date.getDate());
+			$('#examDate').datebox('setValue',dateTime);
+			
+		}
+		});
+</script>
+
+<body>
+	<form name="ShowWritingPageInfo">
+		<table width="100%" border="0">
+			<tr>
+				<td>
+					 <br> 试卷题目信息: <br></td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<table width="100%" cellpadding="0" bordercolor="#CCCCCC"
+						class="qstable">
+						<tr>
+							<td width="15%" valign="top" class="qutd">
+								<table width="100%" border="0" cellspacing="0">
+									<tr>
+										<td height="0" id="tdTop"></td>
+									</tr>
+									<tr>
+										<td id="tdTop"></td>
+									</tr>
+									<tr>
+										<td height="100%">
+											<div id="divQuestionCounts" ></div></td>
+									</tr>
+									<tr>
+										<td height="100%">&nbsp;</td>
+									</tr>
+								</table></td>
+							<td width="100%">
+								<div id="questionInfoTab" ></div></td>
+						</tr>
+					</table></td>
+			</tr>
+			<tr>
+						<!-- <a href="/Examination2.0/projects/xls/${array[0]}.xls"
+								onClick="exportXls()">导出Excel文件</a> &nbsp;&nbsp;
+							<a href="#" onclick="exportText()">纯文本文件</a> -->
+						 
+				<td align="right" height="50"><input
+					onMouseOver="this.className='inp_L2';" ${currentStatus==
+					'未考'?'':'disabled'} 
+														onMouseOut="this.className='inp_L1'"
+					name="deleteManyQues" type="button" class="inp_L1" id="modify"
+					onClick="deleteManyQuestions(-1)" value="删除题目"></td>
+			</tr>
+		</table>
+	</form>
+	
+	<iframe id="addwrite" src='../backoperation/addwritingpaper.html'  frameborder=0 style='border:0;width:100%;height:99.5%;display:none;'></iframe>
+			
+</body>

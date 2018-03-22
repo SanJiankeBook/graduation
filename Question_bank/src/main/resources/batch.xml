@@ -1,0 +1,148 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:batch="http://www.springframework.org/schema/batch" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/batch
+        http://www.springframework.org/schema/batch/spring-batch-3.0.xsd
+        http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    ">
+
+
+	<bean id="jobLauncher"
+		class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
+		<property name="jobRepository" ref="jobRepository" />
+	</bean>
+
+	<bean id="jobRepository"
+		class="org.springframework.batch.core.repository.support.MapJobRepositoryFactoryBean">
+		<property name="validateTransactionState" value="false" />
+
+	</bean>
+	
+	
+	
+	
+	
+	<bean id="itemProcessor" class="com.yc.batch.MessagesItemProcessor"
+		scope="step">
+	</bean>
+	<bean id="teacheritemProcessor" class="com.yc.batch.TeacherMessagesItemProcessor"
+		scope="step">
+	</bean>
+	<bean id="teacherInterviewProcessor" class="com.yc.batch.TeacherInterviewProcessor"
+		scope="step">
+	</bean>
+
+
+	<batch:job id="writerclassJob">
+		<batch:step id="stepwriter1">
+			<batch:tasklet>
+				<batch:chunk reader="jdbcItemReader" writer="messagesItemWriter"
+					processor="itemProcessor" commit-interval="10">
+				</batch:chunk>
+			</batch:tasklet>
+		</batch:step>
+	</batch:job>
+	
+	<!-- 访谈记录 -->
+	<batch:job id="writerclassJobInterview">
+		<batch:step id="stepwriter1Interview">
+			<batch:tasklet>
+				<batch:chunk reader="jdbcItemReaderInterview" writer="messagesItemWriterInterview"
+					processor="itemProcessorInterview" commit-interval="100">
+				</batch:chunk>
+			</batch:tasklet>
+		</batch:step>
+	</batch:job>
+
+	<batch:job id="writerteacherJob">
+		<batch:step id="stepwriter">
+			<batch:tasklet>
+				<batch:chunk reader="jdbcItemReader1" writer="teacherMessagesItemWriter"
+					processor="teacherMessagesItemProcessor" commit-interval="10">
+				</batch:chunk>
+			</batch:tasklet>
+		</batch:step>
+	</batch:job>
+	
+<!-- 	写入教师访谈 -->
+		<batch:job id="writerteacherInterview">
+				<batch:step id="teacherInterview">
+					<batch:tasklet>
+						<batch:chunk reader="jdbcItemReaderTeacherInterview" writer="teacherInterviewItemWriter"
+							processor="teacherInterviewProcessor" commit-interval="10">
+						</batch:chunk>
+					</batch:tasklet>
+				</batch:step>
+			</batch:job>
+
+
+
+	<!-- <batch:job id="readerJob"> <batch:step id="stepreader"> <batch:tasklet> 
+		<batch:chunk reader="cvsFileItemReader" writer="messagesItemWriter" processor="readeritemProcessor" 
+		commit-interval="10"> </batch:chunk> </batch:tasklet> </batch:step> </batch:job> -->
+
+	<bean id="jdbcItemReader"
+		class="org.springframework.batch.item.database.JdbcCursorItemReader"
+		scope="step">
+		<property name="dataSource" ref="dataSource" />
+		<property name="sql"
+			value="select  distinct examineeclassid from work  where checkdate &gt;'${detail_startime}' and checkdate &lt; '${detail_endtime}' " />
+		<property name="rowMapper" ref="ledgerRowMapper">
+		</property>
+	</bean>
+	
+	<!-- 访谈记录 -->
+	<bean id="jdbcItemReaderInterview"
+		class="org.springframework.batch.item.database.JdbcCursorItemReader"
+		scope="step">
+		<property name="dataSource" ref="dataSource" />
+		<property name="sql"
+					value="select className,count(*) as total from examininterviewrecord where pdate &gt;'${detail_startime}' and pdate  &lt; '${detail_endtime}' group by classname" />
+		<property name="rowMapper" ref="ledgerRowMapperInterview">
+		</property>
+	</bean>
+
+	<bean id="jdbcItemReader1"
+		class="org.springframework.batch.item.database.JdbcCursorItemReader"
+		scope="step">
+		<property name="dataSource" ref="dataSource" />
+		<property name="sql"
+			value="select distinct checkcreator   from work  where checkdate &gt;'${detail_startime}' and checkdate &lt; '${detail_endtime}' " />
+		<property name="rowMapper" ref="teacherLedgerRowMapper">
+		</property>
+	</bean>
+	
+	<!--  读取教师访谈的数据-->
+	<bean id="jdbcItemReaderTeacherInterview"
+		class="org.springframework.batch.item.database.JdbcCursorItemReader"
+		scope="step">
+		<property name="dataSource" ref="dataSource" />
+		<property name="sql"
+			value="select distinct teacherName ,count(teacherName) as num from examininterviewrecord   where pdate &gt;'${detail_startime}' and pdate &lt; '${detail_endtime}'  GROUP BY teacherName " />
+		<property name="rowMapper" ref="teacherInterviewMapper">
+		</property>
+	</bean>
+
+
+
+
+	<!-- <bean id="cvsFileItemReader" class="org.springframework.batch.item.file.FlatFileItemReader"> 
+		<property name="resource" value="classpath:file/test.csv" /> <property name="lineMapper"> 
+		<bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper"> 
+		<property name="lineTokenizer"> <bean class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer"> 
+		<property name="names" value="examineeclassid,className,workcount,classcount,checkcount,completionrate" 
+		/> </bean> </property> <property name="fieldSetMapper"> <bean class="com.yc.batch.UserMapper" 
+		/> if no data type conversion, use BeanWrapperFieldSetMapper to map by name 
+		<bean class="org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper"> 
+		<property name="prototypeBeanName" value="report" /> </bean> </property> 
+		</bean> </property> </bean> -->
+
+	<!-- <bean id="csvItemWriter" class="org.springframework.batch.item.file.FlatFileItemWriter" 
+		scope="step"> <property name="resource" value="classpath:file/test.csv" /> 
+		<property name="lineAggregator"> <bean class="org.springframework.batch.item.file.transform.DelimitedLineAggregator"> 
+		<property name="delimiter" value="," /> <property name="fieldExtractor"> 
+		<bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor"> 
+		<property name="names" value="examineeclassid,className,workcount,classcount,checkcount,completionrate" 
+		/> </bean> </property> </bean> </property> </bean> -->
+
+</beans>

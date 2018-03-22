@@ -1,0 +1,219 @@
+<link rel="stylesheet" href="../../css/extreme.css" type="text/css"></link>
+<link href="../../css/szindex.css" type=text/css
+	rel=stylesheet>
+<link id="easyuiTheme" rel="stylesheet" type="text/css" href="../../jslib/themes/default/easyui.css">
+<script type="text/javascript" src="../../js/dateChoose.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+	#firstPage,#upPage,#downPage,#lastPage{
+		background-image: url(../../images/bg_x.jpg);
+		background-repeat: no-repeat;
+		BORDER-TOP-WIDTH: 0px;
+		BACKGROUND-POSITION: -4px -4px;
+		BORDER-LEFT-WIDTH: 0px;
+		BORDER-BOTTOM-WIDTH: 0px;
+		COLOR: #464646;
+		WIDTH: 68px;
+		LINE-HEIGHT: 23px;
+		HEIGHT: 23px;
+		BORDER-RIGHT-WIDTH: 0px
+	}
+	#firstPage:hover,#upPage:hover,#downPage:hover,#lastPage:hover{
+		background-image: url(../../images/bg_x.jpg);
+		background-repeat: no-repeat;
+		BORDER-TOP-WIDTH: 0px;
+		BACKGROUND-POSITION: -4px -30px;
+		BORDER-LEFT-WIDTH: 0px;
+		BORDER-BOTTOM-WIDTH: 0px;
+		COLOR: #464646;
+		WIDTH: 68px;
+		LINE-HEIGHT: 23px;
+		HEIGHT: 23px;
+		BORDER-RIGHT-WIDTH: 0px
+
+	}
+.find_table_slelct{
+border: 1px solid #F8D880 ;
+border-radius:5px;
+width: 100%;
+margin-top: 10px;
+background-color: #F3F3F3;
+padding-bottom: 10px;
+}
+	
+</style> 
+<!-- <script src="http://lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.js"></script> -->
+<script type="text/javascript">
+!window.jQuery && document.write('<script src=../../js/jquery-1.9.1.js><\/script>');
+</script>
+<script type="text/javascript" src="../../js/creatXML.js"></script>
+<script type="text/javascript" src="../../js/jsmathN.js"></script>
+<script type="text/javascript" src="../../js/jscharts.js"></script>
+<script type="text/javascript" src="../../js/listwritingpaperN2.js"></script>
+<script type="text/javascript" src="../../jslib/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../jslib/jeasyui.common.js"></script>
+<script type="text/javascript" src="../../jslib/locale/easyui-lang-zh_CN.js"></script>
+<body>
+	<form name="frmList">
+		<table width="90%" border="0" cellpadding="0" cellspacing="0" style="margin: 0 auto;">
+			<tr>
+				<td height="10" align="center"></td>
+			<tr>
+				<td>
+					<table width="100%" border="0" align="center" cellspacing="0">
+						<tr>
+							<td><div class="find_table_slelct">
+								<table width="100%" border="0" cellspacing="0">
+									<tr>
+										<td width="8%" height="46">
+											<div align="left">
+												<label class="fontColor"> 学期编号: </label>
+											</div></td>
+										<td width="20%"><input name="semester" type="radio"
+											value="S1" checked="checked"
+											onClick="createSelectOption('S1')"> S1
+											&nbsp;&nbsp; <input type="radio"
+											name="semester" value="S2" onClick="createSelectOption('S2')">
+											S2 &nbsp;&nbsp; <input type="radio"
+											name="semester" value="S3" onClick="createSelectOption('S3')">
+											S3</td>
+											<td width="8%" >
+											<div align="right" class="fontColor">班级名称:</div></td>
+											<td  style="width:100px;">
+												<select  id="examClassName" name="examClassName">
+													<option>--请选择--</option>
+												</select></td>
+											<!-- td width="20%"><input name="search" id="search"
+											type="button" class="inp_L1" value="搜索"
+											onMouseOver="this.className='inp_L2'"
+											onMouseOut="this.className='inp_L1'" /></td> -->
+										<td width="100px" class="fontColor"><span id="strPrompt"> </span></td>
+									</tr>
+									<!-- <tr>
+										
+										<td width="10%">
+												<span class="fontColor">显示行数:</span>
+											</td>
+										<td width="20%" align="left"><input name="displayRows" type="text"
+											class="text4" id="displayRows" onKeyUp="inputIsNaN(this)"
+											value="" size="20" maxlength="5"></td>
+										
+									</tr>
+									<tr>
+										<td height="16">&nbsp;</td>
+										<td colspan="2"><font color="red"> <span
+												id="strPrompt"></span> </font></td>
+									</tr> -->
+								</table></div><hr/ width="100%"></td>
+								
+						</tr>
+						<tr>
+							
+							<td>
+								<table width="100%" border="0"  style="margin-top: 20px" align="center" cellspacing="0"
+									id="tab_showWritingPaper">
+
+									<tr>
+									</tr>
+									<tr>
+										<td>
+											<table width="100%" border="1" align="center" cellpadding="1"
+												bordercolor="#FFFFFF" cellspacing="1" id="tbPapershowInfo">
+
+											</table></td>
+									</tr>
+								</table>
+						<tr>
+							<td>
+								<table width="680" height="40" border="0" cellpadding="0"
+									cellspacing="0">
+									<tr height="40">
+										<td>
+											<table width="680" border="0" cellspacing="0" cellpadding="0">
+												<tr>
+													<td><br> 第 <span id="tabCurrentPage"></span> 页
+														&nbsp; 共<span id="tabTotalPage"></span> 页 &nbsp;
+														<input id="firstPage" type="button"  value="首页"
+														onClick="skipToPageNum('first')"></input> &nbsp; <input
+														id="upPage" type="button"  value="上一页" onClick="skipToPageNum('up')"></input>
+														&nbsp; <input id="downPage" type="button"  value="下一页"
+														onClick="skipToPageNum('down')"></input> &nbsp;<input value="末页"
+														type="button" id="lastPage" onClick="skipToPageNum('last')"></input>
+														&nbsp;转到第:<input name="pageNum" type="text"
+														class="text4" id="pageNume" onkeyup="inputIsNaN(this)"
+														size="5">页<input type="hidden"
+														value="${sumPage}" name="sumPage" /></td>
+													<td><br> <input name="go" type="button"
+														class="inp_L1" onMouseOver="this.className='inp_L2'"
+														onMouseOut="this.className='inp_L1'" id="searchGo"
+														value="GO" /></td>
+												</tr>
+												<tr>
+													<td>&nbsp;</td>
+												</tr>
+												<tr align="center">
+													<td><font color="red"> <span id="gradePrompt"></span>
+													</font></td>
+												</tr>
+											</table></td>
+									</tr>
+									<tr>
+										<td align="center"><font color="red"> <span
+												id="gradePaperPrompt">&nbsp;</span> </font></td>
+									</tr>
+								</table></td>
+						</tr>
+					</table></td>
+			</tr>
+		</table>
+	</form>
+	<!-- <div id="datatest_show_carinfo_detail" class="easyui-window"
+		data-options="modal:true,closed:true"
+		style="width: 1000px; height: 500px;display: none;" >
+		<iframe id="showPaperInfo" src="" width="100%" height="100%" title="查看试卷详情"></iframe>
+<div> -->
+<!-- 指派班级 -->
+	<div style="display: none;" id="exam_pointAnotherClass">
+		<fieldset style="border: 2px solid #95b8e7; boreder-radius: 5px;">
+			<legend>指派班级</legend>
+			<center>
+				<table id="exam_anotherClass_table"
+					style="float: left; display: none;">
+					<tr>
+						<td>
+						<td align="center" width="10%" class="fontColor">学期:</td>
+						<td width="25%"><input type="radio" checked="checked"
+							name="semseter2" value="S1" id="semseter1"
+							onClick="createSelectOption2('S1')" />S1 &nbsp;&nbsp;<input
+							type="radio" name="semseter2" value="S2" id="semseter2"
+							onClick="createSelectOption2('S2')" />S2 &nbsp;&nbsp;<input
+							type="radio" name="semseter2" value="S3" id="semseter3"
+							onClick="createSelectOption2('S3')" />S3</td>
+						<td align="center" width="10%" class="fontColor">班级:</td>
+						<td width="15%"><select class="text4" name="examClassName2"
+							id="exam_show_anotherClass_class""></td>
+								<!-- onChange="changeClassName(this.value)" -->
+						
+						<td></select> <span class="prompt"> * </span></td>
+						<td>
+						<div>
+							考试日期：<input type="text" id="checkDate" name="checkDate"
+								readonly="readonly" onclick="fPopCalendar(event,this,this)"
+								onfocus="this.select()" />
+							
+						</div>
+						</td>
+						<td>
+							<div style="margin-left: 80px; margin-top: 30px;">
+								<input type="button" value="确认指派" onclick="exam_anotherClass();"
+									size="15" />
+							</div>
+						</td>
+						
+					</tr>
+
+				</table>
+			</center>
+		</fieldset>
+	</div>
+</body>

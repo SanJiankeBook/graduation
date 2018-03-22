@@ -1,0 +1,60 @@
+    <META http-equiv=Content-Type content="text/html; charset=utf-8">
+    <link href="../../css/szindex.css" type=text/css rel=stylesheet>
+   <link id="easyuiTheme" rel="stylesheet" type="text/css" href="../../jslib/themes/default/easyui.css">
+   
+   <!--  <script src="http://lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.js"></script> -->
+<script type="text/javascript">
+!window.jQuery && document.write('<script src=../../js/jquery-1.9.1.js><\/script>');
+</script>
+    <script type="text/javascript" src="../../js/showstudentanswerN.js"></script>
+   <script type="text/javascript" src="../../jslib/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../jslib/jeasyui.common.js"></script>
+<script type="text/javascript" src="../../jslib/locale/easyui-lang-zh_CN.js"></script>
+  
+  <body>
+  <table width="680" border="0" cellpadding="0" cellspacing="0">
+  <tr>
+    <td height="120" align="center">
+      </td>
+  </tr>
+  <tr>
+    <td>
+      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td width="12%" height="34" class="fontColor" align="right">班级名称:&nbsp;</td>
+          <td width="25%">
+            <select class="text4" name="examclassid" id="examclassid" onChange="showStuNameByClassName(this.value)">
+             	 <option selected>--请选择--</option>
+            </select>
+            <span class="prompt" id="examclassMsg">*
+            </span></td>
+          <td width="12%" class="fontColor" align="right">考生姓名:</td>
+          <td width="36%" align="left"><span class="prompt">&nbsp;
+            <select name="examineeName" id="examineeName" class="text4">
+            </select>
+            </span><span class="prompt" id="examineeNameMsg">*</span>
+          </td>
+          <td width="15%" valign="middle">
+            <input name="search" type="button" class="inp_L1" id="search" onMouseOver="this.className='inp_L2'" onMouseOut="this.className='inp_L1'" value="查 询" onClick="findAnswerInfo()"/>
+       	  </td>
+        </tr>
+      </table>
+      <br>
+      <br>
+       <table width="680" border="1" align="center" cellpadding="1" bordercolor="#FFFFFF" cellspacing="0">
+        <tr>
+          <th width="12%">试卷编号</th>
+          <th width="20%">名称</th>
+          <th width="10%">班级</th>
+          <th width="15%">考生姓名</th>
+          <th width="20%">考试日期</th>
+          <th width="23%">操作</th>
+        </tr>
+        </table>
+      
+      <div id="paperanswerinfos">
+      </div>
+    </td>
+  </tr>
+</table>
+  </body>

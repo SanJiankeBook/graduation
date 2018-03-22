@@ -1,0 +1,183 @@
+<link rel="stylesheet" href="../../css/szindex.css" type="text/css"></link>
+<link id="easyuiTheme" rel="stylesheet" type="text/css" href="../../jslib/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="../../jslib/themes/icon.css">
+
+<!-- <script type="text/javascript" src="http://lib.sinaapp.com/js/jquery/2.0/jquery.min.js"></script> -->
+<script type="text/javascript">
+!window.jQuery && document.write('<script src=../../jslib/jquery.min.js><\/script>');
+</script>
+
+<script type="text/javascript" src="../../jslib/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../jslib/jeasyui.common.js"></script>
+<script type="text/javascript" src="../../jslib/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript">
+	$(function() {
+		//findAllWritingPaper(1);
+		$('#back_exam_datagrid').datagrid({
+			url : "/Examination2.0/dataarray_findAllWritingPaper.action",
+			fit : true,
+			pagination : true,
+			pageList : [ 5, 10, 15, 20, 30, 50, 100 ], //每页多少条
+			pageSize : 50,
+			sortName : 'id', //排序方式
+			sortOrder : 'asc', //排序规则
+			rownumbers : true, //排序ID
+			columns:[[   
+       			 {field:'id',title:'编号',width:100,checkbox :true}, 
+       			 {field:'paperName',title:'试卷名称',width:150},
+       			 {field:'paperPwd',title:'密码',width:200},
+       			 {field:'examineeClass',title:'班级',width:50},   
+        		 {field:'examDate',title:'考试日期',width:500},  
+    		]],
+    		toolbar: [{
+					text:'查看试卷',
+					iconCls: 'icon-add',
+					handler: function(){
+						find();
+					}
+				},'-',{
+					text:'开考',
+					iconCls: 'icon-edit',
+					handler: function(){
+						update();
+					}
+			}]   
+		});
+	});
+	
+	
+	
+	
+	
+	//查看试卷
+	function find(){
+		
+		var rows=$("#back_exam_datagrid").datagrid('getChecked');
+		if(rows.length<=0){
+					$.messager.show({
+						title:'错误',
+						msg:'请至少选定一行',
+						timeout:3000,
+						showType:'slide'
+					});
+					return;
+		}
+		var wpid=rows[0].id;
+		if (window.localStorage) {
+ 	   		 localStorage.setItem("wpid", wpid);
+ 		} else {
+ 	    	 Cookie.write("wpid", wpid);	
+ 		}
+		
+ 		/* $('<div id="edit" width="700px"/>').dialog({  
+				title: '编辑',   
+				width: 700,   
+				height: 460,
+				/* style:{position:'absolute'}, 
+				top:40,   
+				fit:true,
+				closed: false,   
+				closable:true,
+				content: '<iframe src=../grade/showwritingpaper.html   id=endDateLayer name=endDateLayer frameborder=0 style=border:0;width:100%;height:99.5%;></iframe>',
+				modal: true ,
+				onClose:function(){
+						$(this).dialog('destroy');
+				}
+    	}); */
+ 		var content = '<iframe src="/Examination2.0/back/grade/showwritingpaper.html" width="800px" height="95%" frameborder="0" scrolling="yes"></iframe>';  
+		    var boarddiv = '<div id="msgwindow" title="试卷详情显示" width="1000px" height="100%"></div>'//style="overflow:hidden;"可以去掉滚动条  
+		    $(document.body).append(boarddiv);  
+		    var win = $('#msgwindow').dialog({  
+		        content: content,  
+		        width: "100%",  
+		        height: "100%",  
+		        modal: "true",  
+		        title: "试卷详情显示",  
+		        onClose: function () {  
+		            $(this).dialog('destroy');//后面可以关闭后的事件  
+		        }  
+		    });  
+		    win.dialog('open'); 
+	}
+	
+	function update(){
+		var rows=$("#back_exam_datagrid").datagrid('getChecked');
+		if(rows.length<=0){
+					$.messager.show({
+						title:'错误',
+						msg:'请至少选定一行',
+						timeout:3000,
+						showType:'slide'
+					});
+					return;
+		}
+		var wpid=rows[0].id;
+		$.ajax({
+			url : "/Examination2.0/dataarray_updatePaperStatus.action",
+			type : "post",
+			data : {
+				"wpid" : wpid
+			},
+			datatype : "json",
+			success : function(data) {
+				var Object = data;
+				if (Object.responseCode == 0) {
+					$.messager.show({
+							title:'提示',
+							msg:'开考成功',
+							timeout:3000,
+							showType:'slide'
+							});
+							$("#back_exam_datagrid").datagrid('load',{});
+							$("#back_exam_datagrid").datagrid('clearSelections');
+					
+				}else{
+					$.messager.show({
+							title:'提示',
+							msg:'激活失败',
+							timeout:3000,
+							showType:'slide'
+							});
+							
+				}
+			}
+
+		});
+	}
+	
+	function addTab(title,iconCls,closable,href,content) {
+		var tab = $("#back_mainTab");
+		if(href==null  ||  href==""){
+			//判断这个obj中的title是否已经在tab中存在
+			if (tab.tabs('exists', title)) {
+				tab.tabs('select', title);
+			} else {
+				tab.tabs('add', {
+					title : title,
+					iconCls : iconCls,
+					closable : closable,
+					content:content,
+				});
+			}
+		}else if(content==null  ||  content==""){
+			if (tab.tabs('exists', title)) {
+				tab.tabs('select', title);
+			} else {
+				tab.tabs('add', {
+					title : title,
+					iconCls : iconCls,
+					closable : closable,
+					href:href
+				});
+			}
+		}
+	}
+</script>
+<div id="listwritingquestion_layout" data-options="fit:true" class="easyui-layout" style="width:950px;height:600px;">
+	<div data-options="region:'center',title:'考试安排'" style="padding-bottom:40px;background:#eee;">
+		<table id="back_exam_datagrid">
+					
+		</table>
+	</div>
+</div>
+

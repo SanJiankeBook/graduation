@@ -1,0 +1,279 @@
+
+<META http-equiv=Content-Type content="text/html; charset=utf-8">
+<link href="../../css/szindex.css" type=text/css rel=stylesheet>
+<script type="text/javascript" src="../../js/dateChoose.js"></script>
+
+<link id="easyuiTheme" rel="stylesheet" type="text/css"
+	href="../../jslib/themes/default/easyui.css">
+
+<!-- 	<script src="http://lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.js"></script> -->
+<script type="text/javascript">
+	!window.jQuery
+			&& document
+					.write('<script src=../../js/jquery-1.9.1.js><\/script>');
+</script>
+
+<script type="text/javascript" src="../../js/pointtotalN.js"></script>
+<script type="text/javascript" src="../../jslib/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../jslib/jeasyui.common.js"></script>
+<script type="text/javascript"
+	src="../../jslib/locale/easyui-lang-zh_CN.js"></script>
+<style type="text/css">
+.find_table_slelct {
+	border: 1px solid #F8D880;
+	border-radius: 25px;
+	width: 100%;
+	margin-top: 10px;
+	background-color: #F3F3F3;
+	padding-bottom: 10px;
+}
+
+#div1 {
+	width: 70%;
+	height: 100%;
+	background: #ccc;
+	position: absolute;
+	z-index: 40;
+	top: 0px;
+	left: 0px;
+	overflow: hidden;
+	opacity: 0.8;
+	display: none;
+}
+
+#div2 {
+	text-align: center;
+	margin: 0 auto;
+	position: absolute;
+	z-index: 50;
+	width: 40%;
+	height: 100%;
+	top: 0px;
+	left: 27%;
+	display: none;
+	background-color: #fffffff;
+}
+</style>
+<body>
+
+	<div
+		style="background-color: #F3F3F3; text-align: center; margin-left: 15%; margin-top: 15px; width: 70%;; border: 1; border-radius: 15px">
+		<table width="100%" border="0" cellspacing="0" cellpadding="0">
+			<tr height="50">
+				<td align="center" width="10%" class="fontColor">学期:</td>
+				<td width="25%"><input type="radio" checked="checked"
+					name="semseter" value="S1" id="semseter1"
+					onClick="createSelectOption('S1')" />S1 &nbsp;&nbsp;<input
+					type="radio" name="semseter" value="S2" id="semseter2"
+					onClick="createSelectOption('S2')" />S2 &nbsp;&nbsp;<input
+					type="radio" name="semseter" value="S3" id="semseter3"
+					onClick="createSelectOption('S3')" />S3</td>
+				<td align="center" width="10%" class="fontColor">班级:</td>
+				<td width="15%"><select class="text4" name="examClassName"
+					id="examClassName" onchange="findPointPaper()">
+						<!-- onChange="changeClassName(this.value)" -->
+				</select> <span class="prompt"> * </span></td>
+				<!-- 				<td width="10%" class="fontColor" align="right">课程:</td>
+				<td colspan="2" width="30%" align="left"><span class="prompt">&nbsp;
+						<select name="subjectName" id="subjectName" class="text4">
+							<option>--请选择--</option>
+					</select>
+				</span><span class="prompt" id="subjectNameMsg">*</span></td>
+ -->
+				<!-- <td valign="middle" colspan="3" align="center"><input
+					name="search" type="button" class="inp_L1" id="search"
+					onMouseOver="this.className='inp_L2'"
+					onMouseOut="this.className='inp_L1'" value="查 询"
+					onClick="findPointPaper()" /></td> -->
+			</tr>
+		</table>
+	</div>
+	<br />
+	<br />
+	<hr style="color: blue; size: 2px;" />
+	<div width="100%" style="margin-top: 20px">
+		<div style="width: 45%; float: left;">
+			<table width="100%" border="1" align="center" cellpadding="1"
+				bordercolor="#FFFFFF" cellspacing="0">
+				<tr>
+					<th width="8%">编号</th>
+					<th width="25%">名称</th>
+					<!-- <th width="15%">测评班级</th> -->
+					<th width="17%">测评课程</th>
+					<th width="15%">考试日期</th>
+					<th width="25%">操作</th>
+				</tr>
+			</table>
+			<div id="paperanswerinfo"></div>
+		</div>
+
+
+		<div style="width: 50%; float: right; margin-right: 2%; display: none"
+			id="showpointtotal">
+			<center>
+				<table width="100%" border="0" cellpadding="0" cellspacing="0">
+					<tr>
+						<td height="43" colspan="3">
+							<div
+								style="background-color: #E8F2FE; width: 100%; border: 1; border-bottom: 0; border-radius: 15px; border-bottom-left-radius: 0px; border-bottom-right-radius: 0px">
+								<table width="100%" border="0" cellspacing="0">
+									<tr height="43">
+										<td width="18%" class="titlestyle">测评班级：<span
+											id="className"></span></td>
+										<td width="25%" class="titlestyle">测评日期：<span id="pdate"></span></td>
+										<td width="17%" class="titlestyle">参评人数：<span
+											id="pstatus"></span>&nbsp;人
+										</td>
+										<td width="40%" class="titlestyle">科目名称：<span
+											id="subjectName"></span></td>
+									</tr>
+									<tr height="43">
+										<td class="titlestyle" colspan="2">试卷名称：<span id="pname"></span></td>
+										<td colspan="2" class="titlestyle">描述： <span
+											id="descript"></span>
+										</td>
+									</tr>
+									<tr>
+
+									</tr>
+								</table>
+							</div>
+						</td>
+					</tr>
+				</table>
+				<hr />
+				<table width="100%" border="1" cellpadding="1" bordercolor="#FFFFFF"
+					cellspacing="1">
+					<tr>
+						<th bordercolor="#7EA6DC" width="10%">编号</th>
+						<th bordercolor="#7EA6DC" width="70%">知识点</th>
+						<th bordercolor="#7EA6DC" width="10%">总评分</th>
+						<th bordercolor="#7EA6DC" width="10%">平均分</th>
+					</tr>
+				</table>
+				<div id="showpointInfo">
+					<table width="100%" border="1" cellpadding="1"
+						bordercolor="#FFFFFF" cellspacing="1" id='pointInfoMsg'>
+					</table>
+				</div>
+				<br /> <br /> <br />
+			</center>
+		</div>
+	</div>
+	<br />
+	<br />
+	<br />
+	<div id="split"></div>
+	<!-- 用来调整下方div的高度的 -->
+
+	<div id="studentInfo"
+		style="width: 100%; margin: 0 auto; display: none;">
+		<hr />
+		<center>
+			<div class="find_table_slelct" style="width: 90%">
+				<table width="100%" border="0" cellspacing="0">
+					<tr align="center">
+						<td colspan="5"><h3>详情显示</h3></td>
+					</tr>
+					<tr height="43">
+						<td width="20%" class="titlestyle">测评班级：<span id="className2"></span></td>
+						<td width="20%" class="titlestyle">科目名称：<span id="subName2"></span></td>
+						<td width="20%" class="titlestyle">测评日期：<span id="pdate2"></span></td>
+						<td class="titlestyle">题目：<span id="pname2"></span></td>
+						<td class="titlestyle">描述： <span id="descript2"></td>
+					</tr>
+					<tr>
+						<td colspan="5" align="center" class="titlestyle"
+							style="color: red">说明：完全没掌握：1分
+							&nbsp;&nbsp;&nbsp;&nbsp;掌握少部分：2分 &nbsp;&nbsp;&nbsp;&nbsp;基本已掌握
+							：3分&nbsp;&nbsp;&nbsp;&nbsp;掌握大部分
+							：4分&nbsp;&nbsp;&nbsp;&nbsp;完全没问题：5分</td>
+					</tr>
+				</table>
+			</div>
+			<div id="showpointInfoAll"></div>
+			<!-- <table width="100%" border="1" cellpadding="1" bordercolor="#FFFFFF"
+				cellspacing="1">
+				<tr>
+					<th bordercolor="#7EA6DC" width="10%">编号</th>
+					<th bordercolor="#7EA6DC" width="80%">题目</th>
+					<th bordercolor="#7EA6DC" width="10%">评分</th>
+				</tr>
+			</table>
+			<div id="showpointInfo">
+				<table width="100%" border="1" cellpadding="1" bordercolor="#FFFFFF"
+					cellspacing="1" id="pointInfoMsg">
+
+
+				</table>
+			</div>
+			<br />
+			<table width="100%" border="0" cellpadding="0" cellspacing="0">
+				<tr>
+					<td width="8%"></td>
+					<td width="10%"
+						style="color: red; font-size: 14px; font-weight: bold">意见或建议:</td>
+					<td colspan="2" width="70%"><br>
+					<textarea name="messageinfo" cols="70" rows="4" class="text1"
+							id="messageinfo" readonly="readonly"></textarea></td>
+					<td>&nbsp;</td>
+				</tr>
+				<tr height="30">
+					<td>&nbsp;</td>
+				</tr>
+				 <tr height="43">
+			<td width="8%"></td>
+			<td colspan="2" width="80%"><span style="color:red;font-size:14px;font-weight:bold">&nbsp;</span></td>
+			<td align="center" ><input name="btnView" type="button" onClick="toShowStudentAnswer()" class="inp_L1" id="btnView" onMouseOver="this.className='inp_L2'" onMouseOut="this.className='inp_L1'" value="返回"></td>
+	    </tr>
+			</table>
+			<br />
+			<br /> -->
+		</center>
+	</div>
+
+	<!-- 指派班级 -->
+	<div style="width: 100%; margin: 0 auto; display: none;"
+		id="pointAnotherClass">
+		<fieldset style="border: 2px solid #95b8e7; boreder-radius: 5px;">
+			<legend>指派班级</legend>
+			<center>
+				<table id="anotherClass_table" style="float: left; display: none;">
+					<tr>
+						<td align="center" width="10%" class="fontColor">学期:</td>
+						<td width="25%"><input type="radio" checked="checked"
+							name="semseter1" value="S1" id="semseter1"
+							onClick="createSelectOption1('S1')" />S1 &nbsp;&nbsp;<input
+							type="radio" name="semseter1" value="S2" id="semseter2"
+							onClick="createSelectOption1('S2')" />S2 &nbsp;&nbsp;<input
+							type="radio" name="semseter1" value="S3" id="semseter3"
+							onClick="createSelectOption1('S3')" />S3</td>
+						<td align="center" width="10%" class="fontColor">班级:</td>
+						<td width="15%"><select class="text4" name="examClassName1"
+							id="show_anotherClass_class""></td>
+								<!-- onChange="changeClassName(this.value)" -->
+						<td></select> <span class="prompt"> * </span></td>
+
+						<td>
+
+							<div>
+
+								考试日期：<input type="text" id="checkDate" name="checkDate"
+									readonly="readonly" onclick="fPopCalendar(event,this,this)"
+									onfocus="this.select()" />
+								
+							</div>
+						</td>
+						<td>
+							<div>
+									<input type="button" value="确认指派" onclick="anotherClass();"
+										size="15" />
+							</div>	
+						</td>
+					</tr>
+				</table>
+			</center>
+		</fieldset>
+	</div>
+
+</body>

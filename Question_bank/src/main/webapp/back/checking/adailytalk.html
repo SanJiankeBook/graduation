@@ -1,0 +1,216 @@
+
+
+<link rel="stylesheet" href="../../css/szindex.css" type="text/css"></link>
+<!-- <script src="http://lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.js"></script> -->
+<script type="text/javascript">
+	!window.jQuery
+			&& document
+					.write('<script src=../../js/jquery-1.9.1.js><\/script>');
+</script>
+<script type="text/javascript" src="../../js/adailytalk.js"></script>
+<style type="text/css">
+
+.find_table_slelct{
+border: 1px solid #F8D880 ;
+border-radius:5px;
+width: 100%;
+margin-top: 10px;
+background-color: #F3F3F3;
+padding-bottom: 10px;
+}
+</style>
+
+<div id="knowledgeInformation" style="text-align: center;margin: 0 auto;">
+	<img src="images/adt1.jpg" width="595" height="33" align="center"style="margin-left: 29%">
+	<form name="formPoint" method="post">
+		<div  class="find_table_slelct">
+			<table width="95%" border="0" cellpadding="0" cellspacing="0"
+				align="center">
+				<tr height="43">
+					<td width="10%" class="fontColor linefontsize" align="right">学期编号：&nbsp;</td>
+					<td width="8%"><input name='semester' id="semesterS1"
+						type='radio' onClick="checkSemesters('S1')" value='S1' checked />S1</td>
+					<td width="8%"><input name='semester' id="semesterS2"
+						type='radio' onClick="checkSemesters('S2')" value='S2' />S2</td>
+					<td width="14%"><input name='semester' id="semesterS3"
+						type='radio' value='S3' onClick="checkSemesters('S3')" />S3</td>
+					<td width="30%" class="fontColor linefontsize">讲解班级：&nbsp; <select
+						name='examineeClass' class='select2' id='examineeClass'
+						onchange="changeExamineeClasses(this.value)">
+							<option value="0" selected="selected">--请选择--</option>
+
+					</select><span class="prompt">*</span>
+					</td>
+					<td width="33%" class="fontColor linefontsize">学员姓名_已讲次数：&nbsp;
+						<select name='examineeName' class='select2' id='examineeName'>
+							<option value="0">--请选择--</option>
+					</select>
+					</td>
+				</tr>
+				<tr>
+					<td width="60%" height="23" colspan="6"><span
+						class="fontColor">请在下面方框中输入新知识点内容:</span><span class="prompt">*</span></td>
+				</tr>
+				<tr>
+					<td colspan="5"><textarea name='knowledgeInfo' cols='15'
+							rows='2' class="content" onBlur="resetInfo()" id="knowledgeInfo"></textarea></td>
+					<td height="43" style="width: 280px" align="left">&nbsp;&nbsp;&nbsp;&nbsp;<input
+						name="btnView" type="button" class="inp_L1" id="btnView"
+						onClick="addADailyTalkInfo()"
+						onMouseOver="this.className='inp_L2'"
+						onMouseOut="this.className='inp_L1'" width="80" value="添加">
+						<input name="historyInfobtn11" type="button"
+						class="inp_L1" id="historyInfobtn11" width="80" onClick="showadatalkInfoInfo()"
+						onMouseOver="this.className='inp_L2'"
+						onMouseOut="this.className='inp_L1'" value="查看待讲信息">
+						 <input name="historyInfobtn" type="button"
+						class="inp_L1" id="historyInfobtn" width="80"  onClick="showHistoryInfoInfo()"
+						onMouseOver="this.className='inp_L2'"
+						onMouseOut="this.className='inp_L1'" value="查看已讲信息">
+						
+				</tr>
+			</table>
+		</div>
+
+		<div id="nospeak" style="margin-top: 30px">
+
+			<div style="width: 60%; float: left">
+				<div id="tableheadinfo" style="margin: 0px; padding: 0px;">
+					<table width="100%" border="0px" cell padding="1"
+						bordercolor="#FFFFFF" cellspacing="1" align="center">
+						<!-- <tr>
+							<td height="43" colspan="3"><span class="fontColor">本班待讲解的新技术安排如下:</span></td>
+
+						</tr> -->
+						<tr>
+							<th height="43" colspan="5"><span
+								style="font-size: 16px; font-weight: bold; color: white;">本班待讲解的新技术安排如下</span></th>
+						</tr>
+						<tr>
+							<th bordercolor="#7EA6DC" width="10%">编号</th>
+							<th bordercolor="#7EA6DC" width="15%">讲解学生</th>
+							<th bordercolor="#7EA6DC" width="60%">讲解内容</th>
+							<th bordercolor="#7EA6DC">操作</th>
+						</tr>
+					</table>
+				</div>
+
+				<div style="margin: 0px; padding: 0px;">
+					<table id="showKnowledgeInfoDiv" width="100%" border="0px"
+						cellpadding="1" bordercolor="#FFFFFF" cellspacing="1"
+						align="center">
+					</table>
+				</div>
+			</div>
+
+			<div id="commitAdailytalk"
+				style="width: 40%; float: left; text-align: center; display: none">
+				<table width="90%" align="center" border="0" cellpadding="1"
+					bordercolor="#FFFFFF" cellspacing="1" style="border-radius: 15px">
+					<tr align="center">
+						<td colspan="6" height="45"><span
+							class="fontColor linefontsize">源辰信息学员每日一讲教师点评</span></td>
+					</tr>
+
+					<tr height="30" bgcolor="#EDECEB"
+						onmouseover="this.bgColor='#93BBDF';"
+						onmouseout="this.bgColor='#EDECEB';">
+						<td width="20%" align="center">学员姓名&nbsp;&nbsp;</td>
+						<td width="20%" align="center" id="StuName"></td>
+						<td width="20%" align="center">讲解日期</td>
+						<td width="40%" align="center" id="StuDate"></td>
+					</tr>
+					<tr height="30" bgcolor="#EDECEB"
+						onmouseover="this.bgColor='#93BBDF';"
+						onmouseout="this.bgColor='#EDECEB';">
+						<td align="center">讲解内容&nbsp;&nbsp;</td>
+						<td colspan="3" id="StuContent"></td>
+					</tr>
+					<tr>
+						<td align="center" bgcolor="#EDECEB"
+							onmouseover="this.bgColor='#93BBDF';"
+							onmouseout="this.bgColor='#EDECEB';">教员讲评&nbsp;&nbsp;</td>
+						<td colspan="3"><input name="knowledgeInfoAssess"
+							class="content" id="knowledgeInfoAssess" /></td>
+					</tr>
+					<tr height="50">
+						<td align="center" colspan="4"><input name="btnView"
+							type="button" onClick="javascript:addInfoById()" class="inp_L1"
+							id="btnView" onMouseOver="this.className='inp_L2'"
+							onMouseOut="this.className='inp_L1'" value="提交"></td>
+					</tr>
+				</table>
+			</div>
+
+		</div>
+
+		<div id="speak" style="margin-top: 30px">
+			<div style="width: 60%; float: left">
+				<div id="resultListInfo">
+					<table width="100%" align="center" border="1" cellpadding="1"
+						bordercolor="#FFFFFF" cellspacing="1">
+						<tr>
+							<th height="43" colspan="5"><span
+								style="font-size: 16px; font-weight: bold; color: white;">本班已讲解新技术如下</span></th>
+						</tr>
+						<tr>
+							<th bordercolor="#7EA6DC" width="10%">编号</th>
+							<th bordercolor="#7EA6DC" width="12%">讲解学生</th>
+							<th bordercolor="#7EA6DC" width="37%">讲解内容</th>
+							<th bordercolor="#7EA6DC" width="15%">讲解日期</th>
+							<th bordercolor="#7EA6DC" width="20%">操作</th>
+						</tr>
+					</table>
+					<div id="showResultListInfoTeacher">
+						<table id="showResultListInfoTeacher1" width="100%" align="center"
+							border="1" cellpadding="1" bordercolor="#FFFFFF" cellspacing="1">
+							<tr height="23" bgcolor="#EDECEB" onmouseover=this.bgColor=
+								"#93BBDF" onmouseout=this.bgColor="#EDECEB">
+								<td align='center' colspan='6'>暂无数据</td>
+							</tr>
+						</table>
+					</div>
+					<div
+						style="position: absolute; border: 1px solid #666; background: #DDD; width: 300px; padding: 10px; display: none"
+						id="tipInfo"></div>
+				</div>
+
+			</div>
+			<div style="width: 40%; float: left" id="showAdailytalk">
+				<table width="90%" align="center" border="0" cellpadding="1"
+					bordercolor="#FFFFFF" cellspacing="1">
+					<tr align="center">
+						<td colspan="6" height="65"><span
+							class="fontColor linefontsize">源辰信息学员每日一讲详情查看</span></td>
+					</tr>
+					<tr height="30" bgcolor="#EDECEB"
+						onmouseover="this.bgColor='#93BBDF';"
+						onmouseout="this.bgColor='#EDECEB';">
+						<td width="20%" align="center">学员姓名&nbsp;&nbsp;</td>
+						<td width="20%" align="center" id="StuName1"></td>
+						<td width="20%" align="center">讲解日期</td>
+						<td width="40%" align="center" id="StuDate1"></td>
+					</tr>
+					<tr height="30" bgcolor="#EDECEB"
+						onmouseover="this.bgColor='#93BBDF';"
+						onmouseout="this.bgColor='#EDECEB';">
+						<td align="center">讲解内容&nbsp;&nbsp;</td>
+						<td colspan="3" id="StuContent1"></td>
+					</tr>
+					<tr height="30" bgcolor="#EDECEB"
+						onmouseover="this.bgColor='#93BBDF';"
+						onmouseout="this.bgColor='#EDECEB';">
+						<td align="center">教员讲评&nbsp;&nbsp;</td>
+						<td colspan="3" id="knowledgeInfoAssess1"></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</form>
+</div>
+
+<!-- <div id="div1" style="position:absolute; left:0;top:0;width: 2000px;height: 1000px;z-index: 40;background-color:blue;opacity:0.1;display: none " >绝对定位</div>
+<div id="div2" style="display:none;z-index: 100">开始了
+	<button>开始了</button>
+	<textarea rows="50" cols="10"></textarea>
+</div> -->

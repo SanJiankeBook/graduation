@@ -1,0 +1,58 @@
+<link rel="stylesheet" href="../../css/szindex.css" type="text/css"></link>
+<link id="easyuiTheme" rel="stylesheet" type="text/css" href="../../jslib/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="../../jslib/themes/icon.css">
+<!-- <script type="text/javascript" src="http://lib.sinaapp.com/js/jquery/2.0/jquery.min.js"></script> -->
+<script type="text/javascript">
+!window.jQuery && document.write('<script src=../../jslib/jquery.min.js><\/script>');
+</script>
+<script type="text/javascript" src="../../jslib/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../jslib/jeasyui.common.js"></script>
+<script type="text/javascript" src="../../js/createoption.js"></script>
+<script type="text/javascript" src="../../jslib/locale/easyui-lang-zh_CN.js"></script>
+	<script type="text/javascript">
+	var question=""
+	$(function(){
+		question= window.localStorage? localStorage.getItem("queryQues"): Cookie.read("queryQues");
+		findQuestbyText(question);
+	})
+	
+	function findQuestbyText(queryQues){
+		$.ajax({
+				url:"/Examination2.0/qusetion_showQuestbyText.action",
+					type:"post",
+					data:{"question":queryQues},
+					datatype:"json",
+					success:function(data){
+						var Object=$.parseJSON(data);
+						var tablestr="";
+						if(Object.responseCode==0){
+							for(var i=0;i<Object.obj.length;i++){
+								tablestr+="<table width='100%' border='0' cellspacing='0'>";
+								tablestr+="<tr>";
+								tablestr+="<td width='14%' height='35'><span class='fontColor'>编号：</span>"+Object.obj[i].id+"</td>";
+								tablestr+="<td width='20%' height='35'>&nbsp;<span class='fontColor'>版本号: </span>"+Object.obj[i].edition+"</td>";
+								tablestr+="<td width='12%' height='35' class='fontColor'>科目名称:</td><td height='35'>"+Object.obj[i].subjectName+"</td></tr>";
+								tablestr+="<tr><td width='14%' height='35' valign='top' class='fontColor'>题目内容：</td>";	
+								tablestr+="<td height='35' colspan='3'><textarea name='question' cols='' class='content'id='question' readonly>"+Object.obj[i].question+"</textarea></td></tr>";
+								tablestr+="<tr><td height='20' colspan='4' valign='top' class='fontColor'>&nbsp;</td></tr></table>";
+							}
+							$('#showTable').html(tablestr);
+						}else{
+							$('#showTable').html("查询失败，请稍后再试");
+						}
+					}
+				});
+		}
+	</script>
+
+  	
+
+	<table width="630" border="0" cellpadding="0"
+				cellspacing="0">
+				
+				<tr>
+					<td id="showTable">
+					
+					</td>
+				</tr>
+	</table>

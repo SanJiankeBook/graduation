@@ -1,0 +1,71 @@
+    <link rel="stylesheet" href="../../css/szindex.css" type="text/css"></link>
+    <link rel="stylesheet" href="../../css/checking.css" type="text/css"></link>
+    <!-- <script src="http://lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.js"></script> -->
+<script type="text/javascript">
+!window.jQuery && document.write('<script src=../../js/jquery-1.9.1.js><\/script>');
+</script>
+	<script type="text/javascript" src="../../js/dateChoose.js"></script>
+    <script type="text/javascript" src="../../js/showhistoryadailytalk.js"></script>
+    
+<div align="left" style="float:left">
+	<a href="javascript:history.go(-1)" style="color: red"> <img src="images/return-left.png" title="返回上一页" width="30" height="30"></img></a>
+</div>
+<table width="90%" align="center" border="0" cellpadding="0" cellspacing="0">
+	<tr align="center">
+		<td height="65" colspan="6" align="center" valign="middle"><img src="images/adt1.jpg" width="595" height="33"></td>
+	</tr>
+	<tr height="43">
+		<td width="10%" class="fontColor linefontsize" align="right">学期编号：&nbsp;</td>
+		<td width="8%">
+			<input name='semester' type='radio' id="S1" onClick="checkSemesters('S1')" value='S1' checked/>S1
+		</td>
+		<td width="8%">
+			<input name='semester' type='radio' id="S2" onClick="checkSemesters('S2')" value='S2'/>S2
+		</td>
+		<td>
+			<input name='semester' type='radio' id="S3" onClick="checkSemesters('S3')" value='S3'/>S3
+		</td>
+		<td width="30%" class="fontColor linefontsize">讲解班级：&nbsp;
+			<select name='examineeClass' class='select2' id='examineeClass' onchange="changeExamineeClasses()">
+				<option value="0">--请选择--</option>
+				<option value=""></option>
+			</select>
+		</td>
+		<td width="30%" class="fontColor linefontsize">讲解姓名：&nbsp;
+			<select name='examineeName' class='select2' id='examineeName'>
+				<option value="0">--请选择--</option>
+			</select>
+		</td>
+	</tr>
+	<tr height="43">
+		<td colspan="5" align="left" class="fontColor linefontsize">讲解日期：
+			 <input type="text" id="startDate" name="startDate" onclick="fPopCalendar(event,this,this)" onfocus="this.select()"/>&nbsp;
+                          到 &nbsp;<input type="text" id="endDate" name="endDate" onclick="fPopCalendar(event,this,this)" onfocus="this.select()" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </td>
+		<td class="fontColor linefontsize" align="center">
+            <input name="btnView" type="button" onClick="showAdailyTalk('btn')" class="inp_L1" id="btnView" onMouseOver="this.className='inp_L2'" onMouseOut="this.className='inp_L1'" value="查询" />
+            <input id="btnView" class="inp_L1" name="btnView" onclick="reset()" onmouseover="this.className='inp_L2'" onmouseout="this.className='inp_L1'" value="重置" type="button">
+        </td>
+        
+	</tr>
+</table>
+<br/><hr size="1" color="blue" width="90%" align="center"/><br/>
+<div id="resultListInfo">
+<table width="90%" align="center" border="1" cellpadding="1" bordercolor="#FFFFFF" cellspacing="1" >
+	<tr>
+		<th height="43" colspan="5"><span style="font-size:16px;font-weight:bold;color:white;">本班已讲新技术如下</span></th>
+	</tr>
+	<tr>
+		<th bordercolor="#7EA6DC" width="10%">编号</th>
+		<th bordercolor="#7EA6DC" width="12%">讲解学生</th>
+		<th bordercolor="#7EA6DC" width="45%">讲解内容</th>
+		<th bordercolor="#7EA6DC" width="15%">讲解日期</th>
+		<th bordercolor="#7EA6DC" width="18%">操作</th>
+	</tr>
+</table>
+<div id="showResultListInfoTeacher">
+	 <table width="90%" align="center" border="1" cellpadding="1" bordercolor="#FFFFFF" cellspacing="1" >
+	 </table>
+</div>
+	 <div style="position:absolute;border:1px solid #666;background:#DDD;width:300px;padding:10px;display:none" id="tipInfo"></div>
+</div>

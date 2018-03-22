@@ -1,0 +1,839 @@
+
+<link rel="stylesheet" href="../../css/szindex.css" type="text/css"></link>
+<link id="easyuiTheme" rel="stylesheet" type="text/css"
+	href="../../jslib/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css"
+	href="../../jslib/themes/icon.css">
+<!-- <script type="text/javascript"
+	src="http://lib.sinaapp.com/js/jquery/2.0/jquery.min.js"></script> -->
+<script type="text/javascript">
+	!window.jQuery
+			&& document
+					.write('<script src=../../jslib/jquery.min.js><\/script>');
+</script>
+<script type="text/javascript" src="../../jslib/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../jslib/jeasyui.common.js"></script>
+<script type="text/javascript" src="../../js/createoption.js"></script>
+<script type="text/javascript"
+	src="../../jslib/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" language="javascript"
+	src="../../js/dateChoose.js"></script>
+<style>
+.find_table_slelct{
+border: 1px solid #F8D880 ;
+border-radius:5px;
+width: 100%;
+margin-top: 10px;
+background-color: #F3F3F3;
+padding-bottom: 10px;
+}
+</style>
+<script type="text/javascript" language="javascript">
+	//页面加载时, 设置初始化数据
+
+	$(function() {
+		//给日期注入一个默认值
+		var today=new Date();
+		var submitTime=today.getFullYear()+'-'+((today.getMonth()+1)<10?'0'+(today.getMonth()+1):today.getMonth()+1)+'-'+(today.getDate()<10?'0'+today.getDate():today.getDate()); 
+		$("#examDate").attr('value',submitTime);
+		var r1 = '';
+		r1 += '<option value="0%">请选择</option>';
+		for (var a = 1; a <= 10; a++) {
+			r1 += '<option value="' + (a * 10) + '%">' + (a * 10)
+					+ '%</option>';
+		}
+		$("#rate1").html(r1);
+		$("#rate2").html(r1);
+		$("#rate3").html(r1);
+		$("#rate1").val("20%");
+		$("#rate2").val("50%");
+		$("#rate3").val("30%");
+		setOverCount(10);
+		createVersionOption();
+		semester = $('input[name="semester"]:checked').val();
+		version = $('#version').val();
+		createSelectOption(version, semester);
+		createClassOption();
+		hideSubject();
+	})
+	function loadData() {
+		$.ajax({
+			url : "/Examination2.0/initData_editionName.action",
+			type : "post",
+			datatype : "json",
+			success : function(data) {
+				var obj = data;
+				version = obj.obj;
+			}
+		});
+
+	}
+
+	//选择学期
+	function checkSemester(s) {
+		semester = s;
+		version = $('#version').val();
+		createSelectOption(version, semester);
+		createClassOption();
+		hideSubject();
+	}
+	//选择版本
+	function changeVersion() {
+		semester = $('input[name="semester"]:checked').val();
+		version = $('#version').val();
+		createSelectOption(version, semester);
+		hideSubject();
+	}
+	
+	function mubanpaper(){
+		var check = $('input[name="paperTypemuban"]:checked').val();
+		if (check == "1") {
+			alert("模板卷")
+		}else{
+			alert("非模板卷")
+		}
+	}
+
+	function hideSubject() {
+		var check = $('input[name="paperType"]:checked').val();
+		//选定出综合卷
+		if (check == "1") {
+			semester = $('input[name="semester"]:checked').val();
+			version = $('#version').val();
+			$.ajaxSettings.async = false;
+			$
+					.ajax({
+						url : "/Examination2.0/initData_subject.action",
+						type : "post",
+						data : {
+							"editionId" : version,
+							"semester" : semester
+						},
+						datatype : "json",
+						success : function(data) {
+							var Object = data;
+							var optionstr = "";
+							if (Object.responseCode != 1) {
+								for (var i = 0, len = Object.obj.length; i < len; i++) {
+									optionstr += "<tr><td><input name='subject"
+											+ i + "' id='subject"
+											+ Object.obj[i].id
+											+ "' onclick='checkSubject("
+											+ Object.obj[i].id + "," + "\""
+											+ "subject" + i + "\""
+											+ ")' type='checkbox' value='"
+											+ Object.obj[i].subjectName
+											+ "'/></td>";
+									optionstr += "<td>"
+											+ Object.obj[i].subjectName
+											+ "</td>"
+									optionstr += "<tr><td></td>"
+									optionstr += "<td><table width='90%' id='cc"
+											+ Object.obj[i].id
+											+ "'></table></td></tr>";
+									optionstr += "</tr>";
+								}
+								$('#cc').html(optionstr);
+							}
+						}
+					});
+			//不出综合卷		
+		} else {
+			var subject = $('#subject').val();
+			$.ajaxSettings.async = false;
+			$
+					.ajax({
+						url : "/Examination2.0/initData_findchapter.action",
+						type : "post",
+						data : {
+							"subjectId" : subject
+						},
+						datatype : "json",
+						success : function(data) {
+
+							var Object = data;
+							var optionstr = "";
+							if (Object.responseCode != 1) {
+								for (var i = 0, len = Object.obj.length; i < len; i++) {
+									optionstr += "<tr><td><label id='"+"label"+i+"'>"
+											+ Object.obj[i].chapterName
+											+ "</label></td>";
+									optionstr += "<td>有<span id='"+"lblNumber_"+Object.obj[i].chapterName+"_"+i+"'>"
+											+ Object.obj[i].questionNum
+											+ "</span>道题</td>"
+									optionstr += "<td>出题数量:<input id='"
+											+ "chapter"
+											+ (i + 1)
+											+ "' class='text4' type='text' onblur='lostFocus("
+											+ Object.obj[i].questionNum
+											+ ","
+											+ (i + 1)
+											+ ")' name='chapter1' size='8'></td>";
+								}
+								$('#cc').html(optionstr);
+							}
+						}
+					});
+		}
+	}
+	function changeSubject() {
+		var subject = $('#subject').val();
+		$.ajaxSettings.async = false;
+		$
+				.ajax({
+					url : "/Examination2.0/initData_findchapter.action",
+					type : "post",
+					data : {
+						"subjectId" : subject
+					},
+					datatype : "json",
+					success : function(data) {
+
+						var Object = data;
+						var optionstr = "";
+						if (Object.responseCode != 1) {
+							for (var i = 0, len = Object.obj.length; i < len; i++) {
+								optionstr += "<tr><td><label id='"+"label"+i+"'>"
+										+ Object.obj[i].chapterName
+										+ "</label></td>";
+								optionstr += "<td>有<span id='"+"lblNumber_"+Object.obj[i].chapterName+"_"+i+"'>"
+										+ Object.obj[i].questionNum
+										+ "</span>道题</td>"
+								optionstr += "<td>出题数量:<input id='"
+										+ "chapter"
+										+ (i + 1)
+										+ "' class='text4' type='text' onblur='lostFocus("
+										+ Object.obj[i].questionNum + ","
+										+ (i + 1)
+										+ ")' name='chapter1' size='8'></td>";
+							}
+							$('#cc').html(optionstr);
+						}
+					}
+				});
+	}
+	function checkSubject(subject, idname) {
+		var check = $("input[name=" + idname + "]:checked").val();
+		if (check != null) {
+
+			$.ajaxSettings.async = false;
+			$.ajax({
+						url : "/Examination2.0/initData_findchapter.action",
+						type : "post",
+						data : {
+							"subjectId" : subject
+						},
+						datatype : "json",
+						success : function(data) {
+
+							var Object = data;
+							var optionstr = "";
+							if (Object.responseCode != 1) {
+								for (var i = 0, len = Object.obj.length; i < len; i++) {
+									optionstr += "<tr><td><label id='"+"label"+i+"'>"
+											+ Object.obj[i].chapterName
+											+ "</label></td>";
+									optionstr += "<td>有<span id='"+"lblNumber_"+Object.obj[i].chapterName+"_"+i+"'>"
+											+ Object.obj[i].questionNum
+											+ "</span>道题</td>"
+									optionstr += "<td>出题数量:<input id='"
+											+ "chapter"
+											+ (i + 1)
+											+ "' class='text4' type='text' onblur='lostFocus("
+											+ Object.obj[i].questionNum
+											+ ","
+											+ (i + 1)
+											+ ")' name='chapter1' size='8'></td>";
+								}
+								$("#cc" + subject).html(optionstr);
+							}
+						}
+					});
+		} else {
+			$("#cc" + subject).html("");
+		}
+	}
+
+	function setOverCount(id) {
+		var val = $('#questionCount').val();
+		if (isNaN(val)) {
+			alert("请输入有效数字");
+			$('#questionCount').val("");
+			return;
+		}
+
+		if (val != "" && (val<5 || val>200)) {
+			alert("输入的试题数只能在5到200之间");
+			$('#questionCount').val("");
+			return;
+		}
+		var sum = 0
+
+		$("#cc input[type=text]").each(function() {
+			if (!isNaN($(this).val())) {
+				if ($(this).val() != "" && $(this).val() != null) {
+					sum = parseInt($(this).val()) + sum;
+				}
+
+			}
+		});
+
+		if (sum == parseInt(val)) {
+			$('#overCount').val("题目数量已满");
+		}
+
+		if (sum > parseInt(val)) {
+			alert("目前已选的题目总和已经达到出题数量!");
+			$('#overCount').val("题目数量已满");
+			if (id != null || id != "" || id != "null") {
+				$("#chapter" + id).val("");
+			}
+			return;
+		}
+
+		var count = parseInt(val) - sum;
+
+		if (isNaN(count)) {
+			$('#overCount').val(0);
+		} else {
+			$('#overCount').val(count);
+		}
+		$('#timesConsume').val(val);
+	}
+
+	function lostFocus(number, id) {
+		if ($('#overCount').val() == null || $('#overCount').val() == "") {
+			alert("请输入出题数量");
+			$("#chapter" + id).val("");
+			return;
+		}
+		var num = $("#chapter" + id).val();
+		if (isNaN(num)) {
+			alert("请输入有效数字");
+			$("#chapter" + id).val("");
+			return;
+		}
+
+		if (num > number) {
+			alert("试题库题目不够，请确认后再出");
+			$("#chapter" + id).val("");
+			return;
+		}
+
+		setOverCount(id);
+
+	}
+	//得到出题数量信息, 组成一个字符串
+	//格式: 科目:章节, 出题数量 ; 章节, 出题数量 ;
+	// 用 MMM 分隔每一科
+	//如:   网页编程:1, 5; 2, 10; _
+	function getQuestionCountInfo() {
+		var check = $('input[name="paperType"]:checked').val();
+		var questionInfo = "";
+		//选定出综合卷
+		if (check == "1") {
+			$("#cc input[type=checkbox]").each(
+					function() {
+						if ($(
+								"input[name=" + $(this).attr('name')
+										+ "]:checked").val() != null) {
+							var id = $(this).attr("id").substring(7);
+							questionInfo += $(this).val() + ":";
+							$("#cc" + id + " input[type=text]").each(
+									function(data) {
+										if (!isNaN($(this).val())
+												&& $(this).val() != null
+												&& $(this).val() != "") {
+											var ids = $(this).attr("id")
+													.substring(7) - 1;
+											questionInfo += $("#label" + ids)
+													.html()
+													+ ","
+											questionInfo += $(this).val() + ";"
+										}
+									});
+							questionInfo += "MMM";
+						}
+					});
+		} else {
+			questionInfo += $('#subject').find("option:selected").text() + ":"
+			$("#cc input[type=text]").each(
+					function() {
+						if (!isNaN($(this).val()) && $(this).val() != null
+								&& $(this).val() != "") {
+							var id = $(this).attr("id").substring(7) - 1;
+							questionInfo += $("#label" + id).html() + ","
+							questionInfo += $(this).val() + ";"
+
+						}
+					});
+
+		}
+		return questionInfo;
+	}
+
+	//重置
+	function reset() {
+		//$("#classes").val("");
+		//$('#questionCount').val("");
+		//$('#paperPwd').val("");
+		//$('#examDate').val("");
+		//$('#paperPwd2').val("");
+		//$('#timesConsume').val("");
+		//$('#rate1').val("");
+		//$('#rate2').val("");
+		//$('#rate3').val("");
+		$('#paperName').val("");
+		//$('#subject').val("");
+		$("#overCount").val("");
+		$('#remark').val("");
+		//"input[name=jizai]:eq(0)"
+		//$("input[name=semester]:eq('S1')").attr("checked", 'checked');
+		//$("input[name=semester]:eq('S2')").removeAttr("checked");
+		//$("input[name=semester]:eq('S3')").removeAttr("checked");
+	}
+	function addWritingPaper(statu) {
+
+		//确认难易度的百分比是否为100%
+		if ($("#rate1").val() == "请选择" || $("#rate2").val() == "请选择"
+				|| $("#rate3").val() == "请选择") {
+			alert("难易度的百分比不符合规定，请确认后再次确定出卷");
+			return;
+		}
+		var r11 = parseInt($("#rate1").val());
+		var r22 = parseInt($("#rate2").val());
+		var r33 = parseInt($("#rate3").val());
+		if ((r11 + r22 + r33) != 100) {
+			alert("难易度的百分比不符合规定，请确认后再次确定出卷");
+			return;
+		}
+
+		var semester = $('input[name="semester"]:checked').val();//学期
+		if (statu=="0") {//正常出卷
+			var classes = $('#classes').find("option:selected").text();//班级
+
+		} else {//出模板卷
+			var classes = "模板卷班级";//班级
+		}
+		var questionCount = $('#questionCount').val();//出题数量
+		var paperPwd = $('#paperPwd').val();//密码
+		var examDate = $('#examDate').val();//日期
+		var paperPwd2 = $('#paperPwd2').val();//确认密码
+		var timesConsume = $('#timesConsume').val();//时间
+		var rate1 = $('#rate1').val();//难度比例：难
+		var rate2 = $('#rate2').val();//难度比例：中
+		var rate3 = $('#rate3').val();//难度比例：易
+		var paperName = $('#paperName').val();//试卷名
+		var subject = $('#subject').find("option:selected").text();//课程名
+		var remark = $('#remark').val();//试卷说明
+		var edition = $('#version').find("option:selected").text();
+		if (paperPwd != paperPwd2) {
+			$('#strPrompt').html("两次输入的密码不一致,请重新输入!")
+			$('#paperPwd').val("");
+			$('#paperPwd2').val("");
+			return;
+		}
+		if (statu=="0") {//正常出卷
+			if(classes=="" ||classes=="请选择班级"){
+				alert("请选择一个班级");
+				return ;
+			}
+		}
+		
+		if (paperPwd == "" || examDate == "" || questionCount == ""
+				|| paperName == "") {
+			alert("输入的内容不完整,请输入完整信息!");
+			$('#strPrompt').html("输入的内容不完整,请输入完整信息!");
+			return;
+		}
+
+		if ($('#overCount').val() != 0) {
+			$('#strPrompt').html("所选的题目不够数,请再选!");
+			return;
+		}
+		var questionInfo = getQuestionCountInfo();
+		$.ajax({
+			url : "/Examination2.0/paper_addWritingPaper.action",
+			type : "post",
+			data : {
+				"examSubject" : subject,
+				"paperName" : paperName,
+				"paperPwd" : paperPwd,
+				"examineeClass" : classes,
+				"examDate" : examDate,
+				"timesConsume" : timesConsume,
+				"countOfQuestion" : questionCount,
+				"rate1" : rate1,
+				"rate2" : rate2,
+				"rate3" : rate3,
+				"remark" : remark,
+				"semester" : semester,
+				"questionInfo" : questionInfo,
+				"edition" : edition
+			},
+			datatype : "json",
+			success : function(data) {
+				var Object = data;
+				if (Object.responseCode == 0) {
+					$.messager.show({
+						title : '提示',
+						msg : '成功',
+						timeout : 3000,
+						showType : 'slide'
+					});
+					//$('#myform')[0].reset();
+					reset();
+				} else if(Object.responseCode ==0){
+					$.messager.show({
+						title : '错误',
+						msg : Object.errorMessage,
+						timeout : 3000,
+						showType : 'slide'
+					});
+				}else if(Object.responseCode ==2){
+					$.messager.show({
+						title : '提示',
+						msg : '模板件设定成功',
+						timeout : 3000,
+						showType : 'slide'
+					});
+				}
+			}
+		})
+
+	}
+
+	$('#examDate').datebox(
+			{
+				onSelect : function(date) {
+					var dateTime = date.getFullYear()
+							+ "-"
+							+ (date.getMonth() + 1 < 10 ? '0'
+									+ (date.getMonth() + 1)
+									: date.getMonth() + 1)
+							+ "-"
+							+ (date.getDate() < 10 ? '0' + date.getDate()
+									: date.getDate());
+					$('#examDate').datebox('setValue', dateTime);
+
+				}
+			});
+
+	function rate1() {
+		var r1 = parseInt($("#rate1").val());
+		var r2 = parseInt($("#rate2").val());
+		var r3 = parseInt($("#rate3").val());
+		//alert(parseInt(r1));
+		var aa = '';
+		if (r1 != 0 && r2 == 0 && r3 == 0) {
+			aa += '<option value="0%">请选择</option>';
+			for (var a = 1; a <= ((100 - r1)) / 10; a++) {
+				aa += '<option value="' + (a * 10) + '%">' + (a * 10)
+						+ '%</option>';
+			}
+			$("#rate2").html(aa);
+			$("#rate3").html(aa);
+		} else if (r2 != 0 && r1 == 0 && r3 == 0) {
+			aa += '<option value="0%">请选择</option>';
+			for (var a = 1; a <= ((100 - r2)) / 10; a++) {
+				aa += '<option value="' + (a * 10) + '%">' + (a * 10)
+						+ '%</option>';
+			}
+			$("#rate1").html(aa);
+			$("#rate3").html(aa);
+		} else if (r3 != 0 && r1 == 0 && r2 == 0) {
+			aa += '<option value="0%">请选择</option>';
+			for (var a = 1; a <= ((100 - r3)) / 10; a++) {
+				aa += '<option value="' + (a * 10) + '%">' + (a * 10)
+						+ '%</option>';
+			}
+			$("#rate1").html(aa);
+			$("#rate2").html(aa);
+		} else if (r1 != 0 && r2 != 0 && r3 == 0) {
+			aa += '<option value="0%">请选择</option>';
+			for (var a = 1; a <= ((100 - r2 - r1)) / 10; a++) {
+				aa += '<option value="' + (a * 10) + '%">' + (a * 10)
+						+ '%</option>';
+			}
+			$("#rate3").html(aa);
+		} else if (r1 != 0 && r3 != 0 && r2 == 0) {
+			aa += '<option value="0%">请选择</option>';
+			for (var a = 1; a <= ((100 - r3 - r1)) / 10; a++) {
+				aa += '<option value="' + (a * 10) + '%">' + (a * 10)
+						+ '%</option>';
+			}
+			$("#rate2").html(aa);
+		} else if (r3 != 0 && r2 != 0 && r1 == 0) {
+			aa += '<option value="0%">请选择</option>';
+			for (var a = 1; a <= ((100 - r2 - r3)) / 10; a++) {
+				aa += '<option value="' + (a * 10) + '%">' + (a * 10)
+						+ '%</option>';
+			}
+			$("#rate1").html(aa);
+		} else if (r3 != 0 && r2 != 0 && r1 != 0) {
+			var flag = "f";
+		}
+	}
+</script>
+<div id="layout" class="easyui-layout"
+	style="width: 100%; height: 400px;" data-options="fit:true">
+	<div id="back_div" data-options="region:'center'">
+			<div class="find_table_slelct" style="width: 98%;margin: 0 auto;" >
+				
+					<table width="100%" height="122" border="0" cellspacing="0">
+						<tr>
+							<td width="92" height="25" align="left">
+								<div align="left" class="fontColor">版本号:</div>
+							</td>
+							<td width="300px">
+								<div align="left">
+									<select name="version" id="version" onChange="changeVersion()">
+									</select>
+								</div>
+							</td>
+							<td width="95">
+								<div align="left" class="fontColor">学期编号:</div>
+							</td>
+							<td width="214">
+								<div align="left">
+									<input name="semester" id="semester" type="radio" value="S1"
+										onClick="checkSemester('S1')" checked="checked"> S1 <input
+										name="semester" id="semester" type="radio" value="S2"
+										onClick="checkSemester('S2')"> S2 <input type="radio"
+										id="semester" name="semester" value="S3"
+										onClick="checkSemester('S3')"> S3
+								</div>
+							</td>
+							<td align="left">
+								<div align="left" class="fontColor">班 &nbsp;&nbsp;&nbsp;级:</div>
+							</td>
+							<td>
+								<div align="left">
+									<select name="examineeClass" id="classes">
+										<option selected>--请选择班级--</option>
+									</select>
+									<span class="prompt">*</span>
+								</div>
+							</td>
+							<td>
+								<div align="left" class="fontColor">出题数量:</div>
+							</td>
+							<td>
+								<div align="left">
+									<input name="questionCount" width="50px" type="text" class="text4"
+										id="questionCount" onBlur="setOverCount('null')" value="10"> <span
+										class="prompt">*</span>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td width="5%" align="left" class="fontColor">考卷密码:</td>
+							<td width="19%">
+								<div align="left">
+									<input name="paperPwd" type="password" class="text4"
+										id="paperPwd" maxlength="5" value='a' width="50px"> <span class="prompt">默认为a*</span>
+								</div>
+							</td>
+							<td width="92" height="34">
+								<div align="left" class="fontColor">确认密码:</div>
+							</td>
+							<td width="19%" class="prompt">
+								<div align="left">
+									<input name="paperPwd2" type="password" class="text4"
+										id="paperPwd2" maxlength="5" value='a' width="50px"> <span class="prompt">默认为a*</span>
+								</div>
+							</td>
+							<td width="">
+								<div align="left" class="fontColor">考试日期:</div>
+							</td>
+							<td>
+								<div align="left">
+
+								<input type="text" value="" id="examDate" name="examDate" onclick="fPopCalendar(event,this,this)" >
+									<!-- <input type="text" id="examDate" name="examDate"
+										readonly="readonly" onclick="fPopCalendar(event,this,this)"
+										onfocus="this.select()" />  --><span class="prompt">*</span>
+								</div>
+							</td>
+							
+							<td width="95">
+								<div align="left" class="fontColor">考试时间(分):</div>
+							</td>
+							<td width="214">
+								<div align="left">
+									<input name="timesConsume" type="text" class="text4"
+										id="timesConsume" value="10"> <span class="prompt">*</span>
+								</div>
+							</td>
+						</tr>
+					<tr>
+							<td width="6%" height="40">
+								<div align="left" class="fontColor">难易度比例:</div>
+							</td>
+							<td width="30%" colspan="3">
+									难: <select name="rate1" id="rate1" onchange="rate1()">
+										<!-- <option value="0%">--请选择--</option>
+										<option value="10%">10%</option>
+										<option value="20%">20%</option>
+										<option value="30%">30%</option>
+										<option value="40%">40%</option>
+										<option value="50%">50%</option>
+										<option value="60%">60%</option>
+										<option value="70%">70%</option>
+										<option value="80%">80%</option>
+										<option value="90%">90%</option>
+										<option value="100%">100%</option> -->
+									</select>
+										中: <select name="rate2" id="rate2" onchange="rate1()">
+										<!-- <option value="0%"></option>
+										<option value="10%">10%</option>
+										<option value="20%">20%</option>
+										<option value="30%">30%</option>
+										<option value="40%">40%</option>
+										<option value="50%">50%</option>
+										<option value="60%">60%</option>
+										<option value="70%">70%</option>
+										<option value="80%">80%</option>
+										<option value="90%">90%</option>
+										<option value="100%">100%</option> -->
+									</select>
+									易: <select name="rate3" id="rate3" onchange="rate1()">
+										<!-- <option value="0%"></option>
+										<option value="10%">10%</option>
+										<option value="20%">20%</option>
+										<option value="30%">30%</option>
+										<option value="40%">40%</option>
+										<option value="50%">50%</option>
+										<option value="60%">60%</option>
+										<option value="70%">70%</option>
+										<option value="80%">80%</option>
+										<option value="90%">90%</option>
+										<option value="100%">100%</option> -->
+									</select>
+							</td>
+							<td height="32" colspan="5">
+								<div align="left">
+									<span class="fontColor">笔试卷名称:&nbsp;&nbsp;</span> &nbsp;
+									&nbsp;&nbsp; <input name="paperName" type="text" class="text4"
+										id="paperName" size="30"> <span class="prompt">*</span>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div style="margin-left:1%;width: 98%">
+				<table width="90%">
+				<table width="100%">
+					<tr align="center"><td colspan="8"><label style="color: red">提示：当天开启的试卷将于当天十点半自动进行改卷，请老师在第二天或本天之后评卷</label></td></tr>
+						<tr>
+							<td height="43" width="10%"  >
+								<div align="right">
+									<input name="paperTypemuban" type="checkbox" id="paperTypemuban"
+											value="1" onClick="mubanpaper()"> 选中出模板卷 &nbsp;&nbsp;&nbsp;
+									<input name="paperType" type="checkbox" id="paperType"
+										value="1" onClick="hideSubject()"> 选中出综合试卷
+								</div>
+							</td>
+							<td width="5%" align="right">
+								<div >
+									<p class="fontColor">试卷描述:</p>
+								</div>
+							</td>
+							<td width="10%"><br> <textarea name="remark" cols="9"
+									rows="2" class="text1" id="remark"></textarea></td>
+							
+							<td width="5%" align="right">
+								<div align="center">
+									<br> <input name="Submit" type="button" class="inp_L1"
+										value="确定出卷" onMouseOver="this.className='inp_L2'"
+										onMouseOut="this.className='inp_L1'"
+										onClick="addWritingPaper('0')">
+								</div>
+							</td>
+							<td width="5%" align="left"><br> <input type="reset"
+								class="inp_L1" name="Submit3"
+								onMouseOver="this.className='inp_L2'"
+								onMouseOut="this.className='inp_L1'" onClick="reset()"
+								value="重  置"></td>
+							<td width="5%" align="left"><br> <input type="reset"
+								class="inp_L1" name="Submit3"
+								onMouseOver="this.className='inp_L2'"
+								onMouseOut="this.className='inp_L1'" onClick="addWritingPaper('1')"
+								value="设为模板卷"></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="3">
+					<table width="100%" height="40" border="0">
+						<tr>
+							<td width="15%" align="left">
+								<div align="left" class="fontColor">科目名称:</div>
+							</td>
+							<td>
+								<div align="left">
+									<select name="examSubject" id="subject"
+										onChange="changeSubject()">
+										<option value="综合">综合</option>
+									</select>
+								</div>
+							</td>
+							<td width="45%"><span id="questionInfo"></span></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td width="233" align="left"><br> 在下面列表中选择出题数量 <br> <span
+					class="prompt"> *</span> <br>
+				<td width="364">
+					<div align="left">
+						<span class="fontColor">还可添加数量:</span> <input name="overCount"
+							type="text" class="text4" id="overCount" size="14"
+							disabled='true'>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="3">
+					<table width="100%" border="0" cellpadding="0" cellspacing="0">
+						<tr>
+							<td width="6%">&nbsp;</td>
+							<td width="94%" align="left"><span id="chapterSpan">
+							</span></td>
+						</tr>
+						<table id="cc" width="90%">
+
+						</table>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td height="8" colspan="3">
+					<table width="80%" border="0" cellspacing="0">
+						<tr>
+							
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="3">
+					<table width="100%" border="0">
+						<tr>
+							<td width="20%" align="center"><font color="#FF0000">
+									<span id="strPrompt">&nbsp;</span>
+							</font></td>
+							
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="3"></td>
+			</tr>
+		</table>
+		</div>
+	</div>
+</div>

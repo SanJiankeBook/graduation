@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>浏览自评试题</title>
+
+<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+<meta http-equiv="description" content="this is my page">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+<link href="../../css/szindex.css" type=text/css rel=stylesheet>
+
+<!-- <script src="http://lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.js"></script> -->
+<script type="text/javascript">
+!window.jQuery && document.write('<script src=../js/jquery-1.9.1.js><\/script>');
+</script>
+
+<link href="../../css/dopointPaper.css" type="text/css" rel="stylesheet">
+
+</head>
+
+<script type="text/javascript">
+	$(function(){
+		var url = window.location.search;
+		var arr = new Array();
+		var arr = url.split("=");
+		pid = arr[1];
+		var a='';
+		var b='';
+		var c='';
+		$.post("/Examination2.0/exam_getPoint.action",{pid:pid},function(data){
+			var data=eval("("+data+")");
+			$.each(data,function(i,item){
+				if(item[0]==undefined || item[0]==0){
+					return false;
+				}
+				a+='<tr height="43"><td width="20%" class="titlestyle">测评班级：'+item[0].findPointPaperInfo.remark+'</td>';
+				a+='<td width="40%" class="titlestyle">科目名称：'+item[0].subjectName+'</td>';
+				a+='<td width="20%" class="titlestyle">测评日期：'+item[0].findPointPaperInfo.pdate.substr(0,10)+'</td></tr>';
+				a+='<tr height="43"><td class="titlestyle">题目：'+item[0].findPointPaperInfo.pname+'</td>';
+				if(""==item[0].findPointPaperInfo.descript){
+					a+='<td colspan="2" class="titlestyle">描述：无</td></tr>';
+				}else{
+					a+='<td colspan="2" class="titlestyle">描述：'+item[0].findPointPaperInfo.descript+'</td></tr>';
+				}
+				a+='<tr><td colspan="3" class="titlestyle" style="color:red">说明：完全没掌握：1分	&nbsp;&nbsp;&nbsp;&nbsp;掌握少部分：2分 &nbsp;&nbsp;&nbsp;&nbsp;基本已掌握：3分&nbsp;&nbsp;&nbsp;&nbsp;掌握大部分	：4分&nbsp;&nbsp;&nbsp;&nbsp;完全没问题：5分</td></tr>';
+				$("#bodytr").html(a);
+				for(var i=0;i<item[0].pointContent.length;i++){
+					b+='<tr id="'+(i+1)+'" bgcolor="#EDECEB" onmouseover="this.bgColor=\'#93BBDF\';" onmouseout="this.bgColor=\'#EDECEB\';" align="left">';
+					b+='<td align="center" width="10%">'+(i+1)+'</td>';
+					b+='<td width="60%">&nbsp;'+item[0].pointContent[i].pcontent+'</td>';
+					b+='<td align="center" width="30%">';
+					b+='<input type="radio"	name="mygrade'+(i+1)+'" id="mygrade'+(i+1)+'" value="'+item[0].pointContent[i].pid+'-1">1分 ';
+					b+='<input type="radio"	name="mygrade'+(i+1)+'" id="mygrade'+(i+1)+'" value="'+item[0].pointContent[i].pid+'-2">2分 ';
+					b+='<input type="radio" checked="checked"	name="mygrade'+(i+1)+'" id="mygrade'+(i+1)+'" value="'+item[0].pointContent[i].pid+'-3">3分 ';
+					b+='<input type="radio"	name="mygrade'+(i+1)+'" id="mygrade'+(i+1)+'" value="'+item[0].pointContent[i].pid+'-4">4分 ';
+					b+='<input type="radio"	name="mygrade'+(i+1)+'" id="mygrade'+(i+1)+'" value="'+item[0].pointContent[i].pid+'-5">5分 ';
+				}
+				c+='<input name="btnView" type="button"	onClick="pointanswer('+item[0].findPointPaperInfo.pid+')" class="inp_L1"	id="btnView" onMouseOver="this.className=\'inp_L2\'"	onMouseOut="this.className=\'inp_L1\'" value="提交">';
+				$("#mytable").html(b);
+				$("#mytd").html(c);
+				lengtha=item[0].pointContent.length;
+			});
+			
+		});
+	});
+	
+	window.onbeforeunload = function() {
+	    //这里刷新方法有很多，具体要看你的子窗口是怎样出来的
+	    //window.opener.location.reload();
+	    //parent.location.reload();
+	    //self.opener.location.reload();
+	    window.opener.location.href=window.opener.location.href;
+	};
+	
+	//提交答案				9
+	function pointanswer(pid) {
+		var messageinfo = document.getElementById("messageinfo").value;
+		var answer = "";
+		var num = 0;
+		var num1 = 0
+		$("#showpointInfo input[type=radio]").each(function() {
+			if (this.checked) {
+				answer += $(this).val() + ",";
+				num1 += 1;
+			} else {
+				num += 1;
+			}
+		});
+		if (num / num1 != 4) {
+			alert("您还有未评完的知识点,请全部评完后再提交!");
+		} else {
+			if (confirm("数据一旦提交将不能再修改,您确定要提交吗?")) {
+				$.post("/Examination2.0/exam_handInfpc.action?t=" + new Date(), {
+					pid : pid,
+					stuanswer : answer,
+					lengtha:lengtha,
+					messageInfo : messageinfo
+				}, function(data) {
+					if (data == 2) {
+						alert("您还有未评完的知识点,请全部评完后再提交!");
+						return;
+					} else if (data == 1) {
+						alert("提交成功");
+						window.close();
+					} else {
+						alert("操作失败，请稍后重新");
+					}
+				});
+			} else {
+				return;
+			}
+		}
+
+	}
+</script>
+
+<body bgcolor="#fef4d9">
+	<center>
+		<table width="1000" border="0" cellpadding="0" cellspacing="0">
+			<tr align="center">
+				<td height="65" colspan="3" align="center" valign="middle"></td>
+			</tr>
+			<tr>
+				<td height="43" colspan="3">
+					<table width="100%" border="0" cellspacing="0" id="bodytr">
+						
+							
+						
+					</table>
+				</td>
+			</tr>
+		</table>
+		<hr />
+		<table width="1000" border="1" cellpadding="1" bordercolor="#FFFFFF"
+			cellspacing="1">
+			<tr>
+				<th bordercolor="#7EA6DC" width="10%">编号</th>
+				<th bordercolor="#7EA6DC" width="60%">题目</th>
+				<th bordercolor="#7EA6DC" width="30%">评分</th>
+			</tr>
+		</table>
+		<div id="showpointInfo">
+			<table width="1000" border="1" cellpadding="1" bordercolor="#FFFFFF"
+				cellspacing="1" id="mytable">
+				
+			</table>
+		</div>
+		<br />
+		<table width="1000" border="0" cellpadding="0" cellspacing="0">
+			<tr>
+				<td width="8%"></td>
+				<td width="10%" style="color:red;font-size:14px;font-weight:bold">意见或建议:</td>
+				<td colspan="2" width="70%"><br> <textarea
+						name="messageinfo" cols="70" rows="4" class="text1"
+						id="messageinfo"></textarea></td>
+				<td>&nbsp;</td>
+			</tr>
+			<tr height="60">
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td width="8%"></td>
+				<td colspan="2"><span
+					style="color:red;font-size:14px;font-weight:bold">请认真给自己评分，如有问题请填写在意见或建议栏中，完成后请点击提交按钮提交!</span>
+				</td>
+				<td width="10%" height="43" id="mytd"></td>
+			</tr>
+		</table>
+		<br /> <br />
+	</center>
+</body>
+</html>

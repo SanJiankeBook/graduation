@@ -1,0 +1,27 @@
+@CHARSET "UTF-8";
+
+.messageInfoStyle span{
+	text-indent:2em;
+	line-height:30px;
+	font-size:14px;
+	font-family:微软雅黑;
+	font-weight:bold;
+	display:block;
+}
+
+.messageInfoStyle h4{
+	font-size:16px;
+	font-family:微软雅黑;
+	font-weight:bold;
+}
+
+.messageInfoStyle{
+	 border:1px solid #dfdfdd;
+	 color:#5E5E5E;
+}
+
+.showMessageInfoDiv{
+	height:260px;
+	width:720px;
+	overflow:scroll;
+}

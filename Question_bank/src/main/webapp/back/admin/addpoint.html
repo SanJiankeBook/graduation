@@ -1,0 +1,259 @@
+<link rel="stylesheet" href="../../css/szindex.css" type="text/css"></link>
+<link id="easyuiTheme" rel="stylesheet" type="text/css" href="../../jslib/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="../../jslib/themes/icon.css">
+
+<!-- <script type="text/javascript" src="http://lib.sinaapp.com/js/jquery/2.0/jquery.min.js"></script> -->
+<script type="text/javascript">
+!window.jQuery && document.write('<script src=../../jslib/jquery.min.js><\/script>');
+</script>
+
+<script type="text/javascript" src="../../jslib/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../jslib/jeasyui.common.js"></script>
+<script type="text/javascript" src="../../js/createoption.js"></script>
+<script type="text/javascript" src="../../jslib/locale/easyui-lang-zh_CN.js"></script>
+   	<script type="text/javascript">
+   		$(function(){
+  			//createVersionOption();
+  			//semester=$('input[name="semester"]:checked').val();
+  			//version=$('#version').val();
+  			createSelectOption();//查出所有科目
+  			findPointBySubject();
+  			find();
+  		});
+  		
+  		function findPointBySubject(){
+  			$('#back_zsdgl_datagrid').datagrid({
+	  			url : "/Question_bank/assessment_initPointInfo.action",
+				fit : true,
+				pagination : true,
+				border : true,
+				fitColumns : true,
+				singleSelect : true,
+				pageList : [ 5, 10, 15, 20, 30, 50, 100 ], //每页多少条
+				pageSize : 50, //默认每页多少条
+				sortOrder : 'asc', //排序规则
+				rownumbers : true, //排序ID
+				columns:[[   
+	       			 {field:'pid',title:'编号',width:100,checkbox :true,sortable:true}, 
+	       			 {field:'pcontent',title:'题目',width:150,sortable:true},
+	    		]],
+	    		toolbar: [{
+					text:'添加',
+					iconCls: 'icon-add',
+					handler: function(){
+						add();
+					}
+				},'-',{
+					text:'编辑',
+					iconCls: 'icon-edit',
+					handler: function(){
+						update();
+					}
+				/* },'-',{
+					text:'删除',
+					iconCls: 'icon-edit',
+					handler: function(){
+						delPointInfo();
+					} */
+				}],
+  			});
+  		}
+  		
+  		function find(){
+  			var cid=$('#subject').val();
+  			$('#back_zsdgl_datagrid').datagrid('load',{
+				"cid":cid,
+			});
+  		}
+  		//选择学期
+  		function checkSemester(s){
+  			semester=s;
+  			version=$('#version').val();
+  			createSelectOption(version,semester);
+  			find();
+  		}
+  		//选择版本
+  		function changeVersion(){
+  			semester=$('input[name="semester"]:checked').val();
+  			version=$('#version').val();
+  			createSelectOption(version,semester);
+  			find();
+  		}
+  		function add(){
+  			$('#question').val('');
+  			$('#add_dialog').dialog('open');
+  		}
+  		//添加
+  		function addPointInfo(){
+  			cid=$('#subject').val();
+  			pcontent=$('#question').val();
+  			if(pcontent.length<1||pcontent==null){
+				alert("请输入知识点内容！");
+				return;
+			}
+			
+			$.ajax({
+				url:"/Question_bank/assessment_addPointInfo.action",
+				type:"post",
+				data:{"cid":cid,"pcontent":pcontent},
+				datatype:"json",
+				success:function(examineeClassList){
+					if(examineeClassList.responseCode!=1){
+							$.messager.show({
+							title:'提示',
+							msg:'添加成功',
+							timeout:3000,
+							showType:'slide'
+							});
+							$('#add_dialog').dialog('close');
+							$('#back_zsdgl_datagrid').datagrid({ url:"/Question_bank/assessment_initPointInfo.action",queryParams:{"cid":cid},method:"post"});
+						}else{
+							$.messager.show({
+							title:'提示',
+							msg:'添加失败',
+							timeout:3000,
+							showType:'slide'
+							});
+						}
+					
+				}
+			});
+  		}
+  		//删除知识点
+  		function delPointInfo(){
+  			var rows=$("#back_zsdgl_datagrid").datagrid('getChecked');
+  			if(rows.length<=0){
+					$.messager.show({
+						title:'错误',
+						msg:'请至少选定一行',
+						timeout:3000,
+						showType:'slide'
+					});
+					return;
+			}
+			var pid=rows[0].pid;
+  			var cid=$('#subject').val();
+  			if(confirm("您确定要删除此数据吗?")){
+  				$.ajax({
+  					url:"/Question_bank/assessment_delPointInfo.action",
+					type:"post",
+					data:{"cid":cid,"pid":pid},
+					datatype:"json",
+					success:function(examineeClassList){
+						if(examineeClassList.responseCode!=1){
+							$.messager.show({
+							title:'提示',
+							msg:'删除成功',
+							timeout:3000,
+							showType:'slide'
+							});
+							$('#back_zsdgl_datagrid').datagrid({ url:"/Question_bank/assessment_initPointInfo.action",queryParams:{"cid":cid},method:"post"});
+						}else{
+							$.messager.show({
+							title:'提示',
+							msg:'删除失败',
+							timeout:3000,
+							showType:'slide'
+							});
+						}
+					}
+  				});
+  			}
+  		}
+  		function update(){
+  			var rows=$("#back_zsdgl_datagrid").datagrid('getChecked');
+  			if(rows.length<=0){
+					$.messager.show({
+						title:'错误',
+						msg:'请至少选定一行',
+						timeout:3000,
+						showType:'slide'
+					});
+					return;
+			}
+			var pid=rows[0].pid;
+			var pcontent=rows[0].pcontent;
+			$('#pid').val(pid);
+			$('#questions').val(pcontent);
+  			$('#update_dialog').dialog('open');
+			
+  		}
+  		//编辑
+  		function updatePointInfo(){
+  			var pid=$('#pid').val();
+  			var pcontent=$('#questions').val();
+  			var cid=$('#subject').val();
+  			if(pcontent==""||pcontent==null){
+				alert("请输入知识点内容！");
+				return;
+			}
+			$.ajax({
+				url:"/Question_bank/assessment_updatePointInfo.action",
+					type:"post",
+					data:{"cid":cid,"pid":pid,"pcontent":pcontent},
+					datatype:"json",
+					success:function(examineeClassList){
+						if(examineeClassList.responseCode!=1){
+							$.messager.show({
+							title:'提示',
+							msg:'修改成功',
+							timeout:3000,
+							showType:'slide'
+							});
+							$('#update_dialog').dialog('close');
+							$('#back_zsdgl_datagrid').datagrid({ url:"/Question_bank/assessment_initPointInfo.action",queryParams:{"cid":cid},method:"post"});
+						}else{
+							$.messager.show({
+							title:'提示',
+							msg:'修改失败',
+							timeout:3000,
+							showType:'slide'
+							});
+							$('#back_zsdgl_datagrid').datagrid({ url:"/Question_bank/assessment_initPointInfo.action",queryParams:{"cid":cid},method:"post"});
+						}
+					}
+			});
+  		}
+   	</script>
+
+  <div id="listwritingquestion_layout" data-options="fit:true" class="easyui-layout" style="width:950px;height:600px;">
+  		<!-- <div data-options="region:'north',split:true" style="height:1px;">
+  		</div> -->
+  		 <div data-options="region:'center',title:'查询结果'" style="padding:15px;background:#eee;">
+					<table width="680" border="0" cellspacing="0"  >
+						<tr width="100%" align="center">
+							<td width="50%" class="fontColor" align="right">科目名称:</td>
+							<td width="50%" align="left">
+								<select name='subject' class='select2' id='subject' onChange="find()">
+								</select>
+							</td>
+						</tr>
+					</table>
+	  		<table id="back_zsdgl_datagrid">
+	  		
+	  		</table>
+	  	</div>  
+  	</div>
+		<div id="add_dialog" class="easyui-dialog" title="添加" style="width:400px;height:250px;"  
+      	  data-options="iconCls:'icon-save',resizable:true,modal:true,closed:true,collapsible:false,minimizable:false,maximizable:false">  
+    		 
+			 <span class="fontColor" style="display:inline-block;margin: 0 auto;line-height: 23px;height: 23px;margin-left: 16px;">请在下面方框中输入知识点内容:(如果要批量插入请用";"分隔)</span><span class="prompt">*</span></td>
+			 
+			 <textarea name='question' cols='13' rows='7' class="content"  id="question"></textarea>
+			<div style="margin: 5px auto;width: 50%;">
+				<input name="btnView" type="button" class="inp_L1" id="btnView" onClick="addPointInfo()" onMouseOver="this.className='inp_L2'" onMouseOut="this.className='inp_L1'" value="添加">
+			</div>
+		</div>
+		<div id="update_dialog" class="easyui-dialog" title="编辑" style="width:400px;height:200px;"  
+      	  data-options="iconCls:'icon-save',resizable:true,modal:true,closed:true,collapsible:false,minimizable:false,maximizable:false">  
+    		 
+			<div style="width: 80%;margin: 10px auto;text-align: center;">
+				 <span class="fontColor" style="display:inline-block;height: 25px;line-height: 25px;">请在下面方框中编辑知识点内容:</span><span class="prompt">*</span>
+				 
+			
+			   <br/>编号：<input type="text" id="pid" readonly="readonly"/ style="display:inline-block;height: 25px;line-height: 25px;margin: 5px 0px; "><br/>
+			   	内容：<input type="text" id="questions" style="display:inline-block;height: 25px;line-height: 25px;margin: 5px 0px; "><br/>
+			   	 <input name="btnView" type="button" class="inp_L1" id="btnView" onClick="updatePointInfo()" onMouseOver="this.className='inp_L2'" onMouseOut="this.className='inp_L1'" value="编辑">
+			</div>
+
+		</div>

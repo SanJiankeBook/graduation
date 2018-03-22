@@ -1,0 +1,441 @@
+<link rel="stylesheet" href="../../css/szindex.css" type="text/css"></link>
+<link id="easyuiTheme" rel="stylesheet" type="text/css"
+	href="../../jslib/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css"
+	href="../../jslib/themes/icon.css">
+
+<!-- <script type="text/javascript" src="http://lib.sinaapp.com/js/jquery/2.0/jquery.min.js"></script> -->
+<script type="text/javascript">
+!window.jQuery && document.write('<script src=../../jslib/jquery.min.js><\/script>');
+</script>
+
+<script type="text/javascript" src="../../jslib/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../jslib/jeasyui.common.js"></script>
+<script type="text/javascript" src="../../js/createoption.js"></script>
+<script type="text/javascript"
+	src="../../jslib/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript">
+   		$(function(){
+  			createVersionOption();
+  			semester=$('input[name="semester"]:checked').val();
+  			version=$('#version').val();
+  			createSelectOption(version,semester);
+  			createClassOption();
+  			show();
+  		});
+   		//选择学期
+  		function checkSemester(s){
+  			semester=s;
+  			version=$('#version').val();
+  			createSelectOption(version,semester);
+  			createClassOption()
+  			checkPointPaper();
+  		}
+  		//选择版本
+  		function changeVersion(){
+  			semester=$('input[name="semester"]:checked').val();
+  			version=$('#version').val();
+  			createSelectOption(version,semester);
+  		}
+  		function show(){
+  			$('#back_llzpj_datagrid').datagrid({
+  				url : '/Examination2.0/assessmentpaper_findAllPointPaper.action',
+				fit : true,
+				border : true,
+				fitColumns : true,
+				pagination : true,
+				singleSelect : true,
+				sortOrder : 'asc', //排序规则
+				pageList : [ 5, 10, 15, 20, 30, 50, 100 ], //每页多少条
+				pageSize : 50, //默认每页多少条
+				rownumbers : true, //排序ID
+  				columns:[[   
+  				 {field:'pid',title:'编号',width:100,checkbox :true,sortable:true}, 
+       			 {field:'className',title:'测评班级',width:100,sortable:true}, 
+       			 {field:'examDate',title:'测评日期',width:150,sortable:true},
+       			 {field:'pname',title:'试卷名称',width:200,sortable:true},
+       			 {field:'pstatusname',title:'试卷状态',width:50,sortable:true},   
+    			]],
+  				toolbar: [{
+					text:'开考',
+					iconCls: 'icon-add',
+					handler: function(){
+						openPointPaper();
+					}
+				},'-',{
+					text:'删除',
+					iconCls: 'icon-edit',
+					handler: function(){
+						delPointPaper();
+					}
+				},'-',{
+					text:'编辑',
+					iconCls: 'icon-edit',
+					handler: function(){
+						updatePointPaper();
+					}
+				},'-',{
+					text:'评卷',
+					iconCls: 'icon-edit',
+					handler: function(){
+						endPointPaper();
+					}
+				},'-',{
+					text:'查看试卷',
+					iconCls: 'icon-edit',
+					handler: function(){
+						showPointPaperInfo();
+					}
+				/* },'-',{
+					text:'查看结果',
+					iconCls: 'icon-edit',
+					handler: function(){
+						showPointPaperAnswerInfo();
+					} */
+				}]   
+  			})
+  		}
+  		//筛选试卷
+  		function checkPointPaper(){
+  			var sid=$("#subject").val(); //课程编号
+  			var cid=$("#classes").val();//班级编号
+  			if(sid==0){
+  				sid=null
+  			}
+  			if(cid==0){
+  				cid=null
+  			}
+  			var date=null;   //测试日期
+  			$('#back_llzpj_datagrid').datagrid('load',{
+				"sid":sid,
+				"cid":cid,
+				"examDate":date,
+			});
+  		}
+  		
+  		
+  		//开考
+  		function openPointPaper(){
+  			var rows=$("#back_llzpj_datagrid").datagrid('getChecked');
+  			if(rows.length<=0){
+					$.messager.show({
+						title:'错误',
+						msg:'请至少选定一行',
+						timeout:3000,
+						showType:'slide'
+					});
+					return;
+			}
+			var pid=rows[0].pid;
+			var pstatusname=rows[0].pstatusname;
+			if(pstatusname!="未考"){
+				$.messager.show({
+						title:'错误',
+						msg:'只有未考状态的试卷才能开考',
+						timeout:3000,
+						showType:'slide'
+					});
+					return;
+			}
+  			$.ajax({
+  				url:"/Examination2.0/assessmentpaper_changePointPaperStatus.action",
+  				type:"post",
+  				data:{"pid":pid,"pstatus":2},
+  				datatype:"json",
+  				success:function(data){
+  					var examineeClassList=data;
+  					if(examineeClassList.responseCode==0){
+  						$.messager.show({
+							title:'提示',
+							msg:'开考成功',
+							timeout:3000,
+							showType:'slide'
+							});
+							$("#back_llzpj_datagrid").datagrid('load',{});
+							$("#back_llzpj_datagrid").datagrid('clearSelections');
+							checkPointPaper();
+					
+  					}else{
+  						$.messager.show({
+							title:'提示',
+							msg:'开考失败',
+							timeout:3000,
+							showType:'slide'
+							});
+  					}
+  				}
+  			});
+  			
+  		}
+  		//删除
+  		function delPointPaper(){
+  		var rows=$("#back_llzpj_datagrid").datagrid('getChecked');
+  			if(rows.length<=0){
+					$.messager.show({
+						title:'错误',
+						msg:'请至少选定一行',
+						timeout:3000,
+						showType:'slide'
+					});
+					return;
+			}
+			var pid=rows[0].pid;
+			var pstatusname=rows[0].pstatusname;
+			if(pstatusname!="未考"){
+				$.messager.show({
+						title:'错误',
+						msg:'只有未考状态的试卷才能删除',
+						timeout:3000,
+						showType:'slide'
+					});
+					return;
+			}
+  			$.ajax({
+  				url:"/Examination2.0/assessmentpaper_delPointPaper.action",
+  				type:"post",
+  				data:{"pid":pid},
+  				datatype:"json",
+  				success:function(data){
+  					var examineeClassList=data;
+  					if(examineeClassList.responseCode==0){
+  						$.messager.show({
+							title:'提示',
+							msg:'删除成功',
+							timeout:3000,
+							showType:'slide'
+							});
+							$("#back_llzpj_datagrid").datagrid('load',{});
+							$("#back_llzpj_datagrid").datagrid('clearSelections');
+							checkPointPaper();
+  					}else{
+  						$.messager.show({
+							title:'提示',
+							msg:'删除失败',
+							timeout:3000,
+							showType:'slide'
+							});
+  					}
+  				}
+  			});
+  		}
+  		
+  		//已评
+  		function endPointPaper(){
+  			var rows=$("#back_llzpj_datagrid").datagrid('getChecked');
+  			if(rows.length<=0){
+					$.messager.show({
+						title:'错误',
+						msg:'请至少选定一行',
+						timeout:3000,
+						showType:'slide'
+					});
+					return;
+			}
+			var pid=rows[0].pid;
+			var pstatusname=rows[0].pstatusname;
+			if(pstatusname!="开评"){
+				$.messager.show({
+						title:'错误',
+						msg:'只有开评状态的试卷才能评卷',
+						timeout:3000,
+						showType:'slide'
+					});
+					return;
+			}
+  		
+  			$.ajax({
+  				url:"/Examination2.0/assessmentpaper_changePointPaperStatus.action",
+  				type:"post",
+  				data:{"pid":pid,"pstatus":3},
+  				datatype:"json",
+  				success:function(data){
+  					var examineeClassList=data;
+  					if(examineeClassList.responseCode==0){
+  						$.messager.show({
+							title:'提示',
+							msg:'评卷成功',
+							timeout:3000,
+							showType:'slide'
+							});
+							$("#back_llzpj_datagrid").datagrid('load',{});
+							$("#back_llzpj_datagrid").datagrid('clearSelections');
+							checkPointPaper();
+  					}else{
+  						$.messager.show({
+							title:'提示',
+							msg:'评卷失败',
+							timeout:3000,
+							showType:'slide'
+							});
+  					}
+  				}
+  			});
+  			
+  		}
+  		//编辑
+  		function updatePointPaper(){
+  		var rows=$("#back_llzpj_datagrid").datagrid('getChecked');
+  			if(rows.length<=0){
+					$.messager.show({
+						title:'错误',
+						msg:'请至少选定一行',
+						timeout:3000,
+						showType:'slide'
+					});
+					return;
+			}
+			var pid=rows[0].pid;
+			var pstatusname=rows[0].pstatusname;
+			if(pstatusname!="未考"){
+				$.messager.show({
+						title:'错误',
+						msg:'只有未考状态的试卷才能编辑',
+						timeout:3000,
+						showType:'slide'
+					});
+					return;
+			}
+  			if (window.localStorage) {
+	   			 localStorage.setItem("pid", pid);
+			} else {
+	    		 Cookie.write("pid", pid);	
+			}
+			$('<div id="edit"/>').dialog({  
+				title: '编辑',   
+				width: 700,   
+				height: 450,
+				top:40,   
+				closed: false,   
+				closable:true,
+				content: '<iframe src=updatepointpaper.html  frameborder=0 style=border:0;width:100%;height:99.5%;></iframe>',
+				modal: true ,
+				onClose:function(){
+					$(this).dialog('destroy');
+				}
+    		});
+  			//window.location.href='/WebExamination/Jsp/assessment/admin/updatepointpaper.html';
+  		}
+  		//查看试卷
+  		function showPointPaperInfo(){
+  		var rows=$("#back_llzpj_datagrid").datagrid('getChecked');
+  			if(rows.length<=0){
+					$.messager.show({
+						title:'错误',
+						msg:'请至少选定一行',
+						timeout:3000,
+						showType:'slide'
+					});
+					return;
+			}
+			var pid=rows[0].pid;
+			var pstatusname=rows[0].pstatusname;
+			console.info(pstatusname)
+			/* if(pstatusname!="已评"){
+				$.messager.show({
+						title:'错误',
+						msg:'只有已评状态的试卷才能评卷',
+						timeout:3000,
+						showType:'slide'
+					});
+					return;
+			} */
+  			if (window.localStorage) {
+	   			 localStorage.setItem("pid", pid);
+			} else {
+	    		 Cookie.write("pid", pid);	
+			}
+			$('<div id="edit"/>').dialog({  
+				title: '查看试卷',   
+				width: 700,   
+				height: 450,
+				top:40,   
+				closed: false,   
+				closable:true,
+				content: '<iframe src=showpointpaperinfo.html  frameborder=0 style=border:0;width:100%;height:99.5%;></iframe>',
+				modal: true ,
+				onClose:function(){
+						$(this).dialog('destroy');
+				}
+    		});
+  			//window.location.href='/WebExamination/Jsp/assessment/admin/showpointpaperinfo.html';
+  		}
+  		//查看结果
+  		function showPointPaperAnswerInfo(){
+  		var rows=$("#back_llzpj_datagrid").datagrid('getChecked');
+  			if(rows.length<=0){
+					$.messager.show({
+						title:'错误',
+						msg:'请至少选定一行',
+						timeout:3000,
+						showType:'slide'
+					});
+					return;
+			}
+			var pid=rows[0].pid;
+			var pstatusname=rows[0].pstatusname;
+			if(pstatusname!="已评"){
+				$.messager.show({
+						title:'错误',
+						msg:'只有已评状态的试卷才能查看结果',
+						timeout:3000,
+						showType:'slide'
+					});
+					return;
+			}
+  			if (window.localStorage) {
+	   			 localStorage.setItem("pid", pid);
+			} else {
+	    		 Cookie.write("pid", pid);	
+			}
+			$('<div id="edit"/>').dialog({  
+				title: '查看结果',   
+				width: 700,   
+				height: 450,
+				top:40,   
+				closed: false,   
+				closable:true,
+				content: '<iframe src=showpointpaperanswerinfo.html  frameborder=0 style=border:0;width:100%;height:99.5%;></iframe>',
+				modal: true ,
+				onClose:function(){
+						$(this).dialog('destroy');
+				}
+    		});
+  			//window.location.href='/WebExamination/Jsp/assessment/admin/showpointpaperanswerinfo.html';
+  		}
+  		
+  		/* $('#examDate').datebox({
+			onSelect: function(date){
+				var dateTime=date.getFullYear()+"-"+(date.getMonth()+1<10?'0'+(date.getMonth()+1):date.getMonth()+1)+"-"+(date.getDate()<10?'0'+date.getDate():date.getDate());
+				$('#examDate').datebox('setValue',dateTime);
+			}
+		}); */
+   	</script>
+
+<div id="cc" class="easyui-layout" style="width: 950px; height: 600px;"
+	data-options="fit:true">
+	<div id="back_zjwh_datagrid_div"   style="padding-bottom:20px;background:#eee;" data-options="region:'center',title:'浏览自评卷'">
+		<table width="800" height="20px">
+			<tr>
+				<td width="10%" class="fontColor">学期编号:</td>
+				<td width="8%"><input name='semester' type='radio' id="s1"
+					onClick="checkSemester('S1')" value='S1' checked />S1</td>
+				<td width="8%"><input name='semester' type='radio' id="s2"
+					onClick="checkSemester('S2')" value='S2' />S2</td>
+				<td width="12%"><input type='radio' name='semester' id="S3"
+					value='S3' onClick="checkSemester('S3')" />S3</td>
+				<td width="10%" class="fontColor">测评班级:</td>
+				<td width="15%"><select name='classes' class='select2'
+					id='classes' onChange="checkPointPaper()">
+				</select></td>
+				<td width="45%"></td>
+				<!-- <td width="45%"><span style="color: red">请选择您的查询条件，然后点击右边的筛选</span></td>
+				<td><input name="btnView" type="button"
+					onClick="checkPointPaper()" class="inp_L1" id="btnView"
+					onMouseOver="this.className='inp_L2'"
+					onMouseOut="this.className='inp_L1'" value="筛选"></td> -->
+			</tr>
+		</table>
+		<table id="back_llzpj_datagrid">
+		</table>
+	</div>
+</div>

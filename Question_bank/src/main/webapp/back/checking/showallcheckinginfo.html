@@ -1,0 +1,122 @@
+<link rel="stylesheet" href="../../css/szindex.css" type="text/css"></link>
+
+<script type="text/javascript" src="../../js/dateChoose.js"></script>
+<!-- <script src="http://lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.js"></script> -->
+<script type="text/javascript">
+	!window.jQuery
+			&& document
+					.write('<script src=../../js/jquery-1.9.1.js><\/script>');
+</script>
+<script type="text/javascript" src="../../js/checking.js"></script>
+<style type="text/css">
+.corll_div{
+overflow:scroll; /*任何时候都强制显示滚动条*/
+overflow:auto; /*需要的时候会出现滚动条*/
+overflow-x:auto; /*控制X方向的滚动条*/
+overflow-y:auto; /*控制Y方向的滚动条*/
+}
+
+.find_table_slelct{
+border: 1px solid #F8D880 ;
+border-radius:5px;
+width: 100%;
+margin-top: 10px;
+background-color: #F3F3F3;
+padding-bottom: 10px;
+}
+
+ #div1{
+            width:70%;
+            height:100%;
+            background: #ccc;
+            position: absolute;
+            z-index: 40;
+            top:0px;
+            left:0px;
+            overflow: hidden;
+            opacity: 0.8;
+            display: none;
+        }
+        #div2{
+        	text-align:center;
+        	margin: 0 auto;
+            position: absolute;
+            z-index: 50;
+            width:40%;
+            height:100%;
+            top:0px;
+            left:27%;
+            display: none;
+            background-color: #fffffff;
+        }
+}
+</style>
+<body style="text-align: center;margin: 0 auto;">
+<div align="center" id="bigbox">
+	<div style="width: 1000px;" class="find_table_slelct">
+	<table width="1000px" border="0px" cellpadding="0" cellspacing="0">
+		<tr height="43">
+			<td width="10%" class="fontColor linefontsize" align="right">学期编号：&nbsp;</td>
+			<td width="5%"><input name='semester1' type='radio' id="semesterS1" onClick="checkSemesters('S1')" value='S1' checked />S1</td>
+			<td width="5%"><input name='semester1' type='radio' id="semesterS2" onClick="checkSemesters('S2')" value='S2' />S2</td>
+			<td width="38%" align="left"><input type='radio' name='semester1' id="semesterS3" onClick="checkSemesters('S3')" value='S3' />S3</td>
+			<td class="fontColor linefontsize">考勤班级：&nbsp; <select name='examineeClass1' class='select2' id='examineeClass'>
+					<option value="0" selected="selected">--请选择--</option>
+			</select>
+			<label style="color:red;font-size:15px;">*</label>
+			</td>
+		</tr>
+		<tr height="43">
+			<td width="10%" class="fontColor linefontsize" align="right">考勤日期：&nbsp;</td>
+			<td align="left" class="fontColor linefontsize" colspan="3"><input type="text" id="startDate" name="startDate" readonly="readonly" onclick="fPopCalendar(event,this,this)"
+				onfocus="this.select()" />&nbsp; 到 &nbsp;<input type="text" id="endDate" name="endDate" readonly="readonly" onclick="fPopCalendar(event,this,this)" onfocus="this.select()" />&nbsp;&nbsp;&nbsp;&nbsp;
+				<select name="dateTime" id="dateTime" class='select2'>
+					<option value="0" selected="selected">--请选择--</option>
+					<option value="上午">上午</option>
+					<option value="下午">下午</option>
+					<option value="晚上">晚上</option>
+			</select></td>
+			<td class="fontColor linefontsize"><input name="btnView" type="button" onClick="showAllCheckingInfo()" class="inp_L1" id="btnView" onMouseOver="this.className='inp_L2'"
+				onMouseOut="this.className='inp_L1'" value="查询" /></td>
+		</tr>
+	</table>
+	</div>
+	<br />
+	<hr size="2" style="color: blue" />
+	<br />
+	
+	<div class="corll_div"  style="width: 45%;height:70%;float: left;">
+		<h3>班级考勤记录</h3>
+		<table width="100%" style="float: left;" border="0px" cellpadding="1" cellspacing="1">
+		<tr align="center" height="30">
+			<th bordercolor="#7EA6DC" width="15%">编号</th>
+			<th bordercolor="#7EA6DC" width="15%">班级</th>
+			<th bordercolor="#7EA6DC" width="15%">教员</th>
+			<th bordercolor="#7EA6DC" width="25%">日期</th>
+			<th bordercolor="#7EA6DC" width="15%">时间段</th>
+			<th bordercolor="#7EA6DC" width="15%">操作</th>
+		</tr>
+	</table>
+	<div id="findCheckingResultInfo" style="width: 100%;float: left;"></div>
+	</div>
+	<div class="corll_div" style="height:70%;widows: 53%; ">
+	<h3>个人考勤记录</h3>
+		<table id="change_check_info" width="95%" border="1" cellpadding="1" bordercolor="#FFFFFF" cellspacing="1">
+		<tr height="30">
+			<th bordercolor="#7EA6DC" width="15%">学员姓名</th>
+			<th bordercolor="#7EA6DC" width="65%">到勤状态</th>
+			<th bordercolor="#7EA6DC" width="10%">备注</th>
+			<th bordercolor="#7EA6DC" width="10%">操作</th>
+		</tr>
+	</table>
+	</div>
+	<div id="toggle">
+ 	<div id="div1" style="margin: 0 auto;text-align: center;width: 70%;margin-left: 15%" >
+ 	</div>
+    <div id="div2" style="margin: 0 auto;width: 50%;text-align: center;margin-top: 5%">
+	</div>
+<br />
+<br />
+<br />
+<br />
+</body>

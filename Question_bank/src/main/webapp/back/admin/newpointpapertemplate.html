@@ -1,0 +1,311 @@
+<link rel="stylesheet" href="../../css/szindex.css" type="text/css"></link>
+<link id="easyuiTheme" rel="stylesheet" type="text/css"
+	href="../../jslib/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css"
+	href="../../jslib/themes/icon.css">
+
+<!-- <script type="text/javascript" src="http://lib.sinaapp.com/js/jquery/2.0/jquery.min.js"></script> -->
+<script type="text/javascript">
+!window.jQuery && document.write('<script src=../../jslib/jquery.min.js><\/script>');
+</script>
+
+<script type="text/javascript" src="../../jslib/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../jslib/jeasyui.common.js"></script>
+<script type="text/javascript" src="../../js/createoption.js"></script>
+<script type="text/javascript"
+	src="../../jslib/locale/easyui-lang-zh_CN.js"></script>
+<style>
+.find_table_slelct {
+    border: 1px solid #F8D880;
+    border-radius: 5px;
+    width: 100%;
+    margin-top: 10px;
+    background-color: #F3F3F3;
+    padding-bottom: 10px;
+}
+</style>
+<script type="text/javascript">
+  		$(function(){
+  			createVersionOption();
+  			semester=$('input[name="semester"]:checked').val();
+  			version=$('#version').val();
+  			createSelectOption(version,semester);
+  			findPointBySubject();
+  			$('#examDate').datebox('setValue', formatterDate(new Date()));
+  		});
+  		
+  		//选择学期
+  		function checkSemester(s){
+  			semester=s;
+  			version=$('#version').val();
+  			createSelectOption(version,semester);
+  			createClassOption()
+  			findPointBySubject();
+  		}
+  		//选择版本
+  		function changeVersion(){
+  			semester=$('input[name="semester"]:checked').val();
+  			version=$('#version').val();
+  			createSelectOption(version,semester);
+  			findPointBySubject()
+  		}
+  		
+  		//查询知识点
+  		function findPointBySubject(){
+  			cid=$('#subject').val();
+  			
+  			$.post("/Examination2.0/assessment_initPointInfos.action", {
+  				"cid":cid
+			}, function(data) {
+				var examineeClassList=data;
+					var tablestr="";
+					if(examineeClassList.responseCode!=1){
+						for(var i=0;i<examineeClassList.obj.length;i++){
+							tablestr+="<tr id='"+(i+1)+"' bgcolor='#EDECEB' align='left'>";
+							tablestr+="<td align='center' width='14%' >"+(i+1)+" </td>";
+							tablestr+="<td align='left' >"+examineeClassList.obj[i].pcontent+"</td>";
+							tablestr+="<td align='center' width='12%'>";
+							tablestr+="<input type='checkbox' name='checkpoint' id='checkpoint' value='"+examineeClassList.obj[i].pid+"' onclick='checkmy()' >";
+							tablestr+="</td></tr>";
+						}
+					}else{
+						tablestr+="<td height='60' colspan='3'><span class='fontColor'>本科目暂无问卷调查知识点，请添加！</span></td>";
+					}
+					$("#pointInfo").html(tablestr);
+
+			});
+  			
+  			/* $.ajax({
+  				url:"/Examination2.0/assessment_initPointInfos.action",
+				type:"post", 
+				data:{"cid":cid}, 
+				datatype:"json",
+				success:function(data){
+					var examineeClassList=data;
+  					var tablestr="";
+  					if(examineeClassList.responseCode!=1 && examineeClassList.obj!=null){
+  						for(var i=0;i<examineeClassList.obj.length;i++){
+  							tablestr+="<tr id='"+(i+1)+"' bgcolor='#EDECEB' align='left'>";
+  							tablestr+="<td align='center' width='14%' >"+(i+1)+" </td>";
+  							tablestr+="<td align='left' >"+examineeClassList.obj[i].pcontent+"</td>";
+  							tablestr+="<td align='center' width='12%'>";
+  							tablestr+="<input type='checkbox' name='checkpoint' id='checkpoint' value='"+examineeClassList.obj[i].pid+"' onclick='checkmy()' >";
+  							tablestr+="</td></tr>";
+  						}
+  					}else{
+  						tablestr+="<td height='60' colspan='3'><span class='fontColor'>本科目暂无问卷调查知识点，请添加！</span></td>";
+  					}
+  					$("#pointInfo").html(tablestr);
+				}			
+  			}); */
+  		}
+  		//全选
+  		function checkall(val){
+			var arr=document.getElementsByName("checkpoint");
+				for(var i=0;i<arr.length;i++){
+					if(arr[i].type=="checkbox"){
+						arr[i].checked=val;
+					}
+				}
+		}
+
+		function checkmy(){
+			var arr=document.getElementsByName("checkpoint");
+				for(var i=0;i<arr.length;i++){
+					if(arr[i].type=="checkbox"&&arr[i].checked==false){
+						document.getElementById("checkallpoints").checked=false;
+						return;
+					}
+					document.getElementById("checkallpoints").checked=true;
+				}
+		}
+		
+		function newPointPaper(){
+			var sid=$('#subject').val();//课程编号
+			var paperPwd='a'; //测评密码
+			var paperPwds='a'; //测评密码
+			var paperstatus=1; //试卷状态
+			var paperName=$('#paperName').val(); //试卷名称
+			var paperdescript=$('#paperdescript').val(); //备注说明
+			var pcontent="";  //试题
+			
+			if(paperPwd==""||paperPwd==null){
+				alert("请输入考卷密码");
+				return false;
+			}
+	
+			if(paperPwd!=paperPwds){
+				alert("两次密码输入不一致");
+				return false;
+			}
+	
+			if(paperName==""||paperName==null){
+				alert("请输入试卷名称");
+				return false;
+			}
+			$("#showpointInfo input[type=checkbox]" ).each(function(){
+				if(this.checked){
+					pcontent+=$(this).val()+",";
+				}
+			});
+	
+			if(pcontent==""||pcontent==null){
+				alert("请选择考试试题");
+				return false;
+			}
+			
+			$.ajax({
+  				url:"/Examination2.0/assessmentpaper_newPointPapertemplate.action",
+				type:"post", 
+				data:{"sid":sid,"paperPwd":paperPwd,
+				"pstatus":paperstatus,"pname":paperName,"descript":paperdescript,
+				"ptitle":pcontent}, 
+				datatype:"json",
+				success:function(data){
+					 
+					var examineeClassList=data;
+					if(examineeClassList.responseCode!=1){
+						$.messager.show({
+						title:'提示',
+						msg:'出卷成功',
+						timeout:3000,
+						showType:'slide'
+						});
+						/* $('#paperPwd').val("");
+						$('#paperPwds').val("");
+						$('#examDate').val("");; */
+						$('#paperdescript').val("");
+						$('#paperName').val("");
+						
+						$("#showpointInfo input[type=checkbox]" ).each(function(){
+							if(this.checked){
+								this.checked=false;
+							}
+						});
+						checkmy();
+					}else{
+					$.messager.show({
+						title:'错误',
+						msg:'出卷失败，请稍后再试',
+						timeout:3000,
+						showType:'slide'
+					});
+						
+					}
+				}			
+  			});
+	
+		}
+		
+		$('#examDate').datebox({
+		onSelect: function(date){
+			var dateTime=date.getFullYear()+"-"+(date.getMonth()+1<10?'0'+(date.getMonth()+1):date.getMonth()+1)+"-"+(date.getDate()<10?'0'+date.getDate():date.getDate());
+			$('#examDate').datebox('setValue',dateTime);
+			
+		}
+		});
+		
+		
+		formatterDate = function(date) {
+			var day = date.getDate() > 9 ? date.getDate() : "0" + date.getDate();
+			var month = (date.getMonth() + 1) > 9 ? (date.getMonth() + 1) : "0"
+			+ (date.getMonth() + 1);
+			return date.getFullYear() + '-' + month + '-' + day;
+			};
+
+  	</script>
+
+
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0"
+	style="margin: 0 auto;">
+	<tr>
+		<td height="43" colspan="3">
+		<div class="find_table_slelct">
+			<table width="90%" border="0" cellspacing="0" style="margin-left: 5%">
+				<tr height="43">
+					<td width="7%" class="fontColor">学期编号:</td>
+					<td width="4%"><input name='semester' type='radio' id="s1"
+						onClick="checkSemester('S1')" value='S1' checked />S1</td>
+					<td width="4%"><input name='semester' type='radio' id="s2"
+						onClick="checkSemester('S2')" value='S2' />S2</td>
+					<td width="6%"><input type='radio' name='semester' id="S3"
+						value='S3' onClick="checkSemester('S3')" />S3</td>
+					<td width="4%" class="fontColor">版本号:</td>
+					<td width="10%"><select name='version' class='select2'
+						id='version' onChange="changeVersion()">
+
+					</select></td>
+					<td width="7%" class="fontColor">科目名称:</td>
+					<td width="12%"><select name='subject' class='select2'
+						id='subject' onChange="findPointBySubject()">
+
+					</select></td>
+					<td  align="left">
+						<div>
+							<span class="fontColor">试卷名称:</span>&nbsp;&nbsp;&nbsp; <input
+								name="paperName" type="text" class="text4" id="paperName"
+								size="15"> <span class="prompt">*</span>
+						</div>
+					</td>
+				</tr>
+				<!-- <tr height="43">
+							<td colspan="3"><span class="fontColor">考卷状态：</span>
+			  			   		<select name='paperstatus' class='select2' id='paperstatus'>
+			  			   			<option value="1" selected="selected">未评</option>
+			  			   			<option value="2">开评</option>
+			  			   			<option value="3">已评</option>
+			  			    	</select><span class="prompt">*</span>
+			  			   </td>
+		               </tr> -->
+			</table>
+			</div>
+		</td>
+	</tr>
+</table>
+<div width="100%">
+	<div style="width: 52%;float: left">
+		<table width="90%" border="1" cellpadding="1" bordercolor="#FFFFFF"
+			cellspacing="1" style="margin: 0 auto;">
+			<tr>
+				<td height="50" colspan="3"><span class="fontColor">本课程已有知识点如下:</span></td>
+			</tr>
+			<tr>
+				<th bordercolor="#7EA6DC" width="14%">编号</th>
+				<th bordercolor="#7EA6DC">题目</th>
+				<th bordercolor="#7EA6DC" width="12%"><input type="checkbox"
+					name="checkallpoints" id="checkallpoints"
+					onclick="checkall(this.checked)" />全选</th>
+			</tr>
+		</table>
+		<div id="showpointInfo">
+			<table width="90%" border="1" cellpadding="1" bordercolor="#FFFFFF"
+				cellspacing="1" id="pointInfo" style="margin: 0 auto;">
+			</table>
+		</div>
+	</div>
+	<div style="width: 45%;float:right;margin-top: 30px ">
+		<table width="90%" border="0" cellpadding="0" cellspacing="0"
+			style="margin: 0 auto;">
+			<tr>
+				<td height="25" width="14%"><span class="fontColor">&nbsp;备注说明:</span></td>
+				<td colspan="2" width="75%"><br>
+				<textarea name="paperdescript" rows="2" class="text1"
+						id="paperdescript"></textarea></td>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td colspan="2"><span style="color: red">请在上面的表格选择您要出的考题，然后点击右边的确认按钮。</span></td>
+				<td width="10%" height="43"><input name="btnView" type="button"
+					onClick="newPointPaper()" class="inp_L1" id="btnView"
+					onMouseOver="this.className='inp_L2'"
+					onMouseOut="this.className='inp_L1'" value="确认"></td>
+			</tr>
+			<tr>
+				<td colspan="3"><span class="fontColor">出题备注:凡是带有 *
+						号的输入框必须正确添入,不可以为空!</span></td>
+			</tr>
+		</table>
+	</div>
+</div>
+

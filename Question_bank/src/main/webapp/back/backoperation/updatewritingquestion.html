@@ -1,0 +1,510 @@
+<link rel="stylesheet" href="../../css/szindex.css" type="text/css"></link>
+<link id="easyuiTheme" rel="stylesheet" type="text/css" href="../../jslib/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="../../jslib/themes/icon.css">
+<!-- <script type="text/javascript" src="http://lib.sinaapp.com/js/jquery/2.0/jquery.min.js"></script> -->
+<script type="text/javascript">
+!window.jQuery && document.write('<script src=../../jslib/jquery.min.js><\/script>');
+</script>
+<script type="text/javascript" src="../../jslib/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../jslib/jeasyui.common.js"></script>
+<script type="text/javascript" src="../../js/createoption.js"></script>
+<script type="text/javascript" src="../../jslib/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../back/ckeditor/ckeditor.js"></script>
+<script type="text/javascript">
+		var quid="";
+		var userid="";
+		var oldEdition="";
+		$(function(){
+			question=CKEDITOR.replace( 'question',{ height: '50px', width: '600px' } );
+			questionA=CKEDITOR.replace( 'questionA',{ height: '50px', width: '600px' } );
+			questionB=CKEDITOR.replace( 'questionB',{ height: '50px', width: '600px' } );
+			questionC=CKEDITOR.replace( 'questionC',{ height: '50px', width: '600px' } );
+			questionD=CKEDITOR.replace( 'questionD',{ height: '50px', width: '600px' } );
+			quid= window.localStorage? localStorage.getItem("quid"): Cookie.read("quid");
+			userid= window.localStorage? localStorage.getItem("systemUser_uId"): Cookie.read("systemUser_uId");
+			findquestion(quid)
+		});
+		
+		function findquestion(quid){
+		 	$.ajaxSettings.async = false;
+			$.ajax({
+				url : "/Examination2.0/dataarray_findQuestion.action",
+					type : "post",
+					data : {
+						"id":quid
+					},
+					datatype : "json",
+					success : function(data) {
+						var Object = data;
+						if (Object.responseCode != 1) {
+							$('#questionId').val(quid);
+							createVersionOption();
+							$('#version').val(Object.obj.editionId);
+							oldEdition=Object.obj.editionId;
+							$("#"+Object.obj.semester).attr("checked","checked");
+							var semester = $('input[name="semester"]:checked').val();
+							var version = $('#version').val();
+							createSelectOption(version, semester);
+							$('#subject').val(Object.obj.subjectId);
+							
+							$('#type'+Object.obj.questionType).attr("checked","checked");
+							createChapterOption(Object.obj.subjectId);
+							$('#chapter').val(Object.obj.chapterId);
+							if(Object.obj.questionType==1){
+								$('#singleType').attr("checked","checked");
+								$("#radioSpan").css("display", "block");
+								$("#checkboxSpan").css("display", "none");
+								$("#radioAnswer"+Object.obj.answer).attr("checked","checked");
+							}else{
+								$('#checkType').attr("checked","checked");
+								$("#radioSpan").css("display", "none");
+								$("#checkboxSpan").css("display", "block");
+								var answer=Object.obj.answer;
+								for(var i=0;i<answer.length;i++){
+									var an=answer.substr(i,1);
+									$('#checkAnswer'+an).attr("checked","checked");
+								}
+							}
+							$('#D'+Object.obj.difficulty).attr("checked","checked");
+							 question.setData(Object.obj.question);
+							questionA.setData(Object.obj.optionA);
+							questionB.setData(Object.obj.optionB);
+							questionC.setData(Object.obj.optionC);
+							questionD.setData(Object.obj.optionD);
+							 	$('#question').html(question.getData());
+								$('#questionA').html(questionA.getData());
+								$('#questionB').html(questionB.getData());
+								$('#questionC').html(questionC.getData());
+								$('#questionD').html(questionD.getData()); 
+							/*  $('#question').html(Object.obj.question);
+							$('#questionA').html(Object.obj.optionA);
+							$('#questionB').html(Object.obj.optionB);
+							$('#questionC').html(Object.obj.optionC);
+							$('#questionD').html(Object.obj.optionD);  */
+							$('#remark').html(Object.obj.remark);
+						}
+					}
+			})
+		}
+		//选择学期
+	function checkSemester(s) {
+		semester = s;
+		version = $('#version').val();
+		createSelectOption(version, semester);
+		
+	}
+	//选择版本
+	function changeVersion() {
+		semester = $('input[name="semester"]:checked').val();
+		version = $('#version').val();
+		createSelectOption(version, semester);
+		changeSubject();
+	}
+	//选择课程
+	function changeSubject() {
+		subjectId = $('#subject').val();
+		createChapterOption(subjectId);
+	}
+	
+	function searchWritingQuestionByForward(falg){
+		quid=$('#questionId').val();
+		$.ajax({
+				url : "/Examination2.0/dataarray_nextQuestion.action",
+					type : "post",
+					data : {
+						"id":quid,
+						"falg":falg
+					},
+					datatype : "json",
+					success : function(data) {
+						var Object =data;
+						
+						if (Object.responseCode != 1) {
+							findquestion(Object.obj);
+						}else{
+							if(falg=="next"){
+								alert("已经是最后一条了")
+							}else{
+								alert("已经是第一条了")
+							}
+						}
+					}
+				});
+	}
+	
+	function delQuestion(){
+		quid=$('#questionId').val();
+		if (window.confirm("是否删除！")){
+			$.ajax({
+			url : "/Examination2.0/dataarray_delQuestion.action",
+					type : "post",
+					data : {"id":quid},
+					datatype : "json",
+					success : function(data) {
+						var Object = data;
+						if (Object.responseCode != 1) {
+							alert('删除成功');
+							searchWritingQuestionByForward("next")
+						}else{
+							alert('删除失败，请稍后再试');
+						}
+					}
+				});
+		}
+	}
+	
+	function update(){
+		quid=$('#questionId').val();
+		if (window.confirm("是否修改！")){
+			var strQuestion = $('#question').val();
+			var strQuestionA = $('#questionA').val();
+			var strQuestionB = $('#questionB').val();
+			var strQuestionC = $('#questionC').val();
+			var strQuestionD = $('#questionD').val();
+			var semester=$('input[name="semester"]:checked').val();
+			var type=$('input[name="type"]:checked').val();
+			var difficulty=$('input[name="difficulty"]:checked').val();
+			var subject=$('#subject').val();
+			var version=$('#version').val();
+			var chapter=$('#chapter').val();
+			var remark=$('#remark').val();
+			
+			var answer="";
+		if (strQuestion == "" || strQuestionA == "" || strQuestionB == ""
+				|| strQuestionC == "" || strQuestionD == "") {
+			$('#strPrompt').html("输入的内容不完整，请重新输入再添加！");
+			return false;
+		}
+		
+		if(type==1){
+			answer=$('input[name="radioAnswer"]:checked').val();
+		}else{
+			/* $($("input[name='checkAnswer'][checked]")).each(function(){
+				answer+= $(this).val();
+				});
+			 */
+			$('input[name="checkAnswer"]:checked').each(function(){   
+                   answer+= $(this).val()
+			});
+			if(answer.length<2){
+                  alert("复选题必须有两个或两个以上的答案");
+                  return;
+            }
+            
+		}
+		$.ajax({
+			url : "/Examination2.0/qusetion_updateQuestion.action",
+			type : "post",
+			data : {
+				"id":quid,
+				"question":strQuestion,
+				"optionA":strQuestionA,
+				"optionB":strQuestionB,
+				"optionC":strQuestionC,
+				"optionD":strQuestionD,
+				"semester":semester,
+				"editionId":version,
+				"questionType":type,
+				"difficulty":difficulty,
+				"subjectId":subject,
+				"chapterId":chapter,
+				"answer":answer,
+				"remark":remark
+			},
+			datatype : "json",
+			success : function(data) {
+				var Object = data;
+				if(Object.responseCode==0){
+					alert("修改成功");
+				}else{
+					alert("修改失败");
+				}
+			}
+			
+		});
+		}
+	}
+	
+	function copyQuestion(){
+		var versionStr=$("#version").find("option:selected").text();
+		var subjectStr=$("#subject").find("option:selected").text();
+		var chapterStr=$("#chapter").find("option:selected").text();
+		if (window.confirm("是否把此题复制到\n版本"+versionStr+"\n"+"知识点："+subjectStr+"\n"+"章节："+chapterStr+"中去")){
+			var strQuestion = $('#question').val();
+			var strQuestionA = $('#questionA').val();
+			var strQuestionB = $('#questionB').val();
+			var strQuestionC = $('#questionC').val();
+			var strQuestionD = $('#questionD').val();
+			var semester=$('input[name="semester"]:checked').val();
+			var type=$('input[name="type"]:checked').val();
+			var difficulty=$('input[name="difficulty"]:checked').val();
+			var subject=$('#subject').val();
+			var version=$('#version').val();
+			var chapter=$('#chapter').val();
+			var remark=$('#remark').val();
+			
+			var answer="";
+		if (strQuestion == "" || strQuestionA == "" || strQuestionB == ""
+				|| strQuestionC == "" || strQuestionD == "") {
+			$('#strPrompt').html("输入的内容不完整，请重新输入再添加！");
+			return false;
+		}
+		
+		if(type==1){
+			answer=$('input[name="radioAnswer"]:checked').val();
+		}else{
+			$('input[name="checkAnswer"]:checked').each(function(){   
+                   answer+= $(this).val()
+			});
+			
+			if(answer.length<2){
+                  alert("复选题必须有两个或两个以上的答案");
+                  return;
+            }
+            
+		}
+		alert(userid);
+		$.ajax({
+			url : "/Examination2.0/qusetion_addQuestion.action",
+			type : "post",
+			data : {
+				"question":strQuestion,
+				"optionA":strQuestionA,
+				"optionB":strQuestionB,
+				"optionC":strQuestionC,
+				"optionD":strQuestionD,
+				"semester":semester,
+				"editionId":version,
+				"questionType":type,
+				"difficulty":difficulty,
+				"subjectId":subject,
+				"chapterId":chapter,
+				"answer":answer,
+				"remark":remark,
+				"id":quid,
+				"personid":userid,
+				"oldEditionId":oldEdition
+			},
+			datatype : "json",
+			success : function(data) {
+				var Object = data;
+				if(Object.responseCode==0){
+					alert("复制成功");
+				}else{
+					alert("复制失败");
+				}
+			}
+			
+		});
+		}
+	}
+	
+/* 	
+	function createSelectOption(version, semester){
+		//var editid=$("#addEditionName").find("option:selected").val();
+		alert(version);
+		$.post("/Examination2.0/chapter_subjectName.action",{"id":version}, function(json) {
+			//var obj = eval(json);// 转换后的JSON对象
+			
+			$("#editionName-subjectName").html("");
+			if(json!=null && json!=""){
+			var obj=json.obj;
+				if(obj!=null && obj!="" && json.responseCode==0){
+					
+					for ( var i = 0; i < obj.length; i++) {
+						if(i==0){
+							$("#subject").append(
+									"<option  value='"+obj[i].subjectName+"' selected>"
+											+ obj[i].subjectName + "</option>");
+						}else{
+							$("#subject").append(
+									"<option   value='"+obj[i].subjectName+"' >"
+											+ obj[i].subjectName + "</option>");
+						}
+		
+					}
+				}
+			}
+			
+		});
+		
+	} */
+	
+	
+	</script>
+
+
+
+	<form>
+		<table width="630" border="0" cellpadding="0" cellspacing="0">
+			<tr>
+				<td width="100%" colspan="4">
+					<table width="630" height="216" border="0" cellpadding="0"
+						cellspacing="0">
+						<tr>
+							<td height="60" colspan="4">
+								<table width="97%" height="72%">
+									<tr>
+										<td >&nbsp;
+
+										</td>
+									</tr>
+								</table></td>
+						</tr>
+						<tr>
+							<td class="fontColor">试题编号:</td>
+							<td>&nbsp; <input name="questionId" type="text"
+								class="text4" id="questionId" value="" readonly="readonly">
+							</td>
+							<td colspan="2">&nbsp;</td>
+						</tr>
+						<tr>
+							<td width="65" class="fontColor">题目类型:</td>
+							<td width="207"><input name="type" type="radio"
+								id="singleType" onClick="checkQuestionType(1)" value="1"  />
+								单选题 &nbsp; <input type="radio" name="type" value="2"
+								id="checkType" onClick="checkQuestionType(2)" /> 复选题</td>
+							<td width="83"><span class="fontColor">版本号:</span></td>
+							<td width="270"><select name='version' class='select'
+								id='version' onchange="changeVersion()">
+							</select></td>
+							<td width="5">&nbsp;</td>
+						</tr>
+						<tr>
+							<td><span class="fontColor">学期编号: </span></td>
+							<br>
+							<td ><input name='semester' type='radio' id="S1"
+								onClick="checkSemester('S1')" value='S1' /> &nbsp; S1 &nbsp; <input
+								name='semester' type='radio' id="S2"
+								onClick="checkSemester('S2')" value='S2' /> S2 &nbsp; <input
+								type='radio' name='semester' id="S3" value='S3'
+								onClick="checkSemester('S3')" /> S3</td>
+							<td><span class="fontColor">科目名称:</span></td>
+							<td><select name='subject' class='select2' id='subject'
+								onChange="changeSubject()">
+							</select></td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td><span class="fontColor">难 易 度:</span></td>
+							<td><span class="style2"> 
+
+							<input type="radio" name="difficulty" value="1" id="D1">  难 &nbsp;&nbsp;
+                  			<input type="radio" name="difficulty" value="2" id="D2">  中 &nbsp;&nbsp;
+                  			<input type="radio" name="difficulty" value="3" id="D3">  易
+                
+								
+							</td>
+							<td height="30"><span class="fontColor">章节名称:</span></td>
+							<td height="30"><select name='chapter' class='select2'
+								id='chapter'>
+							</select></td>
+						</tr>
+					</table></td>
+			</tr>
+			<tr>
+				<td height="43" colspan="4"><span class="fontColor"><br>
+						请在下面方框中输入题目内容: </span> <span class="prompt">*</span></td>
+			</tr>
+			<tr>
+				<td colspan="4"><textarea name='question' cols='' class="text1"
+						id="question" rows=""></textarea></td>
+			</tr>
+			<tr>
+				<td colspan="4">&nbsp;</td>
+			</tr>
+			<tr>
+				<td colspan="4">&nbsp; <span class="fontColor">选项 A 描述:</span>
+					<span class="fontColor"></span> <span class="prompt"> * </span> <textarea
+						name="questionA" cols="" rows="" class="text1" id="questionA"></textarea>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="4">&nbsp; <span class="fontColor"><br>
+						选项 B 描述:</span> <span class="fontColor"></span> <span class="prompt">
+						* </span> <textarea name="questionB" cols="" rows="" class="text1"
+						id="questionB"></textarea></td>
+			</tr>
+			<tr>
+				<td colspan="4">&nbsp; <br> <span class="fontColor">选项
+						C 描述:</span> <textarea name="questionC" cols="" rows="" class="text1"
+						id="questionC"></textarea></td>
+			</tr>
+			<tr>
+				<td colspan="4">&nbsp; <span class="fontColor"><br>
+						选项 D 描述:</span> <textarea name="questionD" cols="" rows="" class="text1"
+						id="questionD"></textarea></td>
+			</tr>
+			<tr>
+				<td height="30" colspan="4"><br> <span class="fontColor">正确答案选项:
+				</span> <span id="radioSpan"> &nbsp; <span class="prompt">* </span>&nbsp;
+						&nbsp; &nbsp;&nbsp;&nbsp; <input type="radio" name="radioAnswer"
+						value="A" id="radioAnswerA"> A &nbsp; <input type="radio"
+						name="radioAnswer" value="B" id="radioAnswerB"> B &nbsp; <input type="radio"
+						name="radioAnswer" value="C" id="radioAnswerC"> C &nbsp; <input type="radio"
+						name="radioAnswer" value="D" id="radioAnswerD"> D </span> <span id="checkboxSpan">
+						&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp; <input
+						name="checkAnswer" type="checkbox" id="checkAnswerA" value="A">
+						A&nbsp; <input name="checkAnswer" type="checkbox"
+						id="checkAnswerB" value="B"> B&nbsp; <input
+						name="checkAnswer" type="checkbox" id="checkAnswerC" value="C">
+						C &nbsp; <input name="checkAnswer" type="checkbox"
+						id="checkAnswerD" value="D"> D </span> <br></td>
+			</tr>
+
+			<tr>
+				<td height="25" colspan="4"><span class="fontColor">&nbsp;备注说明:</span>
+				</td>
+			</tr>
+			<td width="311"></td>
+			<tr>
+				<td colspan="4"><textarea name='remark' cols='' rows=''
+						class="text1" id="remark">  </textarea></td>
+			</tr>
+			<tr>
+				<td colspan="4"><br>
+					<table width="100%" align="right">
+						<tr>
+							<td colspan="6" class="fontColor">提示: <br> 1、凡是带有 *
+								号的输入框必须正确填入。 <br> 2、上下一题的翻页是按题库中的物理顺序进行的。 <br>
+
+								3、单击复制题目按钮可以复制成不同版本的题目，原题目保留。</td>
+						</tr>
+						<tr>
+							<td align="right">
+								<table width="100%" border="0" cellspacing="2" cellpadding="2">
+									<tr>
+										<td width="30%"><span></span></td>
+										<td width="0%" height="50" align="center"><input
+											type="submit" class="inp_L1" value="修改题目"
+											onClick="update()"
+											onMouseOver="this.className='inp_L2'"
+											onMouseOut="this.className='inp_L1'"></td>
+										<td align="center" width="0%"><input class="inp_L1"
+											id="copyQues" type="button" value="复制题目"
+											onClick="copyQuestion()"
+											onmouseover="this.className='inp_L2'"
+											onmouseout="this.className='inp_L1'"></td>
+										<td align="center" width="0%"><input class="inp_L1"
+											id="delQues" type="button" value="删 除"
+											onclick="delQuestion()" onmouseover="this.className='inp_L2'"
+											onmouseout="this.className='inp_L1'"></td>
+										
+										<td width="0%" align="center"><input class="inp_L1"
+											id="goBackToList" type="button" value="上一题"
+											onclick="searchWritingQuestionByForward('prev')"
+											onmouseover="this.className='inp_L2'"
+											onmouseout="this.className='inp_L1'"></td>
+										<td width="0%" align="center"><input class="inp_L1"
+											id="goBackToList" type="button" value="下一题"
+											onclick="searchWritingQuestionByForward('next')"
+											onmouseover="this.className='inp_L2'"
+											onmouseout="this.className='inp_L1'"></td>
+									</tr>
+								</table></td>
+						</tr>
+					</table></td>
+			</tr>
+		</table>
+	</form>
+

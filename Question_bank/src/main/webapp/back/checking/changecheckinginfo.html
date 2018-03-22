@@ -1,0 +1,93 @@
+<link rel="stylesheet" href="../../css/changechecking.css" type="text/css"></link>
+<link rel="stylesheet" href="../../css/szindex.css" type="text/css"></link>
+
+<style type="text/css">
+div {
+	white-space: nowrap;
+}
+
+#bigbox .checkingtitle {
+	color: blue;
+}
+</style>
+<script type="text/javascript" src="../../js/dateChoose.js"></script>
+<!-- <script src="http://lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.js"></script> -->
+<script type="text/javascript">
+	!window.jQuery
+			&& document
+					.write('<script src=../../js/jquery-1.9.1.js><\/script>');
+</script>
+<script type="text/javascript" src="../../js/changecheckinginfo.js"></script>
+
+<div align="left">
+	<a href="javascript:history.go(-1)" style="color: red"> <img src="images/return-left.png" title="返回上一页" width="30" height="30"></img></a>
+</div>
+
+<div align="center" id="bigbox">
+	<table width="1000px" border="0" cellpadding="0" cellspacing="0">
+		<tr align="center">
+			<td height="65" colspan="7"><span class="checkingtitle"><b>源辰信息学员考勤表</b></span></td>
+		</tr>
+		<tr height="43">
+			<td width="13%" class="fontColor linefontsize" align="right">学期编号：&nbsp;</td>
+			<td width="12%" class="fontColor linefontsize" id="semester"></td>
+			<td width="18%" class="fontColor linefontsize" id="className"></td>
+			<td width="18%" class="fontColor linefontsize" id="userName"></td>
+			<td class="fontColor linefontsize">考勤日期：&nbsp; <input type="label" value="" id="checkDate" name="checkDate"  readonly="readonly" />&nbsp; <select
+				name="dateTime" id="dateTime" class='select2'>
+					<!-- <option value="上午">上午&nbsp;</option>
+					<option value="下午">下午&nbsp;</option>
+					<option value="晚上">晚上&nbsp;</option> -->
+			</select>
+			</td>
+		</tr>
+	</table>
+	<br />
+	<hr size="2" style="color: blue" />
+	<br />
+	<table width="100%" border="1" cellpadding="1" bordercolor="#FFFFFF" cellspacing="1">
+		<tr height="25">
+			<th bordercolor="#7EA6DC" width="8%">编号</th>
+			<th bordercolor="#7EA6DC" width="10%">学员姓名</th>
+			<th bordercolor="#7EA6DC" width="40%">到勤状态</th>
+			<th bordercolor="#7EA6DC">备注</th>
+		</tr>
+	</table>
+	<div id="checkClassInfo">
+		<table width="100%" border="1" cellpadding="1" bordercolor="#FFFFFF" cellspacing="1">
+			<!-- 
+				<tr height="23" id="" bgcolor="#EDECEB" onmouseover="this.bgColor='#93BBDF';" onmouseout="this.bgColor='#EDECEB';" align="left">
+				<td align="center" width="8%"></td>
+				<td align="center" width="10%"></td>
+				<td width="40%" align="center">
+					<input type="radio" name="status1" id="status1" value="1" />已到&nbsp;&nbsp;&nbsp;
+					<input type="radio" name="status1" id="status1" value="2" />迟到&nbsp;&nbsp;&nbsp;
+					<input type="radio" name="status1" id="status1" value="3" />病假&nbsp;&nbsp;&nbsp;
+					<input type="radio" name="status1" id="status1" value="4" />请假&nbsp;&nbsp;&nbsp;
+					<input type="radio" name="status1" id="status1" value="5" />旷课&nbsp;&nbsp;&nbsp;
+					<input type="radio" name="status1" id="status1" value="6" />早退&nbsp;&nbsp;&nbsp;
+				</td>
+				<td><input type="text" size="56" id="" value="" /></td>
+			</tr>
+			<tr height="30"><td align="center" colspan="4"><span class="fontColor" style="color:red;font-weight:bold;font-size:20px;">暂无考勤记录</span></td></tr>
+			 -->
+
+		</table>
+	</div>
+	<div id="beizhu">
+		<div id="remarktitle">
+			<label for="remarkInfo"><b>教课备注：</b></label>
+		</div>
+		<div id="remarkinfo">
+			<textarea cols="50" rows="3" id="remarkInfo" readonly="readonly"></textarea>
+		</div>
+		<br /> <span><input name="btnView" type="button" onClick="changeResultInfo()" class="inp_L1" id="btnView" onMouseOver="this.className='inp_L2'" onMouseOut="this.className='inp_L1'"
+			value="提交修改"></span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span><input name="btnView" type="button" onClick="javascript:history.go(-1)" class="inp_L1" id="btnView"
+			onMouseOver="this.className='inp_L2'" onMouseOut="this.className='inp_L1'" value="后退"></span> <br />
+		<br />
+		<br />
+		<br />
+	</div>
+
+</div>
+

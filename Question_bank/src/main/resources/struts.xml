@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+<constant name="struts.enable.DynamicMethodInvocation" value="true" />
+	<!-- 是否为开发者模式  是为 true -->
+  	<constant name="struts.devMode" value="false" /> 
+	<constant name="struts.multipart.saveDir" value="/tmp"/>
+	<constant name="struts.multipart.maxSize" value="2097152" />
+	   <!-- 当 struts的配置文件修改后，系统是否自动重新加载该文件，默认值为false（生 产环境下使用），开发阶段最好打开 -->   
+	<constant name="struts.configuration.xml.reload" value="true" />   
+	<!-- struts的对象工厂 ： spring 由spring来创建bean -->
+	<constant name="struts.objectFactory" value="spring" />
+
+	<!-- 加了这个 没 乱码了 -->
+	<constant name="struts.i18n.encoding" value="UTF-8" />
+
+
+	<package name="default" namespace="/" extends="struts-default">
+	
+		<action name="initsystem" class="initsystem">
+			<result name="success">/Jsp/index.html</result>
+		</action>
+		<!-- class对应action.xml文件中的具体位置 -->
+		<action name="codepic" class="codepic">
+			<result name="success" type="stream">
+				<param name="contentType">image/jpeg</param>
+				<param name="inputName">imageStream</param>
+				<param name="bufferSize">2048</param>
+			</result>
+		</action> 
+
+		<action name="login_*" class="login" method="{1}">
+			<result name="examineeLogin_success" type="redirect">student/student.html
+			</result>
+			<result name="systemuser_fail" type="redirect">student/checking_fail.html
+			</result>
+			<result name="examineeLogin_fail" type="redirect">student/checking_fail.html
+			</result>
+			<result name="systemuser_success" type="redirect">/student/student.html
+			</result>
+			<result name="system_exit" type="redirect">login.html</result>
+			<result name="updatePassWord_success" type="redirect">/student/student.html
+			</result>
+		</action>
+
+
+		<action name="course_*" class="course" method="{1}">
+
+		</action>
+
+		<action name="subject_*" class="subject" method="{1}">
+
+		</action>
+
+		<action name="isLogin_*" class="isLogin" method="{1}">
+
+		</action>
+
+		<action name="examineeclass_*" class="examineeclass" method="{1}">
+
+		</action>
+
+		<action name="chapter_*" class="chapter" method="{1}">
+		</action>
+		
+		
+		<action name="work_*" class="work" method="{1}">
+		</action>
+		
+		<action name="enterprise_*" class="com.yc.webexam.actions.EnterpriseAction" method="{1}">
+		</action>
+		
+		<action name="job_*" class="com.yc.webexam.actions.JobAction" method="{1}">
+		</action>
+		
+		<action name="paper_*" class="paper" method="{1}">
+		</action>
+		<action name="exam_*" class="exam" method="{1}">
+			<result name="ready_success" type="redirect">Jsp/examinee/writingpaper.html
+			</result>
+			<result name="exam_lookPaper" type="redirect">/Jsp/backoperation/examineewritpaper.html
+			</result>
+		</action>
+
+		<action name="checking_*" class="checking" method="{1}">
+			<result name="talk_success" type="redirect">student/showadailytalk.html
+			</result>
+		</action>
+
+		<action name="validateuser_*" class="validateuser" method="{1}">
+		</action>
+		<action name="dataarraylist_*" class="dataarraylist" method="{1}">
+			<result name="showWritingPaperList">Jsp/backoperation/listwritingpaper.jsp</result>
+		</action>
+		<action name="writingPaper_*" class="writingPaper" method="{1}">
+		</action>
+
+		<action name="initData_*" class="initData" method="{1}">
+		</action>
+		<action name="assessment_*" class="assessment" method="{1}">
+		</action>
+		<action name="examArrangement_*" class="examarrangement"
+			method="{1}">
+		</action>
+
+		<action name="assessmentpaper_*" class="assessmentpaper"
+			method="{1}">
+		</action>
+
+		<action name="showstudentassessment_*" class="showstudentassessment"
+			method="{1}">
+		</action>
+		<action name="qusetion_*" class="qusetion" method="{1}">
+			<interceptor-ref name="fileUpload">
+				<!-- 允许上传的文件类型 -->
+				<param name="allowedTypes">text/plain</param>
+				<!-- 允许单个文件的大小 -->
+				<param name="maximumSize">1024000</param>
+
+			</interceptor-ref>
+			<!-- 配置拦截器 -->
+			<interceptor-ref name="defaultStack" />
+			<!-- 配置action中的属性 -->
+			<param name="savePath">/upload</param>
+		</action>
+
+		<action name="pointAnswer_*" class="pointAnswer" method="{1}">
+		</action>
+		<action name="pointPaper_*" class="pointPaper" method="{1}">
+		</action>
+		<action name="temp_*" class="temp" method="{1}">
+		</action>
+		<action name="systemUser_*" class="systemUser" method="{1}">
+		</action>
+
+		<action name="dataarray_*" class="dataarray" method="{1}">
+		</action>
+
+
+		<action name="writingAnswer_*" class="writingAnswer" method="{1}">
+		</action>
+		<action name="exportWord_*" class="exportWord" method="{1}">
+		</action>
+		<action name="upload_*" class="upload" method="{1}">
+			<!-- 动态设置savePath的属性值 -->
+			<param name="savePath">/upload</param>
+			<interceptor-ref name="fileUpload">
+				<!-- 文件大小, 以字节为单位 -->
+				<param name="maximumSize">10500000</param>
+			</interceptor-ref>
+			<!-- 默认拦截器必须放在fileUpload之后，否则无效 -->
+			<interceptor-ref name="defaultStack" />
+		</action>
+
+		<action name="uploadExcel_*" class="uploadExcel" method="{1}">
+			<result name="success" type="stream">
+				<param name="contentDisposition">attachment;filename=${fileFileName}</param>
+				<param name="inputName">downloadFile</param>
+			</result>
+		</action>
+		
+		<!-- 排课系统 -->
+		 <!-- 页面一加载查询出所有的未毕业班级信息名称 -->
+		 <action name="findClass" class="teachScheduleAction" method="examClass">
+		 </action>
+		 <!-- 生成表格 -->
+		 <action name="getTable" class="teachScheduleAction" method="getTable">
+		 <result name="success"></result>
+		 </action>
+		 <!-- 得到课程信息-->
+		 <action name="getClass" class="teachScheduleAction" method="getClassInfo">
+		 <result name="success"></result>
+		 </action>
+		 <!-- 验证课程信息-->
+		 <action name="isHaveCurri" class="teachScheduleAction" method="isHaveCurri">
+		 </action>
+		  <!-- 插入课程数据 -->
+		 
+		 <action name="teachSchedule_insertCurri" class="teachScheduleAction" method="insertCurri">
+		 <result name="success"></result>
+		 </action>
+		 
+		 <!-- 获取所有老师 信息 -->
+		 <action name="findAllTeacher" class="teachScheduleAction" method="getAllTeacher">
+		 
+		 </action>
+		 <!-- 获取所有老师 信息 -->
+		 <action name="findAllTeacher2" class="teachScheduleAction" method="getAllTeacherInterview">
+		 
+		 </action>
+
+		<!-- 获取所有老师 课程信息 -->
+ 		<action name="teacherCurriFind_getAllTeacherCurriInfo" class="teachScheduleAction" method="getAllTeacherCurriInfo">
+		 </action>
+		 
+		<!-- 获取所有班级课程信息 -->
+ 		<action name="classCurriFind_getAllTeacherCurriInfo" class="teachScheduleAction" method="getAllClassCurriInfo">
+		 
+		 </action>
+		 
+		 <!-- 获取所有教室 信息 -->
+		 <action name="findAllClassroom" class="teachScheduleAction" method="getAllClassroom">
+		 
+		 </action>
+		 
+		 <!-- 获取所有教室课程信息 -->
+ 		<action name="classroomCurriFind_getAllTeacherCurriInfo" class="teachScheduleAction" method="getAllClassroomCurriInfo">
+		 
+		 </action>
+		 
+		  <!-- 加载所有老师数据 -->
+		 <action name="findTeacher" class="teachScheduleAction" method="getAllTeacher">
+		 </action>
+		  <!-- 加载月度课时统计信息-->
+		 <action name="findTeacherScheduleInfo" class="teachScheduleAction" method="getTeacherSchedule">
+		 </action>
+		  <!-- 更新课表信息-->
+		 <action name="toUpdateCurri" class="teachScheduleAction" method="updateToTable">
+		 </action>
+		 
+		  <!-- 删除课表信息-->
+		 <action name="deleteCurri" class="teachScheduleAction" method="deleteCurriInfo">
+		 </action>
+		 <action name="doUpdateCurri" class="teachScheduleAction" method="updateCurriInfo">
+		 </action>
+		 <!-- 查询所有的课程信息 -->
+		 <action name="getAllChapter" class="teachScheduleAction" method="getAllChapter">
+		 </action>
+		 
+		  <!-- 满意度调查表 -->
+		 <action name="openSatisfactionAction" class="satisfactionAction" method="openSatisfaction">
+		 </action>
+		 <!-- 显示老师满意度-->
+		  <action name="showTeacherSatisfactionAction" class="satisfactionAction" method="showTeacherSatisfaction">
+		 </action>
+		 <!-- 显示班级满意度 -->
+		  <action name="showClassSatisfactionAction" class="satisfactionAction" method="showClassSatisfaction">
+		 </action>
+		 <!-- 实现资源上传 -->
+		  <action name="ResourceTypeAction_*" class="com.yc.webexam.actions.ResourceTypeAction" method="{1}">
+		 </action>
+		 <!-- 判断是否开启满意度-->
+		  <action name="isOpenSatisfactionAction" class="satisfactionAction" method="isOpenSatisfaction" >
+		 </action>
+		 <!-- 满意度汇总表-->
+		 <action name="findSummaryInfo" class="satisfactionAction" method="findSummaryInfomation">
+		 </action>
+		  <!-- 满意不满意详情显示-->
+		   <action name="findEvaluateDetail" class="satisfactionAction" method="getEvaluateDetail">
+		 </action>
+		 
+		  <!-- 满意度调查细节表 -->
+		 <action name="showTeacherSatisfactionDetailAction" class="satisfactionDetailAction" method="showTeacherSatisfactionDetail">
+		 </action>
+		<!-- 显示满意度调查细节表 -->
+ 		 <action name="showClassSatisfactionDetailAction" class="satisfactionDetailAction" method="showClassSatisfactionDetail">
+		 </action>
+		 <!-- 班级人数总数-->
+		 <action name="getClassPeopleCountAction" class="satisfactionDetailAction" method="showClassPeopleCount">
+		 </action>
+
+		 
+		 <!-- 访谈记录的操作 -->
+		<action name="examinInterviewRecord_*" class="examinInterviewRecord"
+			method="{1}">
+		</action>
+		 
+		  <!-- 插入满意度调查细节表 -->
+		 <action name="insertSatisfactionAction" class="satisfactionDetailAction" method="insertSatisfactionDetail">
+		 </action>
+		  <!-- 图片上传 -->
+		 <action name="imageUploadAction" class="com.yc.webexam.actions.ImageUploadAction" method="imgUpload">
+		 </action>
+		 
+		 <action name="exportToExcel" class="CurriToExcel" method="ExcelExport">
+		 	<result name="excel" type="stream"><!-- type="stream 把一般内容输出到流 -->
+			    <param name="contentType">application/vnd.ms-excel</param>
+			    <!-- 参数contentType的地方指定为application/vnd.ms-excel -->
+			    <param name="contentDisposition">attachment;filename="CurriExcel.xls"</param>
+			    <!-- 设置为 attachment 将会告诉浏览器下载该文件  filename 指定下载文件保有存时的文件名--> 
+			    <param name="inputName">excelFile</param>
+			    <!-- 参数inputName指定输入流的名称,而且action里面必须有excelFile这个属性的get方法 -->
+			</result>
+		 </action>
+		 
+		<!--  <action name="teachSeduceExportToExcel" class="com.yc.webexam.actions.teachSeduceToExcel" method="ExcelExport">
+		 	<result name="excel" type="stream">
+			    <param name="contentType">application/vnd.ms-excel</param>
+			    <param name="contentDisposition">attachment;filename="teachSeduceExcel.xls"</param>
+			    <param name="inputName">excelFile</param>
+			</result>
+		 </action> -->
+		 
+		  <action name="teachSeduceExportToExcel" class="com.yc.webexam.actions.teachSeduceToExcel" method="ExcelExport">
+		 	 
+		 </action> 
+
+		   
+	</package>
+		
+
+</struts>

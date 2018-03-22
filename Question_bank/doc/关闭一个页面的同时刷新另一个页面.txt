@@ -1,0 +1,9 @@
+关闭一个页面的同时刷新另一个页面  window.open()方法打开的页面
+
+window.onbeforeunload = function() {
+	    //这里刷新方法有很多，具体要看你的子窗口是怎样出来的
+	    //window.opener.location.reload();
+	    //parent.location.reload();
+	    //self.opener.location.reload();
+	    window.opener.location.href=window.opener.location.href;
+	};

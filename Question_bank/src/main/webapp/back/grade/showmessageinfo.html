@@ -1,0 +1,62 @@
+  	<META http-equiv=Content-Type content="text/html; charset=utf-8">
+    <link href="../../css/szindex.css" type=text/css rel=stylesheet>
+    <link href="../../css/showmessageinfo.css" type=text/css rel=stylesheet>
+	<!-- <script src="http://lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.js"></script> -->
+<script type="text/javascript">
+!window.jQuery && document.write('<script src=../../js/jquery-1.9.1.js><\/script>');
+</script>
+	<script type="text/javascript" src="../../js/showmessageinfoN.js"></script>
+  
+  <body>
+  <table width="680" border="0" cellpadding="0" cellspacing="0">
+  <tr>
+    <td height="100" align="center">
+      </td>
+  </tr>
+  <tr>
+    <td>
+      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr height="50">
+          <td align="center" width="10%"  class="fontColor">学期:</td>
+          <td width="25%">
+          	<input  type="radio" checked="checked" name="semseter" value="S1" id="semseter1" onClick="createSelectOption('S1')"/>S1
+          	&nbsp;&nbsp;<input  type="radio" name="semseter" value="S2" id="semseter2"  onClick="createSelectOption('S2')"/>S2
+          	&nbsp;&nbsp;<input  type="radio" name="semseter" value="S3" id="semseter3"  onClick="createSelectOption('S3')"/>S3
+          </td >
+          <td width="15%" class="fontColor" align="center">课程名称:</td>
+          <td colspan="2"><span class="prompt">&nbsp;
+            <select name="subjectName" id="subjectOption" class="text4">
+            </select>
+            </span><span class="prompt">*</span>
+          </td>
+          </tr>
+          <tr height="50">
+          <td align="center" class="fontColor">班级:</td>
+          <td width="25%">
+            <select class="text4" name="examclassid" id="examclassName" onChange="showStuNameByClassName(this.value)">
+            </select>
+            <span class="prompt"> *
+            </span>
+          </td>
+          <td class="fontColor" width="15%" align="center">学生姓名:</td>
+          <td colspan="2"><span class="prompt">&nbsp;
+            <select name="studentName" id="examineeName" class="text4">
+            </select>
+            </span><span class="prompt">*</span>
+          </td>
+        </tr>
+        <tr height="40" >
+          <td colspan="4" style="color:red;font-weight:bold;font-size:14px">请从上面选择您的筛选条件，然后点击右边的查询!</td>
+          <td valign="middle" width="20%"><input name="search" type="button" class="inp_L1" id="search" onMouseOver="this.className='inp_L2'" onMouseOut="this.className='inp_L1'" value="查 询" onClick="showMessagesInfo()"/>
+          </td>
+        </tr>
+      </table>
+      <br/>
+      <hr/>
+      <div id="findMessagesInfo">
+      
+       </div>
+    </td>
+  </tr>
+</table>
+  </body>

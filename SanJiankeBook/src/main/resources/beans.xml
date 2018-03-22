@@ -17,7 +17,6 @@
 
 
 	<!-- xml与注解混合配置 -->
-
 	<!-- 加入包的扫描，以实例化bean -->
 	<context:component-scan base-package="com.yc" />
 	

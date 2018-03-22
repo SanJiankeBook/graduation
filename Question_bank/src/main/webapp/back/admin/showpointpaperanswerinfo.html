@@ -1,0 +1,136 @@
+<link rel="stylesheet" href="../../css/szindex.css" type="text/css"></link>
+<link id="easyuiTheme" rel="stylesheet" type="text/css" href="../../jslib/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="../../jslib/themes/icon.css">
+
+<!-- <script type="text/javascript" src="http://lib.sinaapp.com/js/jquery/2.0/jquery.min.js"></script> -->
+<script type="text/javascript">
+!window.jQuery && document.write('<script src=../../jslib/jquery.min.js><\/script>');
+</script>
+
+<script type="text/javascript" src="../../jslib/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../jslib/jeasyui.common.js"></script>
+<script type="text/javascript" src="../../js/createoption.js"></script>
+<script type="text/javascript" src="../../jslib/locale/easyui-lang-zh_CN.js"></script>
+	<script type="text/javascript">
+		var pid=0;
+		$(function(){
+			pid= window.localStorage? localStorage.getItem("pid"): Cookie.read("pid");
+			showPointPaperInfo(pid);
+			studentCount();
+		})
+		
+		function studentCount(){
+			$.ajax({
+				url:"/Examination2.0/assessmentpaper_studentCount.action",
+  				type:"post",
+  				data:{"pid":pid},
+  				datatype:"json",
+  				success:function(data){
+  						var object= data;
+  						if(object.responseCode==0){
+  							$('#count').html("测评人数为：&nbsp;&nbsp;"+object.obj+"人");
+  						}else{
+  							$('#count').html("数据错误，请稍后重试");
+  						}
+  					
+  				}
+			});
+		}
+		
+		
+		function showPointPaperInfo(pid){
+  		$.ajaxSettings.async = false; 
+  			$.ajax({
+  				url:"/Examination2.0/assessmentpaper_findPointPaper.action",
+  				type:"post",
+  				data:{"pid":pid},
+  				datatype:"json",
+  				success:function(data){
+  					var examineeClassList= data;
+  					for(var i=0;i<examineeClassList.obj.length;i++){
+  						$('#subjectName').html("科目名称：&nbsp;&nbsp;"+examineeClassList.obj[i].subjectName);
+  						$('#examDate').html("测评日期：&nbsp;&nbsp;"+examineeClassList.obj[i].date);
+  						$('#paperName').html("题目：&nbsp;&nbsp;"+examineeClassList.obj[i].pname);
+  						$('#className').html("测评班级：&nbsp;&nbsp;"+examineeClassList.obj[i].className);
+  						$('#paperdescript').html("描述：&nbsp;&nbsp;"+examineeClassList.obj[i].descript);
+  						
+  						pointPaperAnswerCount(pid);
+  					}
+  				}
+  			});
+  		}
+  		//统计分数
+  		function pointPaperAnswerCount(pid){
+		$.ajax({
+					url:"/Examination2.0/pointPaper_findPointPaperInfoPid.action",
+					type:"post",
+					datatype:"json",
+					data:{"pid":pid},
+					success:function(data){
+						var Object= data;
+						var pointInfoStr='';
+						if (Object.responseCode == 0) {
+							for(var i=0;i<Object.obj.length;i++){
+								pointInfoStr+='<tr id="'+i+'" bgcolor="#EDECEB" onmouseover="this.bgColor=\'#93BBDF\';" onmouseout="this.bgColor=\'#EDECEB\';" align="left">';
+								pointInfoStr+='<td align="center" width="10%">'+i+'</td>';
+								pointInfoStr+='<td width="70%">&nbsp;'+Object.obj[i].pcontent+'</td>';
+								pointInfoStr+='<td align="center" width="10%">'+Object.obj[i].sumScore+'分</td>';
+								pointInfoStr+='<td align="center" width="10%">'+Object.obj[i].avgScore+'分</td></tr>';
+							}
+						}else{
+							pointInfoStr='<tr bgcolor="#EDECEB" onmouseover="this.bgColor=\'#93BBDF\';" onmouseout="this.bgColor=\'#EDECEB\';" align="left" ><td height="60" colspan="3"><span class="fontColor">暂无测评知识点信息</span></td></tr>';
+						}
+						$("#showpointInfo").html(pointInfoStr);
+					} 
+				});	
+		}
+	</script>
+
+
+  
+
+	<table width="680" border="0" cellpadding="0" cellspacing="0">
+		<tr>
+			<td height="43" colspan="3">
+				<table width="100%" border="0" cellspacing="0">
+					<tr height="43">
+						<td width="40%" class="fontColor" id="subjectName">科目名称：&nbsp;&nbsp;</td>
+						<td width="20%" class="fontColor" id="className">测评班级：&nbsp;&nbsp;</td>
+						<td class="fontColor" id="examDate">测评日期：&nbsp;&nbsp;</td>
+					</tr>
+					<tr>
+						<td class="fontColor" id=paperName>题目：&nbsp;&nbsp;</td>
+						<td colspan="2" class="fontColor" id=paperdescript>描述：&nbsp;&nbsp;
+						</td>
+					</tr>
+					</table>
+				</td>
+		   </tr>
+	  </table>
+	  <hr/>
+	<table width="680" border="1" cellpadding="1" bordercolor="#FFFFFF" cellspacing="1" >
+		<tr>
+			<td height="50" colspan="2" width="40%"><span class="fontColor" style="font-weight:bold" id="count">测评人数为：&nbsp;&nbsp;人</span></td>
+
+		</tr>
+	</table>
+	<table width="680" border="1" cellpadding="1" bordercolor="#FFFFFF" cellspacing="1" >
+		<tr>
+			<th bordercolor="#7EA6DC" width="10%">编号</th>
+			<th bordercolor="#7EA6DC">题目</th>
+			<th bordercolor="#7EA6DC" width="10%">总分</th>
+			<th bordercolor="#7EA6DC" width="10%">平均分</th>
+		</tr>
+	</table>
+	<div>
+	<table width="680" border="1" cellpadding="1" bordercolor="#FFFFFF" cellspacing="1" id="showpointInfo">
+
+
+
+
+
+
+	</table>
+	</div>
+	<br/><br/>
+

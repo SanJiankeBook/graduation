@@ -1,0 +1,577 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<html>
+<head>
+<title>学生端主界面</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<%
+	String path = request.getContextPath();
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+			+ path + "/";
+%>
+<base href="<%=basePath%>" />
+<script type="text/javascript" language="javascript"
+	src="js/jquery-1.9.1.js"></script>
+<link href="css/szindex.css" type=text/css rel=stylesheet>
+<script type="" language="javascript" src="js/creatXML.js"></script>
+<script type="text/javascript" language="javascript" src="js/ajax.js"></script>
+<!-- <script type="text/javascript" language="javascript" src="js/whir.js"></script> -->
+<script type="text/javascript" language="javascript"
+	src="js/findcheckinginfo.js"></script>
+<link href="css/showadailytalk.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" language="javascript"
+	src="js/showhistoryadailytalk.js"></script>
+<script type="text/javascript" language="javascript"
+	src="js/dateChoose.js"></script>
+<link id="easyuiTheme" rel="stylesheet" type="text/css"
+	href="jslib/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="jslib/themes/icon.css">
+<script type="text/javascript" src="jslib/jquery.min.js"></script>
+<script type="text/javascript" src="jslib/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="jslib/jeasyui.common.js"></script>
+<script type="text/javascript"
+	src="jslib/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript">
+	$(function() {
+		$("#class_panel2").layout('collapse','east');
+		 //绑定右键菜单事件
+        $(".easyui-tabs").bind('contextmenu',function(e){         
+       e.preventDefault();  
+          $('#rcmenu').menu('show', {  
+              left: e.pageX,  
+              top: e.pageY  
+          });  
+      });  
+      //关闭所有标签页  
+       $("#closeall").bind("click",function(){  
+          var tablist =$('#back_mainTab').tabs('tabs');
+           console.log(tablist);
+        //  return; 
+          for(var i=tablist.length-1;i>=1;i--){  
+              $('#back_mainTab').tabs('close',i);  
+          }  
+      });   
+      //关闭其他页面（先关闭右侧，再关闭左侧）  
+      $("#closeother").bind("click",function(){  
+          var tablist = $('#back_mainTab').tabs('tabs');  
+          var tab = $('#back_mainTab').tabs('getSelected');  
+          var index = $('#back_mainTab').tabs('getTabIndex',tab);  
+          for(var i=tablist.length-1;i>index;i--){  
+              $('#back_mainTab').tabs('close',i);  
+          }  
+          var num = index-1;  
+          if(num < 1){  
+              return;  
+          }else{  
+              for(var i=num;i>=1;i--){  
+                  $('#back_mainTab').tabs('close',i);  
+              }  
+              $("#back_mainTab").tabs("select", 1);  
+          }  
+      });  
+      //关闭右边的选项卡
+      $("#closeright").bind("click",function(){  
+          var tablist = $('#back_mainTab').tabs('tabs');  
+          var tab = $('#back_mainTab').tabs('getSelected');  
+          var index = $('#back_mainTab').tabs('getTabIndex',tab);  
+          for(var i=tablist.length-1;i>index;i--){  
+              $('#back_mainTab').tabs('close',i);  
+          }  
+      });  
+      //关闭右边的选项卡
+      $("#closeleft").bind("click",function(){  
+          var tablist = $('#back_mainTab').tabs('tabs');  
+          var tab = $('#back_mainTab').tabs('getSelected');  
+          var index = $('#back_mainTab').tabs('getTabIndex',tab);  
+          var num = index-1;  
+          if(num < 1){  
+              return;  
+          }else{  
+              for(var i=num;i>=1;i--){  
+                  $('#back_mainTab').tabs('close',i);  
+              }  
+              $("#back_mainTab").tabs("select", 1);  
+          }   
+      });  
+	
+		/* //取出地址栏信息
+		var url=window.location.search;
+		//通过截取，获得登录界面传过来的examClass
+		var startIndex=url.lastIndexOf("=")+1;
+		var endIndex=url.length;
+		var uname=decodeURIComponent(url.substring(startIndex, endIndex));	
+		//拼接形成右上角的登录信息
+		var unameStr="";
+		unameStr+='学员：[<strong>'+uname+'</strong>]，欢迎你进入源辰在线考试系统！'; */
+
+		$.post("/Examination2.0/login_isLogin.action", function(data) {
+			
+			$.each(data, function(i, item) {
+
+				 if(item[0]==undefined || item[0]==0){
+					return false;
+				} 
+				var flag = item[0].flag;
+				var uname = item[0].username;
+				var userid = item[0].userid;
+				var className=item[0].examClass;
+				console.info(item);
+				if (flag == "true") {
+					var unameStr = "";
+					unameStr += '学员：[<strong>' + uname
+							+ '</strong>]，欢迎你进入源辰在线考试系统！';
+					$("#sessionInfoDiv").html(unameStr);
+					if (window.localStorage) {
+						localStorage.setItem("student_userName", uname);
+						localStorage.setItem("student_userid", userid);
+						localStorage.setItem("student_className", className);
+					}
+
+				} else {
+					alert("请先登录！！！");
+					location.href = "/Examination2.0/";
+				}
+			});
+		});
+
+		//默认加载考试规则
+		$("#back_mainTab").tabs('add', {
+			title : '考试规则',
+			closable : false,
+			href : 'student/examrule.html'
+		});
+	});
+	//添加tab
+	function addTab(title, iconCls, closable, href, content) {
+		var tab = $("#back_mainTab");
+		if (href == null || href == "") {
+			//判断这个obj中的title是否已经在tab中存在
+			if (tab.tabs('exists', title)) {
+				tab.tabs('select', title);
+			} else {
+				tab.tabs('add', {
+					title : title,
+					iconCls : iconCls,
+					closable : closable,
+					content : content,
+				});
+			}
+		} else if (content == null || content == "") {
+			if (tab.tabs('exists', title)) {
+				tab.tabs('select', title);
+			} else {
+				tab.tabs('add', {
+					title : title,
+					iconCls : iconCls,
+					closable : closable,
+					href : href
+				});
+			}
+		}
+	}
+</script>
+</head>
+<body class="easyui-layout" id="class_panel2">
+	<br>
+	<br>
+	<!-- 头部 -->
+	<div data-options="region:'north',border:false" style="height: 83px;">
+		<img style="padding-left: 20px;" height="80px" width="337px"
+			class="mainpage_head_img" alt="公司logo" src="images/logo.png" />
+
+		<div id="sessionInfoDiv"
+			style="position: absolute; right: 5px; top: 25px;">
+			<!-- 登录界面 -->
+		</div>
+		<div style="position: absolute; right: 0px; bottom: 5px;">
+			<a href="javascript:void(0);" class="easyui-menubutton"
+				data-options="menu:'#layout_north_pfMenu',iconCls:'icon-ok'">更换皮肤</a>
+			<a href="javascript:void(0);" class="easyui-menubutton"
+				data-options="menu:'#layout_north_kzmbMenu',iconCls:'icon-help'">信息中心</a>
+			<a href="javascript:void(0);" class="easyui-menubutton"
+				data-options="menu:'#layout_north_zxMenu',iconCls:'icon-back'">注销</a>
+		</div>
+		<div id="layout_north_pfMenu" style="width: 120px; display: none;">
+			<div onclick="changeTheme('default');">默认皮肤</div>
+			<div onclick="changeTheme('gray');">灰色惬意</div>
+			<div onclick="changeTheme('metro-green');">现代绿色</div>
+			<div onclick="changeTheme('metro-orange');">现代橙色</div>
+			<div onclick="changeTheme('metro-red');">深红沐浴</div>
+		</div>
+		<div id="layout_north_kzmbMenu" style="width: 100px; display: none;">
+			<div onclick="userInfoFun();">修改密码</div>
+			<div class="menu-sep"></div>
+			<div onclick="aboutUs();">联系我们</div>
+		</div>
+		<div id="personalInfo" class="easyui-dialog" title="修改密码"
+			data-options="modal:true,closed:true,buttons:[{
+				text:'确认',
+				handler:function(){
+					//确认修改密码
+					var updateUname=$('#updateUname').val();
+					var updateExamClass=$('#updateExamClass').val();
+					var oldPassword=$('#oldPassword').val();
+					var newPassword=$('#newPassword').val();
+					var newPasswordAgain=$('#newPasswordAgain').val();
+					if(newPassword==newPasswordAgain){
+						$.getJSON('/Examination2.0/login_updatePassWord.action', {examClass:updateExamClass,examineeName:updateUname,oldPwd:oldPassword,newPwd:newPassword}, function(data) {
+							if(data==0){
+								//data为0，表示修改密码不成功，原密码不正确
+								//清空密码框
+								$('#oldPassword').val('');
+								$('#newPassword').val('');
+								$('#newPasswordAgain').val('');
+								alert('修改密码不成功，原密码不正确');
+								return;
+							}else if(data==1){
+								//data为1，表示修改密码不成功，这个班没有找到这位考生。请检查输入的班级、姓名是否输入正确
+								//清空密码框
+								$('#oldPassword').val('');
+								$('#newPassword').val('');
+								$('#newPasswordAgain').val('');
+								alert('表示修改密码不成功，这个班没有找到这位考生。请检查输入的班级、姓名是否输入正确');
+								$('#personalInfo').window('close');
+							}else if(data==2){
+								//data为2，表示修改密码成功
+								//清空密码框
+								$('#oldPassword').val('');
+								$('#newPassword').val('');
+								$('#newPasswordAgain').val('');
+								alert('修改密码成功');
+								$('#personalInfo').window('close');
+							}else if(data==3){
+								//data为3，表示修改密码不成功！请联系管理员
+								//清空密码框
+								$('#oldPassword').val('');
+								$('#newPassword').val('');
+								$('#newPasswordAgain').val('');
+								alert('修改密码不成功！请联系管理员');
+								$('#personalInfo').window('close');
+							}
+						});
+					}else{
+						alert('两次输入密码不一致，请重新输入');
+						//清空密码框
+						$('#newPassword').val('');
+						$('#newPasswordAgain').val('');
+						return;
+					}
+				}
+			},{
+				text:'取消',
+				handler:function(){
+					//取消修改密码
+					//实现方法就是清空所有的文本框
+					$('#oldPassword').val('');
+					$('#newPassword').val('');
+					$('#newPasswordAgain').val('');
+				}
+			}]"
+			style="width: 400px; height: 300px; padding: 20px;">
+			<table cellpadding="5" align="center">
+				<tr>
+					<td>班级:</td>
+					<td><input class="easyui-validatebox textbox" type="text"
+						id="updateExamClass" style="background: #F5F5F5;"
+						disabled="disabled"></input></td>
+				</tr>
+				<tr>
+					<td>用户名:</td>
+					<td><input class="easyui-validatebox textbox" type="text"
+						id="updateUname" style="background: #F5F5F5;" disabled="disabled"></input>
+					</td>
+				</tr>
+				<tr>
+					<td>原密码:</td>
+					<td><input class="easyui-validatebox textbox" type="password"
+						id="oldPassword" data-options="required:true"></input></td>
+				</tr>
+				<tr>
+					<td>新密码:</td>
+					<td><input class="easyui-validatebox textbox" type="password"
+						id="newPassword" data-options="required:true"></input></td>
+				</tr>
+				<tr>
+					<td>确认新密码:</td>
+					<td><input class="easyui-validatebox textbox" type="password"
+						id="newPasswordAgain" data-options="required:true"></input></td>
+				</tr>
+			</table>
+		</div>
+		<div id="aboutUsInfo" class="easyui-dialog" title="联系我们"
+			style="width: 800px; height: 370px;"
+			data-options="modal:true,closed:true">
+			<p
+				style="line-height: 30px; margin-top: 30px; font-size: 24px; font-family: 华文行楷; text-align: center;">开发人员联系表</p>
+			<table border=0px; cellpadding=0px; align="center">
+				<tr>
+					<td height="160px"><img src="images/aboutUs/Tane.jpg"
+						width="150px" height="160px" title="谭振" /></td>
+					<td><img src="images/aboutUs/fpc.jpg" width="150px"
+						height="160px" title="付鹏程" /></td>
+					<td><img src="images/aboutUs/fanhao.jpg" width="150px"
+						height="160px" title="范浩" /></td>
+					<td><img src="images/aboutUs/sunfei.jpg" width="150px"
+						height="160px" title="孙飞" /></td>
+					<td><img src="images/aboutUs/renzewen.jpg" width="150px"
+						height="160px" title="任泽文" /></td>
+				</tr>
+				<tr>
+					<td height="30px" align="center" style="line-height: 30px;">组长：谭振</td>
+					<td height="30px" align="center" style="line-height: 30px;">组员：付鹏程</td>
+					<td height="30px" align="center" style="line-height: 30px;">组员：范浩浩</td>
+					<td height="30px" align="center" style="line-height: 30px;">组员：孙飞</td>
+					<td height="30px" align="center" style="line-height: 30px;">组员：任泽文</td>
+				</tr>
+				<tr>
+					<td align="center">QQ:632497078</td>
+					<td align="center">QQ:377513462</td>
+					<td align="center">QQ:1453028282</td>
+					<td align="center">QQ:714278754</td>
+					<td align="center">QQ:544145729</td>
+				</tr>
+			</table>
+		</div>
+		<div id="layout_north_zxMenu" style="width: 100px; display: none;">
+			<div onclick="ReLogin();">重新登录</div>
+			<div class="menu-sep"></div>
+			<div onclick="logoutFun();">退出系统</div>
+		</div>
+		<div id="reLoginInfo" class="easyui-dialog" title="提示"
+			style="width: 400px; height: 200px;"
+			data-options="modal:true,closed:true,closable:false,
+			buttons:[{
+				text:'确定',
+				handler:function(){
+					//确定退出
+					location.href='/Examination2.0/login.jsp';
+				}
+			},{
+				text:'取消',
+				handler:function(){
+					//取消退出
+					$('#reLoginInfo').window('close');
+				}
+			}]">
+			<p
+				style="line-height: 70px; color: red; font-size: 24px; font-family: 华文行楷; text-align: center;">您确定要重新登录吗？</p>
+		</div>
+		<div id="logoutInfo" class="easyui-dialog" title="提示"
+			style="width: 400px; height: 200px;"
+			data-options="modal:true,closed:true,closable:false,
+			buttons:[{
+				text:'确定',
+				handler:function(){
+					//确定退出
+					$.getJSON('/Examination2.0/login_exit.action', function(data) {
+						if (data==1) {
+							location.replace('login.jsp');
+						} else {
+							$('#sessionInfoDiv').html('');
+						}
+					});
+				}
+			},{
+				text:'取消',
+				handler:function(){
+					//取消退出
+					$('#logoutInfo').window('close');
+				}
+			}]">
+			<p
+				style="line-height: 70px; color: red; font-size: 24px; font-family: 华文行楷; text-align: center;">您确定要退出系统吗？</p>
+		</div>
+	</div>
+
+	<!-- 西边 -->
+	<div data-options="region:'west',split:true,title:'导航菜单'"
+		style="width: 150px;">
+		<div id="aa" class="easyui-accordion"
+			data-options="fit:true,border:false">
+			<div title="考试相关"
+				data-options="iconCls:'icon-mini-add',selected:true"
+				style="overflow: auto; padding: 10px;">
+				<ul id="tt" class="easyui-tree">
+					<li><a
+						onclick="javascript:addTab('考试规则','',true,'student/examrule.html','')">考试规则</a>
+					</li>
+					<li><a
+						onclick="javascript:addTab('考试安排','',true,'student/examhomepage.html','')">考试安排</a>
+					</li>
+					<li><a
+						onclick="javascript:addTab('成绩查询','',true,'student/searchexamineescore.html','')">成绩查询</a>
+					</li>
+				</ul>
+			</div>
+			<div title="评价相关"
+				data-options="iconCls:'icon-mini-add',selected:false"
+				style="padding: 10px;">
+				<ul id="tt" class="easyui-tree">
+					<li><a
+						onclick="javascript:addTab('自评安排','',true,'student/showAllPointPaper1.html','')">自评安排</a>
+					</li>
+					<li><a
+						onclick="javascript:addTab('查看自评','',true,'student/showAllPointPaper2.html','')"> 历史自评详情</a>
+					</li>
+					<li><a
+						onclick="javascript:addTab('自我检测','',true,'student/checkSelf.jsp','')">自我检测</a>
+					</li>
+					<li><a
+						onclick="javascript:addTab('查看自测答卷','',true,'student/showCheckSelf.jsp','')">查看自测答卷</a>
+					</li>
+					<li><a
+						onclick="javascript:addTab('满意度调查表','',true,'student/satisfaction.jsp','')">满意度调查表</a>
+					</li>
+				</ul>
+			</div>
+			
+			<div title="个人管理"
+				data-options="iconCls:'icon-mini-add',selected:false"
+				style="padding: 10px;">
+				<ul id="tt" class="easyui-tree">
+					<li><a
+						onclick="javascript:addTab('查看考勤','',true,'student/findcheckinginfo.jsp','')">查看考勤</a>
+					</li>
+					<li><a
+						onclick="javascript:addTab('修改密码','',true,'student/changePassword.jsp','')">修改密码</a>
+					</li>
+					<li><a
+						onclick="javascript:addTab('每日一讲','',true,'student/showadailytalk.html','')">每日一讲</a>
+					</li>
+					<li><a
+						onclick="javascript:addTab('作业查询','',true,'student/studentfindwork.jsp','')">作业查询</a>
+					</li>
+					<li><a style="color: black;" href="javascript:void(0);"
+								onclick="javascript:addTab('课表查询','icon-mini-add',true,'','<iframe src=student/findStudentCurri.jsp  frameborder=0 style=border:0;width:100%;height:99.5%;></iframe>')">课表查询</a>
+					</li>
+				</ul>
+			</div>
+			
+			<div title="学习资源"
+				data-options="iconCls:'icon-mini-add',selected:false"
+				style="padding: 10px;">
+				<ul id="tt" class="easyui-tree">
+					<li><a  style="color: black;" href="javascript:void(0);"
+								onclick="javascript:addTab('书籍查看','icon-mini-add',true,'','<iframe src=student/resource/downloadBook.jsp  frameborder=0 style=border:0;width:100%;height:99.5%;></iframe>')">书籍查看</a>
+					</li>
+					<li><a style="color: black;" href="javascript:void(0);"
+								onclick="javascript:addTab('源码下载','icon-mini-add',true,'','<iframe src=student/resource/downloadCode.jsp  frameborder=0 style=border:0;width:100%;height:99.5%;></iframe>')">源码下载</a>
+					</li>
+					<li><a style="color: black;" href="javascript:void(0);"
+								onclick="javascript:addTab('课堂资料下载','icon-mini-add',true,'','<iframe src=student/resource/downloadClassInfo.jsp  frameborder=0 style=border:0;width:100%;height:99.5%;></iframe>')">课堂资料下载</a>
+					</li>
+					<li><a style="color: black;" href="javascript:void(0);"
+								onclick="javascript:addTab('工具类下载','icon-mini-add',true,'','<iframe src=student/resource/downloadToolClass.jsp  frameborder=0 style=border:0;width:100%;height:99.5%;></iframe>')">工具类下载</a>
+					</li>
+					<li><a style="color: black;" href="javascript:void(0);"
+								onclick="javascript:addTab('面试资料下载','icon-mini-add',true,'','<iframe src=student/resource/downloadInterviewInfo.jsp  frameborder=0 style=border:0;width:100%;height:99.5%;></iframe>')">面试资料下载</a>
+					</li>
+				</ul>
+			</div>
+			
+			<div title="就业信息"
+				data-options="iconCls:'icon-mini-add',selected:false"
+				style="padding: 10px;">
+				<ul id="tt" class="easyui-tree">
+					<li><a
+						onclick="javascript:addTab('IT企业信息查看','',true,'student/showCompanyInfo.jsp','')">IT企业信息查看</a>
+					</li>
+					<li><a
+						onclick="javascript:addTab('学员就业情况查看','',true,'student/showStudentWorkInfo.jsp','')">学员就业情况查看</a>
+					</li>
+				</ul>
+			</div>
+			
+			<!-- <div title="考勤信息"
+				data-options="iconCls:'icon-mini-add',selected:false"
+				style="padding: 10px;">
+				<ul id="tt" class="easyui-tree">
+					<li><a
+						onclick="javascript:addTab('查看考勤','',true,'searchcheckingresult.html','')">查看考勤</a>
+					</li>
+				</ul>
+			</div>
+			<div title="每日一讲"
+				data-options="iconCls:'icon-mini-add',selected:false"
+				style="padding: 10px;">
+				<ul id="tt" class="easyui-tree">
+					<li><a
+						onclick="javascript:addTab('每日一讲','',true,'showadailytalk.html','')">每日一讲</a>
+					</li>
+				</ul>
+			</div>
+
+			<div title="满意度调查"
+				data-options="iconCls:'icon-mini-add',selected:false"
+				style="padding: 10px;">
+				<ul id="tt" class="easyui-tree">
+					<li><a
+						onclick="javascript:addTab('满意度调查表','',true,'satisfaction.jsp','')">满意度调查表</a>
+					</li>
+				</ul>
+			</div> -->
+		</div>
+	</div>
+
+	<!-- 东边 -->
+	<div data-options="region:'east',title:'工具箱',selected:false"  
+		style="width: 170px; padding: 10px;">
+		<div id="date" class="easyui-calendar"
+			style="width: 150px; height: 150px;"></div>
+	</div>
+	<!-- 南边 -->
+	<div data-options="region:'south',border:false"
+		style="height: 30px; padding: 10px;">
+		<center>衡阳源辰信息科技有限公司</center>
+	</div>
+	<div id="cc"
+		data-options="region:'center',title:'主操作区',
+			 tools: [{   
+        		iconCls:'icon-full',
+       			handler:function(){full()}   
+    		},{   
+        		iconCls:'icon-unfull',
+       			handler:function(){unFull()}   
+    		}]">
+		<div id="back_mainTab" class="easyui-tabs" data-options="fit:true"></div>
+
+	</div>
+	<div id="rcmenu" class="easyui-menu" style="">  
+    <div id="closeall">关闭全部</div>  
+    <div id="closeother">关闭其他</div> 
+    <div id="closeright">当前页右侧全部关闭</div>
+     <div id="closeleft">当前页左侧全部关闭</div> 
+  </div>
+</body>
+<script type="text/javascript">
+$.extend($.fn.layout.methods, {
+	full : function (jq) {
+		return jq.each(function () {
+			var layout = $(this);
+			var center = layout.layout('panel', 'center');
+			center.panel('maximize');
+			center.parent().css('z-index', 10);
+
+			$(window).on('resize.full', function () {
+				layout.layout('unFull').layout('resize');
+			});
+		});
+	},
+	unFull : function (jq) {
+		return jq.each(function () {
+			var center = $(this).layout('panel', 'center');
+			center.parent().css('z-index', 'inherit');
+			center.panel('restore');
+			$(window).off('resize.full');
+		});
+	}
+});
+function full() {
+	$("body").layout("full");
+}
+function unFull() {
+	$("body").layout("unFull");
+}
+</script>
+</html>

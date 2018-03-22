@@ -114,3 +114,4 @@ select * from author
 select * from admin
 select * from novel for update
 delete from novel
+delete from novel_chapter
