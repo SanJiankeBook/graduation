@@ -3,9 +3,10 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.yc</groupId>
-	<artifactId>Examination2.0</artifactId>
-	<version>2.0</version>
+	<artifactId>Question_bank</artifactId>
 	<packaging>war</packaging>
+	<version>2.0</version>
+	<url>http://maven.apache.org</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
@@ -232,21 +233,27 @@
 		    <artifactId>ant</artifactId>
 		    <version>1.7.0</version>
 		</dependency>
+		<!-- 文件上传 -->
+		<dependency>
+			<groupId>com.jspsmart.upload</groupId>
+			<artifactId>smartupload</artifactId>
+			<version>1.2.6</version>
+		</dependency>
 
 	</dependencies>
-	<build>
-		<finalName>SanJianKeBook</finalName>
+   <build>
+		<finalName>question_bank</finalName>
 		<plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
         </plugins>
-	</build>
+	</build> 	
  
 </project>

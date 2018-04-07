@@ -45,6 +45,7 @@ import com.yc.po.PointInfo;
 import com.yc.po.Subject;
 import com.yc.po.TestJavaBen;
 import com.yc.po.WritingQuestion;
+import com.yc.po.XSubject;
 import com.yc.vo.DataGaidModel;
 import com.yc.vo.DataarrayActionModel;
 import com.yc.vo.PointInfoModel;

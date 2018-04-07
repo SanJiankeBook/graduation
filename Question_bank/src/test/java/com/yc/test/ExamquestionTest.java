@@ -140,7 +140,7 @@ public class ExamquestionTest {
 		if (semester != null && editionId != null) {//如果学期编号不为空并且版本id不为空
 			subjects = subjectBiz.findSubject(semester, editionId);
 		} else {
-			subjects = subjectBiz.getSubjects();
+			//subjects = subjectBiz.getSubjects();
 		}
 	}
 
@@ -151,9 +151,9 @@ public class ExamquestionTest {
 		String semester=null;
 		Integer editionId=null;
 		if (semester != null && editionId != null) {//如果学期编号不为空并且版本id不为空
-			subjects = subjectBiz.findSubject(semester, editionId);
+			//subjects = subjectBiz.findSubject(semester, editionId);
 		} else {
-			subjects = subjectBiz.getSubjects();
+			//subjects = subjectBiz.getSubjects();
 		}
 	}
 
