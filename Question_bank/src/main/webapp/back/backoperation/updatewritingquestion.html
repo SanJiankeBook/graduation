@@ -28,7 +28,7 @@
 		function findquestion(quid){
 		 	$.ajaxSettings.async = false;
 			$.ajax({
-				url : "/Examination2.0/dataarray_findQuestion.action",
+				url : "/Question_bank/dataarray_findQuestion.action",
 					type : "post",
 					data : {
 						"id":quid
@@ -39,32 +39,37 @@
 						if (Object.responseCode != 1) {
 							$('#questionId').val(quid);
 							createVersionOption();
-							$('#version').val(Object.obj.editionId);
+							/* $('#version').val(Object.obj.editionId); */
 							oldEdition=Object.obj.editionId;
 							$("#"+Object.obj.semester).attr("checked","checked");
 							var semester = $('input[name="semester"]:checked').val();
-							var version = $('#version').val();
-							createSelectOption(version, semester);
+							//var version = $('#version').val();
+							//createSelectOption(version, semester);
+							createSelectOption();
 							$('#subject').val(Object.obj.subjectId);
 							
 							$('#type'+Object.obj.questionType).attr("checked","checked");
 							createChapterOption(Object.obj.subjectId);
 							$('#chapter').val(Object.obj.chapterId);
-							if(Object.obj.questionType==1){
+							 if(Object.obj.questionType==1){
 								$('#singleType').attr("checked","checked");
-								$("#radioSpan").css("display", "block");
-								$("#checkboxSpan").css("display", "none");
-								$("#radioAnswer"+Object.obj.answer).attr("checked","checked");
-							}else{
-								$('#checkType').attr("checked","checked");
-								$("#radioSpan").css("display", "none");
-								$("#checkboxSpan").css("display", "block");
+								/* $("#radioSpan").css("display", "none");
+								$("#checkboxSpan").css("display", "block"); */
 								var answer=Object.obj.answer;
 								for(var i=0;i<answer.length;i++){
 									var an=answer.substr(i,1);
 									$('#checkAnswer'+an).attr("checked","checked");
 								}
-							}
+							}else{ 
+								$('#checkType').attr("checked","checked");
+								/* $("#radioSpan").css("display", "none");
+								$("#checkboxSpan").css("display", "block"); */
+								var answer=Object.obj.answer;
+								for(var i=0;i<answer.length;i++){
+									var an=answer.substr(i,1);
+									$('#checkAnswer'+an).attr("checked","checked");
+								}
+						 	} 
 							$('#D'+Object.obj.difficulty).attr("checked","checked");
 							 question.setData(Object.obj.question);
 							questionA.setData(Object.obj.optionA);
@@ -87,20 +92,20 @@
 			})
 		}
 		//选择学期
-	function checkSemester(s) {
+/* 	function checkSemester(s) {
 		semester = s;
 		version = $('#version').val();
 		createSelectOption(version, semester);
 		
-	}
-	//选择版本
+	} */
+/* 	//选择版本
 	function changeVersion() {
 		semester = $('input[name="semester"]:checked').val();
 		version = $('#version').val();
 		createSelectOption(version, semester);
 		changeSubject();
 	}
-	//选择课程
+ */	//选择课程
 	function changeSubject() {
 		subjectId = $('#subject').val();
 		createChapterOption(subjectId);
@@ -109,7 +114,7 @@
 	function searchWritingQuestionByForward(falg){
 		quid=$('#questionId').val();
 		$.ajax({
-				url : "/Examination2.0/dataarray_nextQuestion.action",
+				url : "/Question_bank/dataarray_nextQuestion.action",
 					type : "post",
 					data : {
 						"id":quid,
@@ -136,7 +141,7 @@
 		quid=$('#questionId').val();
 		if (window.confirm("是否删除！")){
 			$.ajax({
-			url : "/Examination2.0/dataarray_delQuestion.action",
+			url : "/Question_bank/dataarray_delQuestion.action",
 					type : "post",
 					data : {"id":quid},
 					datatype : "json",
@@ -193,7 +198,7 @@
             
 		}
 		$.ajax({
-			url : "/Examination2.0/qusetion_updateQuestion.action",
+			url : "/Question_bank/qusetion_updateQuestion.action",
 			type : "post",
 			data : {
 				"id":quid,
@@ -265,7 +270,7 @@
 		}
 		alert(userid);
 		$.ajax({
-			url : "/Examination2.0/qusetion_addQuestion.action",
+			url : "/Question_bank/qusetion_addQuestion.action",
 			type : "post",
 			data : {
 				"question":strQuestion,
@@ -303,7 +308,7 @@
 	function createSelectOption(version, semester){
 		//var editid=$("#addEditionName").find("option:selected").val();
 		alert(version);
-		$.post("/Examination2.0/chapter_subjectName.action",{"id":version}, function(json) {
+		$.post("/Question_bank/chapter_subjectName.action",{"id":version}, function(json) {
 			//var obj = eval(json);// 转换后的JSON对象
 			
 			$("#editionName-subjectName").html("");
@@ -352,33 +357,17 @@
 								</table></td>
 						</tr>
 						<tr>
-							<td class="fontColor">试题编号:</td>
+						<td class="fontColor">试题编号:</td>
 							<td>&nbsp; <input name="questionId" type="text"
 								class="text4" id="questionId" value="" readonly="readonly">
 							</td>
-							<td colspan="2">&nbsp;</td>
-						</tr>
-						<tr>
 							<td width="65" class="fontColor">题目类型:</td>
 							<td width="207"><input name="type" type="radio"
 								id="singleType" onClick="checkQuestionType(1)" value="1"  />
 								单选题 &nbsp; <input type="radio" name="type" value="2"
-								id="checkType" onClick="checkQuestionType(2)" /> 复选题</td>
-							<td width="83"><span class="fontColor">版本号:</span></td>
-							<td width="270"><select name='version' class='select'
-								id='version' onchange="changeVersion()">
-							</select></td>
-							<td width="5">&nbsp;</td>
+								id="checkType" onClick="checkQuestionType(2)" /> 多选题</td>
 						</tr>
 						<tr>
-							<td><span class="fontColor">学期编号: </span></td>
-							<br>
-							<td ><input name='semester' type='radio' id="S1"
-								onClick="checkSemester('S1')" value='S1' /> &nbsp; S1 &nbsp; <input
-								name='semester' type='radio' id="S2"
-								onClick="checkSemester('S2')" value='S2' /> S2 &nbsp; <input
-								type='radio' name='semester' id="S3" value='S3'
-								onClick="checkSemester('S3')" /> S3</td>
 							<td><span class="fontColor">科目名称:</span></td>
 							<td><select name='subject' class='select2' id='subject'
 								onChange="changeSubject()">
@@ -437,19 +426,19 @@
 			</tr>
 			<tr>
 				<td height="30" colspan="4"><br> <span class="fontColor">正确答案选项:
-				</span> <span id="radioSpan"> &nbsp; <span class="prompt">* </span>&nbsp;
-						&nbsp; &nbsp;&nbsp;&nbsp; <input type="radio" name="radioAnswer"
+				</span>  &nbsp; <span class="prompt">* </span>&nbsp;
+						&nbsp; &nbsp;&nbsp;&nbsp; <!-- <input type="radio" name="radioAnswer"
 						value="A" id="radioAnswerA"> A &nbsp; <input type="radio"
 						name="radioAnswer" value="B" id="radioAnswerB"> B &nbsp; <input type="radio"
 						name="radioAnswer" value="C" id="radioAnswerC"> C &nbsp; <input type="radio"
-						name="radioAnswer" value="D" id="radioAnswerD"> D </span> <span id="checkboxSpan">
-						&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp; <input
+						name="radioAnswer" value="D" id="radioAnswerD"> D </span>  -->
+						&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;<input
 						name="checkAnswer" type="checkbox" id="checkAnswerA" value="A">
 						A&nbsp; <input name="checkAnswer" type="checkbox"
 						id="checkAnswerB" value="B"> B&nbsp; <input
 						name="checkAnswer" type="checkbox" id="checkAnswerC" value="C">
 						C &nbsp; <input name="checkAnswer" type="checkbox"
-						id="checkAnswerD" value="D"> D </span> <br></td>
+						id="checkAnswerD" value="D"> D  <br></td>
 			</tr>
 
 			<tr>

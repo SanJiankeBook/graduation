@@ -45,17 +45,17 @@
 	//记载创建了多少个文件选择框
 	var fileCount = 1;
 	//选择学期
-	function checkSemester(s) {
+	/* function checkSemester(s) {
 		semester = s;
 		version = $('#version').val();
 		createSelectOption(version, semester);
-	}
+	} */
 	//选择版本
-	function changeVersion() {
+	/* function changeVersion() {
 		semester = $('input[name="semester"]:checked').val();
 		version = $('#version').val();
 		createSelectOption(version, semester);
-	}
+	} */
 	//选择课程
 	function changeSubject() {
 		subjectId = $('#subject').val();
@@ -109,7 +109,7 @@
 	function findQuestbyText(queryQues) {
 
 		$.ajax({
-			url : "/Examination2.0/qusetion_findQuestbyText.action",
+			url : "/Question_bank/qusetion_findQuestbyText.action",
 			type : "post",
 			data : {
 				"question" : queryQues
@@ -231,18 +231,6 @@
 	<div style="margin: 0 auto;width: 100%">
 		<table width="100%" border="0" cellspacing="0">
 					<tr>
-						<td width="5%" height="42" class="fontColor">&nbsp;&nbsp;&nbsp;&nbsp;版本号:</td>
-						<td width="9%" >&nbsp; <select name='version' class='select'
-							id='version' onChange="changeVersion()">
-						</select>
-						</td>
-						<td width="5%" class="fontColor">学期编号:</td>
-						<td width="11%" height="41"><input name='semester'
-							type='radio' id="s1" onClick="checkSemester('S1')" value='S1'
-							checked /> S1 &nbsp; <input name='semester' type='radio' id="s2"
-							onClick="checkSemester('S2')" value='S2' /> S2
-						<input type='radio' name='semester' id="S3" value='S3'
-							onClick="checkSemester('S3')" /> S3</td>
 						<td width="6%" class="fontColor">&nbsp;&nbsp;&nbsp;&nbsp;科目名称:</td>
 						<td width="10%"><select name='subject' class='select2'
 							id='subject' onChange="changeSubject()">
@@ -352,7 +340,7 @@
 	</div>
 </form>
 <iframe id="upload" name="upload" frameborder="0" style="display: none"></iframe>
-<form target="upload" action='/Examination2.0/qusetion_upload.action'
+<form target="upload" action='/Question_bank/qusetion_upload.action'
 	method='post' name='form2' enctype="multipart/form-data">
 	<input type="hidden" id="uqusetion" value="">
 							<input type="hidden" name="uquestion" id="uquestion" value="">

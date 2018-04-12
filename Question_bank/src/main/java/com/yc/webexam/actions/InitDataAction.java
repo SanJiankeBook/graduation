@@ -225,7 +225,7 @@ public class InitDataAction extends BaseAction implements ServletResponseAware {
 		}
 	}
 
-	// 根据课程编号查出所有章节
+	// 根据课程编号查出所有章节    毕设版
 	public void chapter() {
 		String jsonStr = "";
 		try {

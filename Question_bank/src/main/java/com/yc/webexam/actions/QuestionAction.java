@@ -348,7 +348,7 @@ public class QuestionAction extends BaseAction implements ModelDriven<QuestionMo
 				wq.setAnswer(questionModel.getUanswer());
 				wq.setChapterId(questionModel.getUchapterId());
 				wq.setDifficulty(questionModel.getUdifficulty());
-				wq.setEditionId(questionModel.getUeditionId());
+				//wq.setEditionId(questionModel.getUeditionId());
 				wq.setOptionA(questionModel.getUoptionA());
 				wq.setOptionB(questionModel.getUoptionB());
 				wq.setOptionC(questionModel.getUoptionC());
@@ -356,7 +356,7 @@ public class QuestionAction extends BaseAction implements ModelDriven<QuestionMo
 				wq.setQuestion(questionModel.getUquestion());
 				wq.setQuestionType(questionModel.getUquestionType());
 				wq.setRemark(questionModel.getUremark());
-				wq.setSemester(questionModel.getUsemester());
+				//wq.setSemester(questionModel.getUsemester());
 				wq.setSubjectId(questionModel.getUsubjectId());
 				wq.setImage(path);
 				writingQuestionBiz.addWritingQuestion(wq);

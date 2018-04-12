@@ -35,7 +35,7 @@
 				rownumbers : true, //排序ID
 				columns:[[   
 	       			 {field:'pid',title:'编号',width:100,checkbox :true,sortable:true}, 
-	       			 {field:'pcontent',title:'题目',width:150,sortable:true},
+	       			 {field:'pcontent',title:'章节',width:150,sortable:true},
 	    		]],
 	    		toolbar: [{
 					text:'添加',
@@ -49,12 +49,12 @@
 					handler: function(){
 						update();
 					}
-				/* },'-',{
+				},'-',{
 					text:'删除',
 					iconCls: 'icon-edit',
 					handler: function(){
 						delPointInfo();
-					} */
+					} 
 				}],
   			});
   		}
@@ -184,7 +184,7 @@
   			var pcontent=$('#questions').val();
   			var cid=$('#subject').val();
   			if(pcontent==""||pcontent==null){
-				alert("请输入知识点内容！");
+				alert("请输入章节内容！");
 				return;
 			}
 			$.ajax({
@@ -219,15 +219,16 @@
   <div id="listwritingquestion_layout" data-options="fit:true" class="easyui-layout" style="width:950px;height:600px;">
   		<!-- <div data-options="region:'north',split:true" style="height:1px;">
   		</div> -->
-  		 <div data-options="region:'center',title:'查询结果'" style="padding:15px;background:#eee;">
+  		 <div data-options="region:'center',title:''" style="padding:15px;background:#eee;">
 					<table width="680" border="0" cellspacing="0"  >
-						<tr width="100%" align="center">
-							<td width="50%" class="fontColor" align="right">科目名称:</td>
+						<tr width="100%" align="center" >
+							<td width="50%" class="fontColor" align="right" >科目名称:</td>
 							<td width="50%" align="left">
 								<select name='subject' class='select2' id='subject' onChange="find()">
 								</select>
 							</td>
 						</tr>
+						<tr><td height="10"> </td></tr>
 					</table>
 	  		<table id="back_zsdgl_datagrid">
 	  		
@@ -237,7 +238,7 @@
 		<div id="add_dialog" class="easyui-dialog" title="添加" style="width:400px;height:250px;"  
       	  data-options="iconCls:'icon-save',resizable:true,modal:true,closed:true,collapsible:false,minimizable:false,maximizable:false">  
     		 
-			 <span class="fontColor" style="display:inline-block;margin: 0 auto;line-height: 23px;height: 23px;margin-left: 16px;">请在下面方框中输入知识点内容:(如果要批量插入请用";"分隔)</span><span class="prompt">*</span></td>
+			 <span class="fontColor" style="display:inline-block;margin: 0 auto;line-height: 23px;height: 23px;margin-left: 16px;">请在下面方框中输入章节名:(如果要批量插入请用";"分隔)</span><span class="prompt">*</span></td>
 			 
 			 <textarea name='question' cols='13' rows='7' class="content"  id="question"></textarea>
 			<div style="margin: 5px auto;width: 50%;">
@@ -248,7 +249,7 @@
       	  data-options="iconCls:'icon-save',resizable:true,modal:true,closed:true,collapsible:false,minimizable:false,maximizable:false">  
     		 
 			<div style="width: 80%;margin: 10px auto;text-align: center;">
-				 <span class="fontColor" style="display:inline-block;height: 25px;line-height: 25px;">请在下面方框中编辑知识点内容:</span><span class="prompt">*</span>
+				 <span class="fontColor" style="display:inline-block;height: 25px;line-height: 25px;">请在下面方框中编辑章节:</span><span class="prompt">*</span>
 				 
 			
 			   <br/>编号：<input type="text" id="pid" readonly="readonly"/ style="display:inline-block;height: 25px;line-height: 25px;margin: 5px 0px; "><br/>

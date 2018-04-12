@@ -1,7 +1,7 @@
-//根据学期显示班级 	
+/*//根据学期显示班级 	
 	function createSelectOption(s){
  		var selectedvalue=s;
- 		$.post("/Examination2.0/writingPaper_getExamineeClassName.action",{"semester":selectedvalue}, function(data){
+ 		$.post("/Question_bank/writingPaper_getExamineeClassName.action",{"semester":selectedvalue}, function(data){
 				var examineeClassList= eval("("+data+")");
 				var optionstr="<option>--请选择--</option>";	
 				if(examineeClassList!=null){
@@ -11,11 +11,12 @@
 				}																
 				$("#examClassName").html(optionstr);
   				});  				  		
- 	}
+ 	}*/
  	$(function(){
- 		var selectedvalue="S1";
+ 		serchAll();
+ 		/*var selectedvalue="S1";
  		
- 		$.post("/Examination2.0/writingPaper_getExamineeClassName.action",{"semester":selectedvalue}, function(data){
+ 		$.post("/Question_bank/writingPaper_getExamineeClassName.action",{"semester":selectedvalue}, function(data){
 				var examineeClassList= eval("("+data+")");
 				var optionstr="<option>--请选择--</option>";																
 				if(examineeClassList!=null){
@@ -24,7 +25,7 @@
 					});	
 				}			
 				$("#examClassName").html(optionstr);
-  				});  			
+  				});  			*/
  	});
  	
  	
@@ -119,7 +120,7 @@
  		}	
  		if(pageNume>=1&&pageNume<=totalPage){
  			$.ajax({
- 				url:"/Examination2.0/dataarraylist_showWritingPaperPages.action",
+ 				url:"/Question_bank/dataarraylist_showWritingPaperPages.action",
  				type:"post",
  				datatype:"json",
  				data:{"displayRows":displayRows,"pageNume":pageNume,"examClassName":examClassName},
@@ -171,7 +172,7 @@
 				examClassName="";
 			}
 			$.ajax({
-				url:"/Examination2.0/dataarraylist_showWritingPaperPages.action",
+				url:"/Question_bank/dataarraylist_showWritingPaperPages.action",
 				type:"post",
 				datatype:"json",
 				data:{"displayRows":displayRows,"pageNume":pageNume,"examClassName":examClassName},
@@ -190,7 +191,7 @@
  	{		
  					var pageinfos =   data ;	
  					var pageStr="";
- 					pageStr=pageStr+'<tr><th style="display:none" bordercolor="#7EA6DC">编号</th><th bordercolor="#7EA6DC">试卷名称</th><th bordercolor="#7EA6DC">密码</th><th bordercolor="#7EA6DC">考试班级</th><th bordercolor="#7EA6DC">考试日期</th><th bordercolor="#7EA6DC">状态</th><th bordercolor="#7EA6DC">操作</th></tr>';
+ 					pageStr=pageStr+'<tr><th style="display:none" bordercolor="#7EA6DC">编号</th><th bordercolor="#7EA6DC">试卷名称</th><th bordercolor="#7EA6DC">密码</th><th bordercolor="#7EA6DC">考试日期</th><th bordercolor="#7EA6DC">状态</th><th bordercolor="#7EA6DC">操作</th></tr>';
  					if(pageinfos.responseCode==0){
  						var pageSize=pageinfos.obj.pageSize;
  						var currentPage=pageinfos.obj.currentPage;
@@ -203,7 +204,7 @@
  							pageStr+='<td style="display:none" align="left">'+pageinfo.id+'</td>';
  							pageStr+='<td width="15%" align="center"> <input type="text" style="color:#000099;cursor:pointer"onClick="toShowWritingPaperPage(\''+pageinfo.id+'\')" value="'+pageinfo.paperName+'" title="'+pageinfo.paperName+'" class="noneborder" size="10" readonly="readonly" /> </td>';
  							pageStr+='<td align="center">'+pageinfo.paperPwd+'</td>';
- 							pageStr+='<td align="center">'+pageinfo.examineeClass+'</td>';
+ 						/*	pageStr+='<td align="center">'+pageinfo.examineeClass+'</td>';*/
  							pageStr+='<td align="center">'+change(pageinfo.examDate)+'</td>';
  							
  							var statusStr="";
@@ -221,7 +222,8 @@
  							if(pageinfo.paperStatus==3){
  								pageStr+='<td align="center" id="tdOP_'+pageinfo.paperStatus+''+pageinfo.id+'"><a href="#" onclick="javascript:showwrittiongpapergrade(\''+pageinfo.id+'\',\''+pageinfo.paperName+'\',\''+pageinfo.examineeClass+'\',\''+pageinfo.examSubject+'\',\''+pageinfo.examDate+'\',\''+pageinfo.scorePercent+'\',\''+pageinfo.avgScore+'\',\''+pageinfo.maxScore+'\',\''+pageinfo.minScore+'\',\''+pageinfo.questionInfo+'\')" title="查看已评试卷的评卷结果">查看</a>   &nbsp;<a href="#" onClick="javascript:deleteThisPaper(\''+pageinfo.id+'\')"title="删除此卷">删除</a>&nbsp; <a href="#" id="reExam_${rowNumber.index}" onClick="reExamThisWp(\''+pageinfo.id+'\')" title="对本班重考此试卷，全班原有的考试成绩将会全部丢失">重考</a>&nbsp; <a href="#"  onClick="examToAnotherClass(\''+pageinfo.id+'\')" title="将试卷指派给其他班级考试">指派班级</a></td>';												
  							}else if(pageinfo.paperStatus==1){
- 								pageStr+='<td align="center"><a href="#" onClick="updateThisPaperStatus(\''+pageinfo.id+'\',\''+4+'\')" title="开考此卷，也可以在“考试安排”菜单中开考">开考</a>&nbsp; <a href="#" onClick="javascript:deleteThisPaper(\''+pageinfo.id+'\')"title="删除此卷">删除</a> </td>';													
+ 								//pageStr+='<td align="center"><a href="#" onClick="updateThisPaperStatus(\''+pageinfo.id+'\',\''+4+'\')" title="开考此卷，也可以在“考试安排”菜单中开考">开考</a>&nbsp; <a href="#" onClick="javascript:deleteThisPaper(\''+pageinfo.id+'\')"title="删除此卷">删除</a> </td>';													
+ 								pageStr+='<td align="center"><a href="#" onclick="javascript:toShowWritingPaperPage(\''+pageinfo.id+'\')" title="编辑考试试卷">编辑</a>&nbsp; <a href="#" onClick="javascript:deleteThisPaper(\''+pageinfo.id+'\')"title="删除此卷">删除</a> </td>';													
  							}else if(pageinfo.paperStatus==4){
  								pageStr+='<td align="center"><a  href="#" onClick="gradeThisPaper(\''+pageinfo.id+'\')" title="自动评卷">评卷</a>&nbsp; <a href="#" onclick="javascript:toShowWritingPaperPage(\''+pageinfo.id+'\')" title="编辑考试试卷">编辑</a>&nbsp; <a href="#" onClick="javascript:deleteThisPaper(\''+pageinfo.id+'\')"title="删除此卷">删除</a></td>';	
  							}else if(pageinfo.paperStatus==2){
@@ -249,7 +251,7 @@
  	    		 Cookie.write("wpid", wpid);	
  			}
  			
- 			var content = '<iframe src="/Examination2.0/back/grade/showwritingpaper.html" width="1000px" height="95%" frameborder="0" scrolling="yes"></iframe>';  
+ 			var content = '<iframe src="/Question_bank/back/grade/showwritingpaper.html" width="1000px" height="95%" frameborder="0" scrolling="yes"></iframe>';  
  		    var boarddiv = '<div id="msgwindow" title="试卷详情显示" width="1000px" height="100%"></div>'//style="overflow:hidden;"可以去掉滚动条  
  		    $(document.body).append(boarddiv);  
  		    var win = $('#msgwindow').dialog({  
@@ -290,13 +292,13 @@
 	    		 Cookie.write("writtingPaper_minScore", minScore);
 	    		 Cookie.write("writtingPaper_questionInfo", questionInfo);
 			}
- 			/*window.location.href='/Examination2.0/back/grade/showwritingpapergrade.html';*/
+ 			/*window.location.href='/Question_bank/back/grade/showwritingpapergrade.html';*/
  			/*$("#showPaperInfo").src="";
  			$("#datatest_show_carinfo_detail").show();
  			$("#datatest_show_carinfo_detail").window("open");
  			*/
  			
- 			var content = '<iframe src="/Examination2.0/back/grade/showwritingpapergrade.html" width="800px" height="95%" frameborder="0" scrolling="yes"></iframe>';  
+ 			var content = '<iframe src="/Question_bank/back/grade/showwritingpapergrade.html" width="800px" height="95%" frameborder="0" scrolling="yes"></iframe>';  
  		    var boarddiv = '<div id="msgwindow" title="考试情况显示" width="1000px" height="100%"></div>'//style="overflow:hidden;"可以去掉滚动条  
  		    $(document.body).append(boarddiv);  
  		    var win = $('#msgwindow').dialog({  
@@ -316,7 +318,7 @@
  			//alert("delId"+delId);
  			//delId=wpid;
  			$.ajax({
- 				url:"/Examination2.0/writingPaper_delWritingPaperById.action",
+ 				url:"/Question_bank/writingPaper_delWritingPaperById.action",
  				type:"post",
  				datatype:"json",
  				data:{"wpid":wpid},
@@ -352,7 +354,7 @@
  	 				examClassName="";
  	 			}
  	 			$.ajax({
- 	 				url:"/Examination2.0/dataarraylist_showWritingPaperPages.action",
+ 	 				url:"/Question_bank/dataarraylist_showWritingPaperPages.action",
  	 				type:"post",
  	 				datatype:"json",
  	 				data:{"displayRows":displayRows,"pageNume":pageNume,"examClassName":examClassName},
@@ -365,7 +367,7 @@
  		//更改评卷信息及其更改后的状态
  		function gradeThisPaper(wpid){
  			$.ajax({
- 				url:"/Examination2.0/writingPaper_gradeThisWritingPaper.action",
+ 				url:"/Question_bank/writingPaper_gradeThisWritingPaper.action",
  				type:"post",
  				datatype:"json",
  				data:{"wpid":wpid},
@@ -376,7 +378,7 @@
 		//重考试卷
 		function reExamThisWp(wpid){
 			$.ajax({
-				url:"/Examination2.0/writingPaper_reExamThisWritingPaper.action",
+				url:"/Question_bank/writingPaper_reExamThisWritingPaper.action",
 				type:"post",
 				datatype:"json",
 				data:{"wpid":wpid},
@@ -388,7 +390,7 @@
  		//根据id来更新试卷的状态
  		function updateThisPaperStatus(wpid,toPaperStatu){
  			$.ajax({
- 				url:"/Examination2.0/writingPaper_updatePaperStatuById.action",
+ 				url:"/Question_bank/writingPaper_updatePaperStatuById.action",
  				type:"post",
  				datatype:"json",
  				data:{"wpid":wpid,"paperStatus":toPaperStatu},
@@ -423,7 +425,7 @@
  	 				examClassName="";
  	 			}
  	 			$.ajax({
- 	 				url:"/Examination2.0/dataarraylist_showWritingPaperPages.action",
+ 	 				url:"/Question_bank/dataarraylist_showWritingPaperPages.action",
  	 				type:"post",
  	 				datatype:"json",
  	 				data:{"displayRows":displayRows,"pageNume":pageNume,"examClassName":examClassName},
@@ -441,7 +443,7 @@
  			$('#exam_anotherClass_table').css("display","block")
  			
  			//selectedvalue2=S1;
- 	 		$.post("/Examination2.0/writingPaper_getExamineeClassName.action",{"semester":"S1"}, function(data){
+ 	 		$.post("/Question_bank/writingPaper_getExamineeClassName.action",{"semester":"S1"}, function(data){
  					var examineeClassList= eval("("+data+")");
  					var optionstr="<option>--请选择--</option>";	
  					if(examineeClassList!=null){
@@ -464,7 +466,7 @@
  			var nodeTemp = $('#exam_anotherClass_tree').tree('getRoot',
  					"exam_point_selectSubcondition");
  			$.ajax({
- 				url : "/Examination2.0/findClass.action",
+ 				url : "/Question_bank/findClass.action",
  				type : "POST",
  				dataType : "JSON",
  				success : function(data) {
@@ -509,7 +511,7 @@
  				return;
  			}
  			
- 			$.post("/Examination2.0/paper_examPaperToAnotherClass.action", {
+ 			$.post("/Question_bank/paper_examPaperToAnotherClass.action", {
  				examDate: anotherTime,
  				examineeClass : anotherClassName,
  				paperPwd : exampid,

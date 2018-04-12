@@ -53,12 +53,12 @@ padding-bottom: 10px;
 		semester = $('input[name="semester"]:checked').val();
 		version = $('#version').val();
 		createSelectOption(version, semester);
-		createClassOption();
+		//createClassOption();
 		hideSubject();
 	})
 	function loadData() {
 		$.ajax({
-			url : "/Examination2.0/initData_editionName.action",
+			url : "/Question_bank/initData_editionName.action",
 			type : "post",
 			datatype : "json",
 			success : function(data) {
@@ -69,7 +69,7 @@ padding-bottom: 10px;
 
 	}
 
-	//选择学期
+	/* //选择学期
 	function checkSemester(s) {
 		semester = s;
 		version = $('#version').val();
@@ -83,15 +83,10 @@ padding-bottom: 10px;
 		version = $('#version').val();
 		createSelectOption(version, semester);
 		hideSubject();
-	}
+	} */
 	
 	function mubanpaper(){
 		var check = $('input[name="paperTypemuban"]:checked').val();
-		if (check == "1") {
-			alert("模板卷")
-		}else{
-			alert("非模板卷")
-		}
 	}
 
 	function hideSubject() {
@@ -103,7 +98,7 @@ padding-bottom: 10px;
 			$.ajaxSettings.async = false;
 			$
 					.ajax({
-						url : "/Examination2.0/initData_subject.action",
+						url : "/Question_bank/initData_subject.action",
 						type : "post",
 						data : {
 							"editionId" : version,
@@ -143,7 +138,7 @@ padding-bottom: 10px;
 			$.ajaxSettings.async = false;
 			$
 					.ajax({
-						url : "/Examination2.0/initData_findchapter.action",
+						url : "/Question_bank/initData_findchapter.action",
 						type : "post",
 						data : {
 							"subjectId" : subject
@@ -181,7 +176,7 @@ padding-bottom: 10px;
 		$.ajaxSettings.async = false;
 		$
 				.ajax({
-					url : "/Examination2.0/initData_findchapter.action",
+					url : "/Question_bank/initData_findchapter.action",
 					type : "post",
 					data : {
 						"subjectId" : subject
@@ -191,6 +186,10 @@ padding-bottom: 10px;
 
 						var Object = data;
 						var optionstr = "";
+						if(Object.errorMessage=="暂无数据"){
+							$('#cc').html("<tr><td>暂无数据</td></tr>");
+							return ;
+						}
 						if (Object.responseCode != 1) {
 							for (var i = 0, len = Object.obj.length; i < len; i++) {
 								optionstr += "<tr><td><label id='"+"label"+i+"'>"
@@ -218,7 +217,7 @@ padding-bottom: 10px;
 
 			$.ajaxSettings.async = false;
 			$.ajax({
-						url : "/Examination2.0/initData_findchapter.action",
+						url : "/Question_bank/initData_findchapter.action",
 						type : "post",
 						data : {
 							"subjectId" : subject
@@ -392,6 +391,7 @@ padding-bottom: 10px;
 		//$("input[name=semester]:eq('S2')").removeAttr("checked");
 		//$("input[name=semester]:eq('S3')").removeAttr("checked");
 	}
+	//出卷
 	function addWritingPaper(statu) {
 
 		//确认难易度的百分比是否为100%
@@ -433,12 +433,12 @@ padding-bottom: 10px;
 			$('#paperPwd2').val("");
 			return;
 		}
-		if (statu=="0") {//正常出卷
+	/* 	if (statu=="0") {//正常出卷
 			if(classes=="" ||classes=="请选择班级"){
 				alert("请选择一个班级");
 				return ;
 			}
-		}
+		} */
 		
 		if (paperPwd == "" || examDate == "" || questionCount == ""
 				|| paperName == "") {
@@ -453,7 +453,7 @@ padding-bottom: 10px;
 		}
 		var questionInfo = getQuestionCountInfo();
 		$.ajax({
-			url : "/Examination2.0/paper_addWritingPaper.action",
+			url : "/Question_bank/paper_addWritingPaper.action",
 			type : "post",
 			data : {
 				"examSubject" : subject,
@@ -578,53 +578,42 @@ padding-bottom: 10px;
 <div id="layout" class="easyui-layout"
 	style="width: 100%; height: 400px;" data-options="fit:true">
 	<div id="back_div" data-options="region:'center'">
-			<div class="find_table_slelct" style="width: 98%;margin: 0 auto;" >
+			<div class="find_table_slelct" style="width: 95%;margin: 0 auto;" >
 				
 					<table width="100%" height="122" border="0" cellspacing="0">
 						<tr>
-							<td width="92" height="25" align="left">
-								<div align="left" class="fontColor">版本号:</div>
-							</td>
-							<td width="300px">
-								<div align="left">
-									<select name="version" id="version" onChange="changeVersion()">
-									</select>
-								</div>
-							</td>
-							<td width="95">
-								<div align="left" class="fontColor">学期编号:</div>
-							</td>
-							<td width="214">
-								<div align="left">
-									<input name="semester" id="semester" type="radio" value="S1"
-										onClick="checkSemester('S1')" checked="checked"> S1 <input
-										name="semester" id="semester" type="radio" value="S2"
-										onClick="checkSemester('S2')"> S2 <input type="radio"
-										id="semester" name="semester" value="S3"
-										onClick="checkSemester('S3')"> S3
-								</div>
-							</td>
-							<td align="left">
-								<div align="left" class="fontColor">班 &nbsp;&nbsp;&nbsp;级:</div>
-							</td>
-							<td>
-								<div align="left">
-									<select name="examineeClass" id="classes">
-										<option selected>--请选择班级--</option>
-									</select>
-									<span class="prompt">*</span>
-								</div>
-							</td>
 							<td>
 								<div align="left" class="fontColor">出题数量:</div>
 							</td>
-							<td>
+							<td width="">
 								<div align="left">
 									<input name="questionCount" width="50px" type="text" class="text4"
 										id="questionCount" onBlur="setOverCount('null')" value="10"> <span
 										class="prompt">*</span>
 								</div>
 							</td>
+							<td width="5%">
+								<div align="left" class="fontColor">考试日期:</div>
+							</td>
+							<td>
+								<div align="left">
+
+								<input type="text" value="" id="examDate" name="examDate" onclick="fPopCalendar(event,this,this)" >
+									<!-- <input type="text" id="examDate" name="examDate"
+										readonly="readonly" onclick="fPopCalendar(event,this,this)"
+										onfocus="this.select()" />  --><span class="prompt">*</span>
+								</div>
+							</td>
+							<td width="95">
+								<div align="left" class="fontColor">考试时间(分):</div>
+							</td>
+							<td width="214">
+								<div align="left">
+									<input name="timesConsume" type="text" class="text4"
+										id="timesConsume" value="10"> <span class="prompt">*</span>
+								</div>
+							</td>
+							
 						</tr>
 						<tr>
 							<td width="5%" align="left" class="fontColor">考卷密码:</td>
@@ -643,34 +632,15 @@ padding-bottom: 10px;
 										id="paperPwd2" maxlength="5" value='a' width="50px"> <span class="prompt">默认为a*</span>
 								</div>
 							</td>
-							<td width="">
-								<div align="left" class="fontColor">考试日期:</div>
-							</td>
-							<td>
-								<div align="left">
-
-								<input type="text" value="" id="examDate" name="examDate" onclick="fPopCalendar(event,this,this)" >
-									<!-- <input type="text" id="examDate" name="examDate"
-										readonly="readonly" onclick="fPopCalendar(event,this,this)"
-										onfocus="this.select()" />  --><span class="prompt">*</span>
-								</div>
-							</td>
 							
-							<td width="95">
-								<div align="left" class="fontColor">考试时间(分):</div>
-							</td>
-							<td width="214">
-								<div align="left">
-									<input name="timesConsume" type="text" class="text4"
-										id="timesConsume" value="10"> <span class="prompt">*</span>
-								</div>
-							</td>
+							
+							
 						</tr>
 					<tr>
 							<td width="6%" height="40">
 								<div align="left" class="fontColor">难易度比例:</div>
 							</td>
-							<td width="30%" colspan="3">
+							<td width="30%" colspan="1">
 									难: <select name="rate1" id="rate1" onchange="rate1()">
 										<!-- <option value="0%">--请选择--</option>
 										<option value="10%">10%</option>
@@ -728,8 +698,8 @@ padding-bottom: 10px;
 						<tr>
 							<td height="43" width="10%"  >
 								<div align="right">
-									<input name="paperTypemuban" type="checkbox" id="paperTypemuban"
-											value="1" onClick="mubanpaper()"> 选中出模板卷 &nbsp;&nbsp;&nbsp;
+									<!-- <input name="paperTypemuban" type="checkbox" id="paperTypemuban"
+											value="1" onClick="mubanpaper()"> 选中出模板卷 &nbsp;&nbsp;&nbsp; -->
 									<input name="paperType" type="checkbox" id="paperType"
 										value="1" onClick="hideSubject()"> 选中出综合试卷
 								</div>
@@ -755,11 +725,11 @@ padding-bottom: 10px;
 								onMouseOver="this.className='inp_L2'"
 								onMouseOut="this.className='inp_L1'" onClick="reset()"
 								value="重  置"></td>
-							<td width="5%" align="left"><br> <input type="reset"
+							<!-- <td width="5%" align="left"><br> <input type="reset"
 								class="inp_L1" name="Submit3"
 								onMouseOver="this.className='inp_L2'"
 								onMouseOut="this.className='inp_L1'" onClick="addWritingPaper('1')"
-								value="设为模板卷"></td>
+								value="设为模板卷"></td> -->
 						</tr>
 					</table>
 				</td>

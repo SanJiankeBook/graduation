@@ -21,6 +21,7 @@ import com.yc.biz.EditionBiz;
 import com.yc.biz.SubjectBiz;
 import com.yc.po.Edition;
 import com.yc.po.Subject;
+import com.yc.po.XSubject;
 import com.yc.utils.JsonProtocol;
 import com.yc.utils.JsonUtil;
 import com.yc.vo.SubjectPage;
@@ -113,16 +114,16 @@ public class SubjectAction extends BaseAction implements ServletResponseAware, S
 		String subjectName = req.getParameter("newSubName");
 		Integer seq=Integer.parseInt(   req.getParameter("seq") );
 		try {
-			Subject subject = subjectBiz.findSubjectById(sid);
+			XSubject subject = subjectBiz.findSubjectById(sid);
 			subject.setId(sid);
 			subject.setSubjectName(subjectName);
-			subject.setSeq(seq);
-			int result = subjectBiz.updateSubject(subject);
-			if (result > 0) {
-				jsonStr = super.writeJson(0, null);
-			} else {
-				jsonStr = super.writeJson(1, null);
-			}
+			//subject.setSeq(seq);
+//			int result = subjectBiz.updateSubject(subject);
+//			if (result > 0) {
+//				jsonStr = super.writeJson(0, null);
+//			} else {
+//				jsonStr = super.writeJson(1, null);
+//			}
 			//JsonUtil.jsonOut(jsonStr);
 		} catch (Exception e) {
 			logger.error(e);

@@ -107,7 +107,7 @@ public class ChapterBizImpl implements ChapterBiz {
 
 	@Override
 	public String getChapterName(int chapterId) {
-		String sql = "select chapterName from Chapter where id=?";
+		String sql = "select pcontent from PointInfo where pid=?";
 		String[] params = new String[] { chapterId + "" };
 		List<String> list = baseDao.search(sql, params);
 		return list != null && list.size() > 0 ? list.get(0) : null;

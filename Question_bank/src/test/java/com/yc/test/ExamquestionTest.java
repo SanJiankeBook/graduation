@@ -375,7 +375,7 @@ public class ExamquestionTest {
 
 	@Test //assessmentpaper_newPointPaper.action 出自评卷（把自评卷的内容写进数据库）   已优化  三个basedao方法，三条语句
 	public void testHibernateConn13d() {//已优化
-		Subject sb = subjectBiz.findSubjectById(1);
+		//Subject sb = subjectBiz.findSubjectById(1);
 		ExamineeClass ec = examineeClassBiz.findExamineeClassById(49);
 		PointPaper po = new PointPaper();
 		po.setPname("YC_45班的自评卷");
@@ -384,7 +384,7 @@ public class ExamquestionTest {
 		po.setPaperPwd("a");
 		po.setPtitle("103,4,");
 		po.setDescript("");
-		po.setSubject(sb);
+		//po.setSubject(sb);
 		po.setExamineeClass(ec);
 		pointPaperBiz.addPointPaper(po);
 	}

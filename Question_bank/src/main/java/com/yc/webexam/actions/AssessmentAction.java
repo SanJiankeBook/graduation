@@ -14,6 +14,7 @@ import com.yc.biz.PointInfoBiz;
 import com.yc.biz.SubjectBiz;
 import com.yc.po.PointInfo;
 import com.yc.po.Subject;
+import com.yc.po.XSubject;
 import com.yc.utils.JsonUtil;
 import com.yc.vo.DataGaidModel;
 import com.yc.vo.PointInfoModel;
@@ -53,6 +54,7 @@ public class AssessmentAction extends BaseAction implements ModelDriven<PointInf
 		}
 	}
 
+	//获取所有章节    --毕设版
 	public void initPointInfo() {
 		String jsonStr = "";
 		try {
@@ -86,11 +88,11 @@ public class AssessmentAction extends BaseAction implements ModelDriven<PointInf
 			}
 		}
 	}
-
+	// 增加章节    毕设版
 	public void addPointInfo() {
 		String jsonStr = "";
 		try {
-			Subject subject = subjectBiz.findSubjectById(pointInfoModel.getCid());
+			XSubject subject = subjectBiz.findSubjectById(pointInfoModel.getCid());
 			String contnt=pointInfoModel.getPcontent();
 			contnt=contnt.replaceAll("；", ";");
 			String[] contnts=contnt.split(";");
@@ -121,7 +123,7 @@ public class AssessmentAction extends BaseAction implements ModelDriven<PointInf
 	public void delPointInfo() {
 		String jsonStr = "";
 		try {
-			Subject subject = subjectBiz.findSubjectById(pointInfoModel.getCid());
+			XSubject subject = subjectBiz.findSubjectById(pointInfoModel.getCid());
 			PointInfo po = new PointInfo();
 			po.setPid(pointInfoModel.getPid());
 			po.setSubject(subject);
@@ -142,7 +144,7 @@ public class AssessmentAction extends BaseAction implements ModelDriven<PointInf
 	public void updatePointInfo() {
 		String jsonStr = "";
 		try {
-			Subject subject = subjectBiz.findSubjectById(pointInfoModel.getCid());
+			XSubject subject = subjectBiz.findSubjectById(pointInfoModel.getCid());
 			PointInfo po = new PointInfo();
 			po.setPid(pointInfoModel.getPid());
 			po.setPcontent(pointInfoModel.getPcontent());

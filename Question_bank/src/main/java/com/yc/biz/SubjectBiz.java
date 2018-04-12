@@ -128,7 +128,7 @@ public interface SubjectBiz {
 	 * @param subjectId
 	 * @return
 	 */
-	public Subject findSubjectById(int subjectId);
+	public XSubject findSubjectById(int subjectId);
 	
 	
 	/**

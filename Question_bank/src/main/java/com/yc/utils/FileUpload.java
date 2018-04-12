@@ -41,7 +41,7 @@ public class FileUpload {
 		Map<String, String> map = new HashMap<String, String>();
 		SmartUpload su = new SmartUpload();
 		su.initialize(pageContext); // 初始化
-		//su.setCharset("utf-8");
+		su.setCharset("utf-8");
 		// 定义允许上传文件类型
 		su.setAllowedFilesList(allowedFilesList);
 		// 不允许上传文件类型

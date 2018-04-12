@@ -47,8 +47,17 @@ public class DataarraylistAction extends BaseAction {
 	private String examinationType;
 	private Integer classId;
 	private String examSubject;
+	private Integer chapterId;//章节编号
 	
 	
+	public Integer getChapterId() {
+		return chapterId;
+	}
+
+	public void setChapterId(Integer chapterId) {
+		this.chapterId = chapterId;
+	}
+
 	public String getExamSubject() {
 		return examSubject;
 	}

@@ -17,7 +17,7 @@ public class PointInfoModel implements Serializable {
 	
 	
 	public Integer getRows() {
-		return rows;
+		return rows==null?10000:rows;
 	}
 
 	public void setRows(Integer rows) {
@@ -25,7 +25,7 @@ public class PointInfoModel implements Serializable {
 	}
 
 	public Integer getPage() {
-		return page;
+		return page==null?1:page;
 	}
 
 	public void setPage(Integer page) {

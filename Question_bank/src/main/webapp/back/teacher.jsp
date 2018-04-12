@@ -683,7 +683,7 @@ FONT-VARIANT: normal" face=华文行楷 color=#336699><strong>试卷生成系统
 					<li><span>题库维护</span>
 						<ul>
 							<li><a href="javascript:void(0);"
-								onclick="javascript:addTab('知识点管理','icon-mini-add',true,'','<iframe src=back/admin/addpoint.html  frameborder=0 style=border:0;width:100%;height:99.5%;></iframe>')">知识点管理</a></li>
+								onclick="javascript:addTab('章节管理','icon-mini-add',true,'','<iframe src=back/admin/addpoint.html  frameborder=0 style=border:0;width:100%;height:99.5%;></iframe>')">章节管理</a></li>
 							<li><a href="javascript:void(0);"
 								onclick="javascript:addTab('录入笔试题','icon-mini-add',true,'','<iframe src=back/backoperation/newwritingquestion.html  frameborder=0 style=border:0;width:100%;height:99.5%;></iframe>')">录入笔试题</a></li>
 							<li><a href="javascript:void(0);"
@@ -693,13 +693,13 @@ FONT-VARIANT: normal" face=华文行楷 color=#336699><strong>试卷生成系统
 						<ul>
 							<li><a href="javascript:void(0);"
 								onclick="javascript:addTab('出笔试卷','icon-mini-add',true,'','<iframe src=back/backoperation/newwritingpaper.html  frameborder=0 style=border:0;width:100%;height:99.5%;></iframe>')">出笔试卷</a></li>
-							<li><a href="javascript:void(0);"
+							<%-- <li><a href="javascript:void(0);"
 								onclick="javascript:addTab('出笔试模板卷','icon-mini-add',true,'','<iframe src=back/backoperation/newwritingpapertemplate.html  frameborder=0 style=border:0;width:100%;height:99.5%;></iframe>')">出笔试模板卷</a></li>
-
+ --%>
 							<li><a href="javascript:void(0);"
 								onclick="javascript:addTab('浏览笔试卷','icon-mini-add',true,'','<iframe src=back/grade/listwritingpaper2.html  frameborder=0 style=border:0;width:100%;height:99.5%;></iframe>')">浏览笔试卷</a>
 							</li>
-							<li><a href="javascript:void(0);"
+							<%-- <li><a href="javascript:void(0);"
 								onclick="javascript:addTab('浏览笔试模板卷','icon-mini-add',true,'','<iframe src=back/grade/listwritingpaper2Template.html  frameborder=0 style=border:0;width:100%;height:99.5%;></iframe>')">浏览笔试模板卷</a>
 							</li>
 							<li><a href="javascript:void(0);"
@@ -713,14 +713,14 @@ FONT-VARIANT: normal" face=华文行楷 color=#336699><strong>试卷生成系统
 							</li>
 							<li><a href="javascript:void(0);"
 								onclick="javascript:addTab('浏览自评模板卷','icon-mini-add',true,'','<iframe src=back/admin/showpointpapertemplate.html  frameborder=0 style=border:0;width:100%;height:99.5%;></iframe>')">浏览自评模板卷</a>
-							</li>
+							</li> --%>
 						</ul></li>
-					<li><span>考试安排</span>
+					<%-- <li><span>考试安排</span>
 						<ul>
 							<li><a href="javascript:void(0);"
 								onclick="javascript:addTab('考试安排','icon-mini-add',true,'','<iframe src=back/backoperation/examarrange.html  frameborder=0 style=border:0;width:100%;height:99.5%;></iframe>')">考试安排</a>
 							</li>
-						</ul></li>
+						</ul></li> --%>
 				</ul>
 			</div>
 			<div title="测评结果管理"

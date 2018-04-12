@@ -33,7 +33,7 @@ public class PointInfo implements Serializable {
 
 	@ManyToOne(fetch=FetchType.LAZY)//测试加上的
     @JoinColumn(name="cid")
-	private Subject subject;
+	private XSubject subject;
 	
 
 	
@@ -104,13 +104,13 @@ public class PointInfo implements Serializable {
 	}
 
 
-	public Subject getSubject() {
+	public XSubject getSubject() {
 		return subject;
 	}
 
 
-	public void setSubject(Subject subject) {
-		this.subject = subject;
+	public void setSubject(XSubject subject2) {
+		this.subject = subject2;
 	}
 
 

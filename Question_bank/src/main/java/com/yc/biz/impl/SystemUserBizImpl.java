@@ -43,7 +43,7 @@ public class SystemUserBizImpl implements SystemUserBiz
 		String[] params = new String[] { userName };
 		boolean flag = false;
 		// 去除bug，先根据name和id找password，再比较password
-		String sql = "select s.password from SystemUser s where s.userName=? and status=1";
+		String sql = "select s.password from SystemUser s where s.userName=? ";
 		String pass = "";
 		List list = (List) this.baseDao.search(sql, params);
 		if (list != null && list.size() > 0)

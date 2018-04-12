@@ -100,19 +100,20 @@
   				}
   			});
   		}
-  		//生成章节列表
+  		//生成章节列表   毕设版
   		function createChapterOption(subjectId){
   	  		 $.ajaxSettings.async = false; 
   	  			$.ajax({
-  	  				url:"/Question_bank/initData_chapter.action",
+  	  				url:"/Question_bank/assessment_initPointInfo.action",
   	  				type:"post",
-  	  				data:{"subjectId":subjectId},
+  	  				//data:{"subjectId":subjectId},
+  	  				data:{"cid":subjectId},
   	  				datatype:"json",
   	  				success:function(examineeClassList){
   	  					var optionstr="";
-  	  					if(examineeClassList.responseCode!=1){
-  	  						for(var i=0,len=examineeClassList.obj.length;i<len;i++){
-  	  						optionstr+="<option value='"+examineeClassList.obj[i].id+"'>"+examineeClassList.obj[i].chapterName+"</option>";
+  	  					if(examineeClassList.responseCode!=1 &&  examineeClassList.total!=0){
+  	  						for(var i=0,len=examineeClassList.rows.length;i<len;i++){
+  	  						optionstr+="<option value='"+examineeClassList.rows[i].pid+"'>"+examineeClassList.rows[i].pcontent+"</option>";
   	  						}
   	  					}else{
   	  						optionstr+="<option value=0 >没有数据</option>"

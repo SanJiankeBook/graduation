@@ -8,6 +8,7 @@ public class DataarrayActionModel implements Serializable{
 	private Integer version;//版本号
 	private String semester;//班级
 	private Integer difficult;//难易度
+	
 	private String questionType;
 	private Integer subject;
 	private String txtQuestion;
@@ -20,10 +21,32 @@ public class DataarrayActionModel implements Serializable{
 	private String sort;//排序方式
 	private String order;//排序规则
 	private String idField;//标识列
+	private Integer chapterId;//章节编号
+	private String sname;
+	private String cname;
+	
 	
 	
 	
 
+	public String getSname() {
+		return sname;
+	}
+	public void setSname(String sname) {
+		this.sname = sname;
+	}
+	public String getCname() {
+		return cname;
+	}
+	public void setCname(String cname) {
+		this.cname = cname;
+	}
+	public Integer getChapterId() {
+		return chapterId;
+	}
+	public void setChapterId(Integer chapterId) {
+		this.chapterId = chapterId;
+	}
 	public String getSort() {
 		return sort;
 	}

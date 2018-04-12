@@ -42,7 +42,7 @@
 		//根据id查找试卷信息
 		$
 				.ajax({
-					url : "/Examination2.0/dataarraylist_showWritingPaperPagesDetail.action",
+					url : "/Question_bank/dataarraylist_showWritingPaperPagesDetail.action",
 					type : "post",
 					datatype : "json",
 					data : {
@@ -104,7 +104,7 @@
 			//显示班级下拉框
 			$
 					.ajax({
-						url : "/Examination2.0/dataarraylist_findAllExamineeClass.action",
+						url : "/Question_bank/dataarraylist_findAllExamineeClass.action",
 						type : "post",
 						datatype : "json",
 						success : showAllExamineeClass
@@ -113,7 +113,7 @@
 		}
 		//根据ids查询考试题
 		$.ajax({
-			url : "/Examination2.0/dataarraylist_findQuestionByids.action",
+			url : "/Question_bank/dataarraylist_findQuestionByids.action",
 			type : "post",
 			datatype : "json",
 			data : {
@@ -311,7 +311,7 @@
 		}
 		// alert("answer:"+answer);
 		$.ajax({
-			url : "/Examination2.0/dataarraylist_updateWritingQuestion.action",
+			url : "/Question_bank/dataarraylist_updateWritingQuestion.action",
 			type : "post",
 			datatype : "json",
 			data : {
@@ -380,7 +380,7 @@
 									+ '","paperStatus":"' + paperStatus + '"}'
 							$
 									.ajax({
-										url : "/Examination2.0/dataarraylist_updateWritingPaperPagesDetail.action",
+										url : "/Question_bank/dataarraylist_updateWritingPaperPagesDetail.action",
 										type : "post",
 										datatype : "json",
 										data : {
@@ -437,7 +437,7 @@
 		}
 		//用来重新显示删除后的试卷
 		$.ajax({ 
-					url : "/Examination2.0/writingPaper_updateWritingPaperQuestionId.action",
+					url : "/Question_bank/writingPaper_updateWritingPaperQuestionId.action",
 					type : "post",
 					datatype : "json",
 					data : {
@@ -454,7 +454,7 @@
 			//alert("wpid:"+info.obj);
 			$
 					.ajax({
-						url : "/Examination2.0/dataarraylist_showWritingPaperPagesDetail.action",
+						url : "/Question_bank/dataarraylist_showWritingPaperPagesDetail.action",
 						type : "post",
 						datatype : "json",
 						data : {
@@ -471,7 +471,7 @@
 		var paperId = $.trim($("#paperId").val());
 		var flag = confirm("如果想将试卷的正确答案放在最后请点“确定”，如果想将正确答案跟在每道题的后面请点“取消”");
 		//放在最后
-		location.href = "/Examination2.0/exportWord_exportTxt.action?paperId="
+		location.href = "/Question_bank/exportWord_exportTxt.action?paperId="
 				+ paperId + "&answerAtLast=" + flag;
 	}
 	
@@ -501,18 +501,7 @@
 									class="text4" id="paperName" value="" maxlength="50"
 									 ></td>
 							</tr>
-							<tr>
-								<td height="38" class="fontColor">考试班级:</td>
-								<td><select name="className"
-									 
-									id="examineeClassStr">
-
-								</select></td>
-								<td class="fontColor">考卷密码:</td>
-								<td><input name="paperPwd" type="text" class="text4"
-									id="paperPwd" value="" maxlength="50"
-									 ></td>
-							</tr>
+							
 							<tr>
 								<td height="37" class="fontColor">考试科目:</td>
 								<td id="examSubject"></td>
@@ -541,10 +530,10 @@
 								<td><input name="timesConsume" type="text" class="text4"
 									id="timesConsume" maxlength="3"
 									 ></td>
-								<td><span class="fontColor">出卷人:</span></td>
-								<td><input name="operator" type="text" class="text4"
-									id="operator" maxlength="50"  >
-								</td>
+								<td class="fontColor">考卷密码:</td>
+								<td><input name="paperPwd" type="text" class="text4"
+									id="paperPwd" value="" maxlength="50"
+									 ></td>
 							</tr>
 							<tr>
 								<td height="34" class="fontColor">备注:</td>
@@ -562,12 +551,6 @@
 								</td>
 							</tr>
 								
-							<tr>
-								<td height="34" valign="top" class="fontColor">温馨提示:</td>
-								<td colspan="3">当想把这套试卷再给其他班级考试的话，操作步骤: <br>
-									1、修改&quot;考试班级&quot;名称 <br> 2、将考卷状态设置为&quot;未考&quot; <br>
-									3、修改考试日期、时长或密码(可选) <br> 4、在&quot;考试安排&quot;中重新安排</td>
-							</tr>
 						</table>
 					</form> <br> 下面是试卷题目信息: <br></td>
 			</tr>
@@ -598,7 +581,7 @@
 					</table></td>
 			</tr>
 			<tr>
-						<!-- <a href="/Examination2.0/projects/xls/${array[0]}.xls"
+						<!-- <a href="/Question_bank/projects/xls/${array[0]}.xls"
 								onClick="exportXls()">导出Excel文件</a> &nbsp;&nbsp;
 							<a href="#" onclick="exportText()">纯文本文件</a> -->
 						 

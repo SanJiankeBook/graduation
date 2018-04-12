@@ -32,7 +32,7 @@ public class SubjectBizImpl implements SubjectBiz {
 	
 	@Override
 	public String findSubjectName(int pid) {
-		String sql="select subjectName from Subject where id=?";
+		String sql="select subjectName from XSubject where id=?";
 		String[] params = new String[]{pid+""};
 		List<String> list=baseDao.search(sql, params);
 		return list!=null&&list.size()>0?list.get(0):null;
@@ -88,7 +88,7 @@ public class SubjectBizImpl implements SubjectBiz {
 		String hql=" select *  from Subject  sb  where  sb.subjectName=:subjectName ";
 		Map<String,Object> map=new HashMap<String,Object>();
 		map.put("subjectName", subjectName);
-		List<Subject> subject=baseDao.findDatabyhql(hql, map, new Subject(), null, null);
+		List<XSubject> subject=baseDao.findDatabyhql(hql, map, new XSubject(), null, null);
 		return subject.get(0).getId();
 	}
 
@@ -181,11 +181,12 @@ public class SubjectBizImpl implements SubjectBiz {
 
 	@Override
 
-	public Subject findSubjectById(int subjectId)
+	public XSubject findSubjectById(int subjectId)
 	{
-		String sql="from Subject where id=?";
+		int i=0;
+		String sql="from XSubject where id=?";
 		String[] params =new String[]{subjectId+""};
-		List<Subject> list=baseDao.search(sql, params);
+		List<XSubject> list=baseDao.search(sql, params);
 		if(list!=null&&list.size()>0){
 			return list.get(0);
 		}

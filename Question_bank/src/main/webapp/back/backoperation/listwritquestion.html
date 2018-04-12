@@ -11,17 +11,16 @@
 <script type="text/javascript" src="../../jslib/locale/easyui-lang-zh_CN.js"></script>
 <script type="text/javascript">
 	$(function() {
-		createVersionOption();
-		semester = $('input[name="semester"]:checked').val();
-		version = $('#version').val();
-		createSubjectOption(version, semester);
+		/* createVersionOption();
+		createSubjectOption(version, semester); */
 		showPaperQuestion();
+		createSelectOption();
+		changeSubject();
 	});
 		function createSubjectOption(version, semester) {
 		$.ajaxSettings.async = false;
-		$
-				.ajax({
-					url : "/Examination2.0/initData_subject.action",
+		$.ajax({
+					url : "/Question_bank/initData_subject.action",
 					type : "post",
 					data : {
 						"editionId" : version,
@@ -55,7 +54,7 @@
 	}
 	function showPaperQuestion(){
 		$('#back_writingquestion_datagrid').datagrid({
-			url : "/Examination2.0/dataarray_searchAllPaper.action",
+			url : "/Question_bank/dataarray_searchAllPaper.action",
 			fit : true,
 			pagination : true,
 			border : true,
@@ -75,18 +74,18 @@
         		 {field:'question',title:'题目',width:700,sortable:true}  
     		]],
     		toolbar: [{
-					text:'编辑内容',
+					text:'题目管理',
 					iconCls: 'icon-add',
 					handler: function(){
 						search();
 					}
-				},'-',{
+				}/* ,'-',{
 					text:'删除',
 					iconCls: 'icon-edit',
 					handler: function(){
 						remove();
 					}
-				}]   
+				} */]   
 			
 		});
 	}
@@ -111,7 +110,7 @@
 						ids+=rows[i].id+",";
 					}
 				$.ajax({
-						url:'/Examination2.0/dataarray_delQuestions.action',
+						url:'/Question_bank/dataarray_delQuestions.action',
 						data:{
 							"ids":ids
 						},
@@ -154,13 +153,16 @@
 					return;
 				}
 			var quid=rows[0].id;
+			var subject=rows[0].subjectName;
 			if (window.localStorage) {
  	   			 localStorage.setItem("quid", quid);
+ 	   			 localStorage.setItem("subject", subject);
  			} else {
  	    		 Cookie.write("quid",quid);	
+ 	    		 Cookie.write("subject",subject);	
  			}	
 			$('<div id="edit"/>').dialog({  
-				title: '编辑',   
+				title: '题目管理',   
 				width: 700,   
 				height: 600,
 				top:40,   
@@ -174,19 +176,23 @@
     		});
 	}
 	function find(){
-		var version=$('#version').val();//版本号
-		var semester=$('input[name="semester"]:checked').val();//学期
+		/* var version=$('#version').val();//版本号
+		var semester=$('input[name="semester"]:checked').val();//学期 */
 		var difficult=$('input[name="difficult"]:checked').val();//难易度
 		var questionType=$('input[name="questionType"]:checked').val();//题目类型
 		var subject=$('#subject').val();//科目编号
+		var chapter=$('#chapter').val();//章节目录
 		var txtQuestion=$('#txtQuestion').val();//关键字
+		var sname=$("#subject option:selected").text();//关键字
+		var cname=$("#chapter option:selected").text();//关键字
 		$('#back_writingquestion_datagrid').datagrid('load',{
-			"version":version,
-			"semester":semester,
+			"chapterId":chapter,
 			"difficult":difficult,
 			"questionType":questionType,
 			"subject":subject,
 			"txtQuestion":txtQuestion,
+			"sname":sname,
+			"cname":cname
 		});
 	}
 	function changeVersion(){
@@ -196,6 +202,11 @@
 		//showPaperQuestion();
 		find();
 	}
+	//选择课程
+	function changeSubject() {
+		subjectId = $('#subject').val();
+		createChapterOption(subjectId);
+	}
 </script>
 	<div id="listwritingquestion_layout" data-options="fit:true" class="easyui-layout" style="width:950px;height:600px;">
 		<!-- <div data-options="region:'north',title:'查询',split:true" style="height:180px;">
@@ -204,7 +215,7 @@
 	  		<table width="100%"  border="0" cellpadding="0"
 						cellspacing="0">
 						<tr height="32px">
-							<td width="109" height="32" class="fontColor">版本号:</td>
+							<!-- <td width="109" height="32" class="fontColor">版本号:</td>
 							<td height="32" width="109"><select name='version' class='select'
 								id='version'  onChange="changeVersion()">
 							</select></td>
@@ -218,9 +229,11 @@
 								value="S3" id="S3" onClick="cretsubject()"> S3
 								&nbsp;&nbsp;&nbsp; <input type="radio" name="semester"
 								value="0" id="all" onClick="cretsubject()" checked="checked"  > 全部
-							</td>
+							</td> -->
 							<td height="32"><span class="fontColor">科目名称:</span></td>
-							<td height="32"><select name="subject" id="subject">
+							<td height="32"><select name="subject" id="subject" onChange="changeSubject()">
+							<td height="32" class="fontColor">章节:</td>
+							<td height="32"><select name='chapter' class='select2' id='chapter'>
 							<td height="32"><span class="fontColor">难易度:</span></td>
 							<td height="32"><input name="difficult" type="radio"
 								value="1" checked> 难 &nbsp;&nbsp;&nbsp; <input

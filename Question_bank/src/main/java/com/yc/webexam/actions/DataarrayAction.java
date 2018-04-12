@@ -37,7 +37,7 @@ public class DataarrayAction extends BaseAction implements ModelDriven<Dataarray
 	@Resource(name = "writingPaperBiz")
 	private WritingPaperBiz writingPaperBiz;
 
-	// 查询所有题目信息
+	// 查询所有题目信息  毕设版
 	public void searchAllPaper() {
 		try {
 			List<WritingQuestionPaper> lists = new ArrayList<WritingQuestionPaper>();
@@ -54,8 +54,14 @@ public class DataarrayAction extends BaseAction implements ModelDriven<Dataarray
 				question=question.replaceAll("&nbsp;", "");
 				
 				wqp.setQuestion("<xmp>" + question + "</xmp>");
-				wqp.setSubjectName(subjectBiz.findSubjectName(list.get(i).getSubjectId()));
-				wqp.setChapterName(chapterBiz.getChapterName(list.get(i).getChapterId()));
+				if(dataarrayActionModel.getSname()!=null && dataarrayActionModel.getSname()!=""){
+					wqp.setSubjectName(dataarrayActionModel.getSname());
+					wqp.setChapterName(dataarrayActionModel.getCname());
+				}else{
+					wqp.setSubjectName(subjectBiz.findSubjectName(list.get(i).getSubjectId()));
+					wqp.setChapterName(chapterBiz.getChapterName(list.get(i).getChapterId()));
+				}
+				
 				if (("1").equals(list.get(i).getQuestionType())) {
 					wqp.setType("单选");
 				} else if (("2").equals(list.get(i).getQuestionType())) {
@@ -198,7 +204,7 @@ public class DataarrayAction extends BaseAction implements ModelDriven<Dataarray
 		}
 
 	}
-
+	//根据id得到题目的所有信息   毕设版
 	public void findQuestion() {
 		String jsonStr = "";
 		try {

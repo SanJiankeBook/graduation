@@ -362,11 +362,11 @@ public class WritingQuestionBizImpl implements WritingQuestionBiz {
 		// 通过指定条件,得到查询到的记录条数
 		Map<String,Object> params=new HashMap<String,Object>();
 		String sql = "select count(*) from WritingQuestion where 1=1 ";
-		if (!semester.equals("")) {
+/*		if (semester!=null) {
 			sql += " and semester = :semester ";
 			params.put("semester", semester);
 		}
-		if (subjectId != 0) {
+*/		if (subjectId != 0) {
 			sql += " and subjectId = :subjectId" ;
 			params.put("subjectId", subjectId);
 		}
@@ -611,10 +611,10 @@ public class WritingQuestionBizImpl implements WritingQuestionBiz {
 		// 查询符合条件的所有题目编号
 		Map<String,Object> map=new HashMap<String,Object>();
 		String sql = "select id from WritingQuestion where 1=1 ";
-		if (!semester.equals("")) {
+		/*if (!semester.equals("")) {
 			sql += " and semester =:semester" ;
 			map.put("semester", semester);
-		}
+		}*/
 		if (subjectId != 0) {
 			sql += " and subjectId = :subjectId ";
 			map.put("subjectId", subjectId);
@@ -924,6 +924,11 @@ public class WritingQuestionBizImpl implements WritingQuestionBiz {
 				param.put("semester", da.getSemester());
 			}
 			if (da.getSubject() != null && da.getSubject() != 0) {
+				sql += " and wp.chapterId =:chapterId";
+				sqlcount += " and wp.chapterId = " + da.getChapterId();
+				param.put("chapterId", da.getChapterId());
+			}
+			if(da.getChapterId()!=null && da.getChapterId()!=0){
 				sql += " and wp.subjectId =:subjectId";
 				sqlcount += " and wp.subjectId = " + da.getSubject();
 				param.put("subjectId", da.getSubject());

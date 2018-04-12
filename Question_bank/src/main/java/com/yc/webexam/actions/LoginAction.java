@@ -93,68 +93,25 @@ public class LoginAction extends BaseAction implements ServletRequestAware, Serv
 	public void login() {
 		try {
 			this.request.setCharacterEncoding("UTF-8");
-
+/*
 			String identity = this.request.getParameter("identity");
-			String examClass = this.request.getParameter("examClass");
+			String examClass = this.request.getParameter("examClass");*/
 			
 			// UTFUtil.Utf8Util(this.request.getParameter("uname"));
 			String uname = this.request.getParameter("uname");
-			String password = Encrypt.md5AndSha(this.request.getParameter("password"));
-			String validateCode = this.request.getParameter("validateCode").trim();
+			String password = this.request.getParameter("password");
+		/*	String validateCode = this.request.getParameter("validateCode").trim();*/
 			// 取出imageCode.jsp中存的验证码
 			String rand = (String) mysession.getAttribute("rand");
-			if (!validateCode.equals(rand)) {
-				// 验证码错误,返回0
-				try {
-					JsonUtil.jsonOut("0");
-				} catch (IOException e) {
-					logger.error(e);
-					e.printStackTrace();
-				}
-			} else {
 				// 标识列
 				boolean flag = false;
-				// 学员登录
-				if (identity.equals("1")) {
-					Examinee e = examineeBiz.getExaminee(uname, password, examClass);
-					if (e != null) {
-						flag = true;
-					}
-					if (flag) {
-						
-						mysession.setAttribute("userid", e.getId());
-						mysession.setAttribute("userName", uname);
-						mysession.setAttribute("examClass", examClass);
-						mysession.setAttribute("identity", identity); // 标识列，用来区别教员和学生登录
-						mysession.setMaxInactiveInterval(45*60);
-						//mysession.setMaxInactiveInterval(20);
-						// session.put("userName", uname);
-						// session.put("examClass", examClass);
-						// 学生登录成功时，返回1
-						try {
-							JsonUtil.jsonOut("1");
-						} catch (IOException e1) {
-							e1.printStackTrace();
-						}
-					} else {
-						HttpServletRequest request = ServletActionContext.getRequest();
-						request.setAttribute("message", "用户的密码输入有误!");
-						// 用于登录失败时回复页面
-						request.setAttribute("role", 1);
-						// 密码错误，返回2
-						try {
-							JsonUtil.jsonOut("2");
-						} catch (IOException e1) {
-							logger.error(e1);
-							e1.printStackTrace();
-						}
-					}
+				
+				
 					// 教师登陆
-				} else {
+				
 					flag = systemUserBiz.isExist(uname, password);
 					if (flag) {
 						mysession.setAttribute("userName", uname);
-						mysession.setAttribute("identity", identity);
 						mysession.setMaxInactiveInterval(45*60);
 						//	mysession.setMaxInactiveInterval(10);
 						// session.put("userName", uname);
@@ -176,8 +133,7 @@ public class LoginAction extends BaseAction implements ServletRequestAware, Serv
 							
 						}
 					}
-				}
-			}
+			
 		} catch (UnsupportedEncodingException e2) {
 			logger.error(e2);
 			e2.printStackTrace();

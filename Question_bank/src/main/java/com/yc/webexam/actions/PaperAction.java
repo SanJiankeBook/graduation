@@ -266,8 +266,8 @@ public class PaperAction extends BaseAction implements ModelDriven<WritingPaperM
 	 */
 	private String createWritingPaperId(String version, String semester, String subject, String examClass) {
 		String paperID = ""; // 考卷ID
-		String vid = Integer.toString(editionBiz.getEditionId(version));
-		String eid = Integer.toString(examineeClassBiz.getClassIdOfname(examClass));
+		/*String vid = Integer.toString(editionBiz.getEditionId(version));
+		String eid = Integer.toString(examineeClassBiz.getClassIdOfname(examClass));*/
 		String sid;
 		if (subject.endsWith("0")) {
 			sid = 0 + "";
@@ -277,7 +277,7 @@ public class PaperAction extends BaseAction implements ModelDriven<WritingPaperM
 		// 根据系统时间生成年月日时分组成的字符串
 		String nowT = ExamUtil.getNowDate("yyyyMMddhhmmss");
 		// 版本，学期，考试班级，科目编号(综合试卷的科目为:0)生成考卷ID
-		paperID = vid + semester + eid + sid + nowT;
+		paperID =  sid + nowT;
 		return paperID;
 	}
 	

@@ -89,57 +89,57 @@ public class AssessmentPaperAction extends BaseAction implements ModelDriven<Poi
 	// 添加试卷
 	public void newPointPaper() {
 		String jsonStr = "";
-		try {
-			Subject sb = subjectBiz.findSubjectById(pointPaperModel.getSid());
-			ExamineeClass ec = examineeClassBiz.findExamineeClassById(pointPaperModel.getCid());
-			PointPaper po = new PointPaper();
-			po.setPname(pointPaperModel.getPname());
-			po.setPdate(pointPaperModel.getExamDate());
-			po.setPstatus(pointPaperModel.getPstatus());
-			po.setPaperPwd(pointPaperModel.getPaperPwd());
-			po.setPtitle(pointPaperModel.getPtitle());
-			po.setDescript(pointPaperModel.getDescript());
-			po.setSubject(sb);
-			po.setExamineeClass(ec);
-			pointPaperBiz.addPointPaper(po);
-			jsonStr = super.writeJson(0, "出卷成功！");
-		} catch (Exception e) {
-			jsonStr = super.writeJson(1, "出卷失败！");
-			logger.error(e);
-		} finally {
-			try {
-				JsonUtil.jsonOut(jsonStr);
-			} catch (IOException e) {
-				logger.error(e);
-			}
-		}
+//		try {
+//			//Subject sb = subjectBiz.findSubjectById(pointPaperModel.getSid());
+//			ExamineeClass ec = examineeClassBiz.findExamineeClassById(pointPaperModel.getCid());
+//			PointPaper po = new PointPaper();
+//			po.setPname(pointPaperModel.getPname());
+//			po.setPdate(pointPaperModel.getExamDate());
+//			po.setPstatus(pointPaperModel.getPstatus());
+//			po.setPaperPwd(pointPaperModel.getPaperPwd());
+//			po.setPtitle(pointPaperModel.getPtitle());
+//			po.setDescript(pointPaperModel.getDescript());
+//			po.setSubject(sb);
+//			po.setExamineeClass(ec);
+//			pointPaperBiz.addPointPaper(po);
+//			jsonStr = super.writeJson(0, "出卷成功！");
+//		} catch (Exception e) {
+//			jsonStr = super.writeJson(1, "出卷失败！");
+//			logger.error(e);
+//		} finally {
+//			try {
+//				JsonUtil.jsonOut(jsonStr);
+//			} catch (IOException e) {
+//				logger.error(e);
+//			}
+//		}
 	}
 	// 添加模板试卷
 	public void newPointPapertemplate() {
-		String jsonStr = "";
-		try {
-			Subject sb = subjectBiz.findSubjectById(pointPaperModel.getSid());
-			//ExamineeClass ec = examineeClassBiz.findExamineeClassById(pointPaperModel.getCid());
-			PointPaperTemplate po = new PointPaperTemplate();
-			po.setPname(pointPaperModel.getPname());
-			po.setPdate(pointPaperModel.getExamDate());
-			po.setPstatus(pointPaperModel.getPstatus());
-			po.setPaperPwd(pointPaperModel.getPaperPwd());
-			po.setPtitle(pointPaperModel.getPtitle());
-			po.setDescript(pointPaperModel.getDescript());
-			po.setSid(sb.getId());
-			pointPaperBiz.addPointPaper(po);
-			jsonStr = super.writeJson(0, "出模板卷成功！");
-		} catch (Exception e) {
-			jsonStr = super.writeJson(1, "出卷失败！");
-			logger.error(e);
-		} finally {
-			try {
-				JsonUtil.jsonOut(jsonStr);
-			} catch (IOException e) {
-				logger.error(e);
-			}
-		}
+//		String jsonStr = "";
+//		try {
+//			//Subject sb = subjectBiz.findSubjectById(pointPaperModel.getSid());
+//			//ExamineeClass ec = examineeClassBiz.findExamineeClassById(pointPaperModel.getCid());
+//			PointPaperTemplate po = new PointPaperTemplate();
+//			po.setPname(pointPaperModel.getPname());
+//			po.setPdate(pointPaperModel.getExamDate());
+//			po.setPstatus(pointPaperModel.getPstatus());
+//			po.setPaperPwd(pointPaperModel.getPaperPwd());
+//			po.setPtitle(pointPaperModel.getPtitle());
+//			po.setDescript(pointPaperModel.getDescript());
+//			po.setSid(sb.getId());
+//			pointPaperBiz.addPointPaper(po);
+//			jsonStr = super.writeJson(0, "出模板卷成功！");
+//		} catch (Exception e) {
+//			jsonStr = super.writeJson(1, "出卷失败！");
+//			logger.error(e);
+//		} finally {
+//			try {
+//				JsonUtil.jsonOut(jsonStr);
+//			} catch (IOException e) {
+//				logger.error(e);
+//			}
+//		}
 	}
 	
 	/**
@@ -189,31 +189,31 @@ public class AssessmentPaperAction extends BaseAction implements ModelDriven<Poi
 	// 更新试卷
 	public void updatePointPaper() {
 		String jsonStr = "";
-		try {
-			Subject sb = subjectBiz.findSubjectById(pointPaperModel.getSid());
-			ExamineeClass ec = examineeClassBiz.findExamineeClassById(pointPaperModel.getCid());
-			PointPaper po = new PointPaper();
-			po = pointPaperBiz.findPointPaperById(pointPaperModel.getPid());
-			po.setPname(pointPaperModel.getPname());
-			po.setPdate(pointPaperModel.getExamDate());
-			po.setPstatus(pointPaperModel.getPstatus());
-			po.setPaperPwd(pointPaperModel.getPaperPwd());
-			po.setPtitle(pointPaperModel.getPtitle());
-			po.setDescript(pointPaperModel.getDescript());
-			po.setSubject(sb);
-			po.setExamineeClass(ec);
-			pointPaperBiz.updatePointPaper(po);
-			jsonStr = super.writeJson(0, "编辑成功！");
-		} catch (Exception e) {
-			jsonStr = super.writeJson(1, "编辑失败！请稍后再试");
-			logger.error(e);
-		} finally {
-			try {
-				JsonUtil.jsonOut(jsonStr);
-			} catch (IOException e) {
-				logger.error(e);
-			}
-		}
+//		try {
+//			Subject sb = subjectBiz.findSubjectById(pointPaperModel.getSid());
+//			ExamineeClass ec = examineeClassBiz.findExamineeClassById(pointPaperModel.getCid());
+//			PointPaper po = new PointPaper();
+//			po = pointPaperBiz.findPointPaperById(pointPaperModel.getPid());
+//			po.setPname(pointPaperModel.getPname());
+//			po.setPdate(pointPaperModel.getExamDate());
+//			po.setPstatus(pointPaperModel.getPstatus());
+//			po.setPaperPwd(pointPaperModel.getPaperPwd());
+//			po.setPtitle(pointPaperModel.getPtitle());
+//			po.setDescript(pointPaperModel.getDescript());
+//			po.setSubject(sb);
+//			po.setExamineeClass(ec);
+//			pointPaperBiz.updatePointPaper(po);
+//			jsonStr = super.writeJson(0, "编辑成功！");
+//		} catch (Exception e) {
+//			jsonStr = super.writeJson(1, "编辑失败！请稍后再试");
+//			logger.error(e);
+//		} finally {
+//			try {
+//				JsonUtil.jsonOut(jsonStr);
+//			} catch (IOException e) {
+//				logger.error(e);
+//			}
+//		}
 	}
 
 	// 按条件查询试卷

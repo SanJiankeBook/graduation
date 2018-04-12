@@ -242,7 +242,7 @@
 
 	</dependencies>
    <build>
-		<finalName>question_bank</finalName>
+		<finalName>Question_bank</finalName>
 		<plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
