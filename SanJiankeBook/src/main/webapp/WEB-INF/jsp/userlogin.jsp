@@ -35,12 +35,6 @@
 <body>
     <div id="wrapper">
         
-<script>login();</script>
-<div class="header">
-    <div class="header_logo"><a href="http://www.bixia.org">笔下文学</a></div>
-    <div class="header_search"><script>search();</script></div>
-    <div class="userpanel"><script>banner();</script></div>
-</div>
 <div class="clear"></div>
 <div class="nav">
 			<ul>
@@ -109,8 +103,19 @@ function forgivepassword(){
      }
 }
 function logger() {
-						$.ajax({
-										url : "logger",
+	if($("#uname").val()==null | $("#uname").val()==""){
+		alert("请输入用户名");
+		return ;
+	}
+	if($("#upassword").val()==null | $("#upassword").val()==""){
+		alert("请输入密码");
+		return ;
+	}
+	if($("#validateCode").val()==null | $("#validateCode").val()==""){
+		alert("请输入验证码");
+		return ;
+	}
+						$.ajax({url : "logger",
 										type : "POST",
 										dataType : "JSON",//客户端返回过来的数据类型
 										data : {

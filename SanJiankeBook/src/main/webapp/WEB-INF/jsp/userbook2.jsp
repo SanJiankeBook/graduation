@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page isELIgnored="false"%>
@@ -268,5 +268,5 @@ function searchNovel() {
 		
 	</script>
 </body>
->>>>>>> branch 'master' of git@github.com:SanJiankeBook/FangxXieNovelBook.git
+
 </html>

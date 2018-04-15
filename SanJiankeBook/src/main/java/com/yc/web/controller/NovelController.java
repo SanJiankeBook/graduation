@@ -144,11 +144,10 @@ public class NovelController {
 
 	//页面登陆界面
 	@RequestMapping(value="/userlogininfo")
-	
 	public String userlogininfo(Model model){
 		logger.info("页面登陆界面........");
 		List<NovelType> list1 = novelTypebizImpl.showType(noveltype); // 小说类型
-		model.addAttribute("list1",list1);
+		model.addAttribute("list",list1);
 		return "userlogin";
 	}
     //搜索页面
@@ -346,6 +345,14 @@ public class NovelController {
     	List<NovelType> list1 = novelTypebizImpl.showType(noveltype); // 小说类型
 		model.addAttribute("list",list1);
     	return "Authorlogger";
+    }
+    //前往阅读记录界面  毕设
+    @RequestMapping(value="/toReadRecord")
+    public String toReadRecord(Model model){
+    	logger.info("toReadRecord...");
+    	List<NovelType> list1 = novelTypebizImpl.showType(noveltype); // 小说类型
+    	model.addAttribute("list",list1);
+    	return "readRecord";
     }
     //已有账号注册成为作家
     @RequestMapping(value="/registauthorUser")

@@ -155,7 +155,7 @@
 					<li><a href="authorPrefectrue1">作者专区</a></li>
 					<li><a href="toindex_type">排行榜单</a></li>
 					<li><a href="quanben">全本小说</a></li>
-					<li><a rel="nofollow" href="jsp/readRecord.jsp">阅读记录</a></li>
+					<li><a  href="toReadRecord">阅读记录</a></li>
 			</ul>
 		</div>
 		

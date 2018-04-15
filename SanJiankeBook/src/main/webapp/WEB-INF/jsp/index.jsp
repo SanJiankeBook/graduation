@@ -10,7 +10,7 @@
 	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
 %>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html >
 <head id="Head1">
 
 
@@ -35,7 +35,7 @@
 			frameborder="0"></iframe>
 
 		<div id="bdshare_l" style="display: none; left: 1044.08px; top: 84px;">
-			<div id="bdshare_l_c">
+			<div id="bdshare_l_c" style="visibility: hidden;">
 				<h6>分享到</h6>
 				<ul>
 					<li><a href="#" class="bds_mshare mshare">一键分享</a></li>
@@ -67,8 +67,6 @@
 		</script>
 		<div style="display: none">
 
-			<script src="php/stat.php" language="JavaScript"></script>
-			<script src="php/core.php" charset="utf-8" language="JavaScript"></script>
 		</div>
 
 
@@ -78,8 +76,7 @@
 					
 				</div>
 				<div class="ywtop_addfavorite">
-					<a
-						href="javascript:window.external.addFavorite('http://www.bixia.org','%E7%AC%94%E4%B8%8B%E6%96%87%E5%AD%A6')">三剑客文学</a>
+					<a href="#">IT类专业书籍</a>
 				</div>
 
 				<div class="nri" id="loger">
@@ -87,14 +84,14 @@
 					<!-- <form name="mylogin" id="mylogin" method="post"
 						action="userLogin"
 						> -->
-					<div class="cc">
+					<div class="cc" style="display: none;">
 						<div class="txt">账号：</div>
 						<div class="inp">
 							<input name="uname" id="uname" type="text" />
 
 						</div>
 					</div>
-					<div class="cc">
+					<div class="cc" style="display:none; ">
 						<div class="txt">密码：</div>
 						<div class="inp">
 
@@ -104,8 +101,9 @@
 					</div>
 					<div class="frii">
 						<!--  <button id="log">登录</button>-->
-						<input type="button" id="log" onClick="logger()" value="登录" />
-					</div>
+						<a href="userlogininfo"><span>登陆</span></a>
+<!-- 						<input type="button" id="log" onClick="logger()" value="登录" />
+ -->					</div>
 
 					<div class="ccc">
 						<div class="txtt"></div>
@@ -216,7 +214,7 @@
 					<li><a href="authorPrefectrue1">作者专区</a></li>
 					<li><a href="toindex_type">排行榜单</a></li>
 					<li><a href="quanben">全本小说</a></li>
-					<li><a rel="nofollow" href="jsp/readRecord.jsp">阅读记录</a></li>
+					<li><a  href="toReadRecord">阅读记录</a></li>
 				</ul>
 			</div>
 			<div id="main">
@@ -492,6 +490,14 @@
 		
 	})
 						function logger() {
+						if($("#uname").val()==null | $("#uname").val()==""){
+							alert("请输入用户名");
+							return ;
+						}
+						if($("#upassword").val()==null | $("#upassword").val()==""){
+							alert("请输入密码");
+							return ;
+						}
 							$.ajax({
 										url : "logger",
 										type : "POST",
