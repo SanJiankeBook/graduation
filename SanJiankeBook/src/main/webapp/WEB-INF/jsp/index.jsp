@@ -266,20 +266,25 @@
 				<div id="novelslist1" class="novelslist">
 
 					<!-- 玄幻   -->
-					<div class="content">
+					<div class="content" >
 						<h2>${list[0].tname}</h2>
 						<div class="top">
+						<c:forEach items="${Alllist}" var="Alllist">
+							<div style="height: 82;width: 318px ;float: left;" >
 							<div class="image">
-								<img src="${n[0].npicture}" alt="${n[0].nname}" width="67"
+								<img src="${Alllist.npicture}" alt="${Alllist.nname}" width="67"
 									height="82" />
 							</div>
 							<dl>
 								<dt>
-									<a href="toindex_id/${n[0].nid}"> ${n[0].nname}</a>
+									<a href="toindex_id/${Alllist.nid}"> ${Alllist.nname}</a>
 								</dt>
-								<dd>${n[0].ndescription}</dd>
+								<dd>${Alllist.aname}</dd>
+								
 
 							</dl>
+							</div>
+							</c:forEach>
 							<div class="clear"></div>
 						</div>
 						<ul>

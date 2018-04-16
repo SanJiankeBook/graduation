@@ -20,7 +20,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		inner join novel
 		on novel_type.tid=novel.tid
 		inner join author
-		on author.aid=novel.aid
+		on author.aid=novel.aid where novel.standby_1='通过'
 	</select>
 	<!-- 根据名字查找所有小说 -->
 	<select id="findNovleByName" parameterType="Novel" resultMap="NovelResultMap">
@@ -220,7 +220,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		inner join author
 		on author.aid=novel.aid
 		where nid>=( (select max(nid) from novel)-(select min(nid) from novel)  )*RAND()
-		+( select min(nid) from novel ) limit 9;
+		+( select min(nid) from novel ) and novel.standby_1='通过'  limit 9;
 	</select>
 	
 	<select id="recommand"  parameterType="Novel" resultMap="NovelResultMap">
@@ -231,7 +231,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		inner join author
 		on author.aid=novel.aid
 		where nid>=( (select max(nid) from novel)-(select min(nid) from novel)  )*RAND()
-		+( select min(nid) from novel ) limit 4;
+		+( select min(nid) from novel ) and novel.standby_1='通过' limit 4;
 	</select>
 	
 

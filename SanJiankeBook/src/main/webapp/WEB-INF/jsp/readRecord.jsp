@@ -7,11 +7,11 @@
 <head id="Head1">
 <title>临时书架只记录最新100部浏览过的小说</title>
 
-<link rel="stylesheet" href="../../css/style.css" />
-<script type="text/javascript" src="../../js/jquery.js"></script>
-<script language="javascript" type="text/javascript" src="../../js/index.js"></script>
-<!--  <script type="text/javascript" src="../../js/xiaoshuo.js"></script> -->
-<script type="text/javascript" src="../../js/xiaoshuo.js"></script>
+<link rel="stylesheet" href="css/style.css" />
+<script type="text/javascript" src="js/jquery.js"></script>
+<script language="javascript" type="text/javascript" src="js/index.js"></script>
+<!--  <script type="text/javascript" src="js/xiaoshuo.js"></script> -->
+<script type="text/javascript" src="js/xiaoshuo.js"></script>
 
 </head>
 <body>

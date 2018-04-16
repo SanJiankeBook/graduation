@@ -59,7 +59,9 @@ public class TNovelUtils {
 	      	allist1.setNid(snid);
 	      	allist1.setNname(nname);
 	      	allist1.setAname(aname);
+	      	allist1.setNpicture(TypeNovel.get(a).getNpicture());
 	      	Alllist.add(allist1);
+	      	
 	      	 
 		}
 		return Alllist;

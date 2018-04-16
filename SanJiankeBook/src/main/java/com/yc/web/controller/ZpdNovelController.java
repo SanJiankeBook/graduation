@@ -308,7 +308,7 @@ public class ZpdNovelController {
 		model.addAttribute("novel_id", list);
 		model.addAttribute("author", author);
 		model.addAttribute("chapter", chapter);
-		model.addAttribute("list1",list1);
+		model.addAttribute("list",list1);
 		// System.out.println(list);
 
 		/*
@@ -751,7 +751,7 @@ public class ZpdNovelController {
 				list=authorbiz.inforByunumber(uid);
 				if(!list.isEmpty()){
 				Integer aid=list.get(0).getAid();
-				List<Novel> novel=authorbiz.inforByaid(aid);
+				//List<Novel> novel=authorbiz.inforByaid(aid); 根据作家id得到自己的书籍信息
 				model.addAttribute("author",list);
 				StaticContain.USERID=aid;
 				return "AuthorPrefecture";		
@@ -816,11 +816,21 @@ public class ZpdNovelController {
     	int end=Integer.parseInt(rows);           //每页的条数
     	int start=0;
     	start=(currentPage-1)*end;
-    	
+    	//TODO:这里的分页由于某些原因，暂时通过Java实现
     	//List<Novel> lists=this.novelbiz.FindAllNovel();
-    	List<Novel> lists=this.novelbiz.findNovelByName(novel);
+    	//    List<Novel> lists=this.novelbiz.findNovelByName(novel);
+    	List<Novel> lists=authorbiz.inforByaid(aid);
     	//List<Novel> list=this.novelbiz.FindNovelByPage(start, end);
-    	List<Novel> list=this.novelbiz.FindNovelByaid(aid, start, end);
+    	//   List<Novel> list=this.novelbiz.FindNovelByaid(aid, start, end);
+    	List<Novel> list=new ArrayList<Novel>();//通过java代码实现分页
+    	Integer st=(Integer.valueOf(page)-1)*Integer.valueOf(rows);//获取应取得第一个值得索引
+    	Integer len=st+Integer.valueOf(rows);
+    	for(int i=st;i<len;i++){
+    		if((lists.size()+st)<=i){//防止数组溢出
+    			break;
+    		}
+    		list.add(lists.get(i));
+    	}
     	EasyuiFindByPage ebp=new EasyuiFindByPage();
     	ebp.setTotal(lists.size());
     	ebp.setRows(list);

@@ -5,10 +5,10 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" >
 <head><title>
 	用户登录
-</title>
+</title >
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="stylesheet" href="css/style.css" />
 <script type="text/javascript" src="js/jquery-1.12.4.js"></script>
@@ -36,7 +36,7 @@
     <div id="wrapper">
         
 <div class="clear"></div>
-<div class="nav">
+<div class="nav" ">
 			<ul>
 				<li><a href="toindex_zpd">首页</a></li>
 					<li><a rel="nofollow" href="mybook">我的书架</a></li>
@@ -53,7 +53,7 @@
 			</ul>
 		</div>
        <br />
-<form name="frmLogin" id="frmLogin" action="logger" method="post">
+<form name="frmLogin" id="frmLogin" action="logger" method="post" >
 <table class="grid" width="580" align="center">
 <c:if test="${errmsg!='' }">
 		<font style="color:red" ><c:out value="${errmsg }"></c:out></font>

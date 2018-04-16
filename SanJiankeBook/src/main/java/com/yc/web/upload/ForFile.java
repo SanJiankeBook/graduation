@@ -72,7 +72,7 @@ public class ForFile {
                 	novelchapter.setStandby_2( Integer.parseInt(str));
                 }
                 System.out.println("success create file,the file is "+filenameTemp);
-                String startcontent="<!DOCTYPE html><html><head><meta charset='UTF-8'><title>第"+novelchapter.getStandby_2()+"章              "+title+"</title></head><body><h1>第"+novelchapter.getStandby_2()+"章              "+title+"</h1>";
+                String startcontent="<!DOCTYPE html><html><head><meta charset='UTF-8'><title style=''>第"+novelchapter.getStandby_2()+"章              "+title+"</title></head><body><h1 style='text-align: center'>第"+novelchapter.getStandby_2()+"章  &nbsp;&nbsp;&nbsp;"+title+"</h1>";
                 String endconten="</body></html>";	
                 String content=startcontent+filecontent+endconten;
                 //创建文件成功后，写入内容到文件里
