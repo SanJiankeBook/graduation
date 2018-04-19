@@ -12,7 +12,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>书籍信息修改</title>
 <base href="<%=basePath%>">	
 <script type="text/javascript" src="js/jquery-1.12.4.js"></script>
 </head>
@@ -50,19 +50,19 @@
 	</script>
 
 <body>
-	<h1>小说信息编辑</h1>
+	<h1>书籍信息编辑</h1>
 	<form action="saveedit" method="post" enctype="multipart/form-data">
 	<input id="nid" name="nid" value="${novel[0].nid}" type="hidden"/>
-	小说名：<input type="text" name="nname" value="${novel[0].nname}"><br />
-	小说类型：<select id="t"  name="t" disabled="disabled">
+	书籍名：<input type="text" name="nname" value="${novel[0].nname}"><br />
+	书籍类型：<select id="t"  name="t" disabled="disabled">
 	</select>
 	<div id="div" style="display: none" >
 	<select id="tid"  name="tid" >
 	</select></div>
 	<br />
 	<hr />
-	 小说封面: <img id="xmTanImg" name="npicture" height="200" width="200" style="margin-left:300px" src="${novel[0].npicture}"/>
-	 小说封面图片选取：<input type="file" name="pdfsUrl" id="xdaTanFileImg" onchange="xmTanUploadImg(this)" />
+	 书籍封面: <img id="xmTanImg" name="npicture" height="200" width="200" style="margin-left:300px" src="${novel[0].npicture}"/>
+	 书籍封面图片选取：<input type="file" name="pdfsUrl" id="xdaTanFileImg" onchange="xmTanUploadImg(this)" />
                 <input type="file" name="pdfsUrl" id="xdaTanFileImg" onchange="xmTanUploadImg(this)"  style="display:none"/>
                 <input type="button" value="隐藏图片" onclick="document.getElementById('xmTanImg').style.display = 'none';"/>
                 <input type="button" value="显示图片" onclick="document.getElementById('xmTanImg').style.display = 'block';"/>
@@ -112,8 +112,7 @@
         </script>
 		小说状态：<select id="nstatus" name="nstatus">		
 			<option value="完结">完结</option>
-			<option value="未完结">未完结</option>
-			<option value="更新中">更新中</option>
+			<option value="未完结">待更新</option>
 		</select><br/>
 		<input type="submit" value="保存" />
 		<input type="reset" value="重置 " /> 

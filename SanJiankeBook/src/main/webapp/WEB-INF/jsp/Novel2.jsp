@@ -182,7 +182,7 @@
 					<li><a href="authorPrefectrue1">作者专区</a></li>
 					<li><a href="toindex_type">排行榜单</a></li>
 					<li><a href="quanben">全本小说</a></li>
-					<li><a rel="nofollow" href="jsp/readRecord.jsp">阅读记录</a></li>
+					<li><a  href="toReadRecord">阅读记录</a></li>
 			</ul>
 		</div>
 		<div class="dahengfu">
@@ -192,7 +192,7 @@
 		</div>
 		<div class="box_con">
 			<div class="con_top">
-				<a href="/">三剑客网文</a> &gt; ${novel_id[0].nname}最新章节列表
+				<a href="http://localhost:8080/SanJianKeBook/">IT类专业书籍管理网站</a> &gt; ${novel_id[0].nname}最新章节列表
 			</div>
 			<div id="maininfo">
 
@@ -202,15 +202,14 @@
 					<p>
 						动&nbsp;&nbsp;作：<a rel="nofollow" href="javascript:;"
 							onclick="addBookCase('${novel_id[0].nid }');">加入书架</a>、
-							<a rel="nofollow" href="#footer">直达底部</a>、
 							<a target="_blank" href="txt_id/${novel_id[0].nid }" style="color: red;">TXT下载</a>
 					</p>
 					<p>
-						最新更新：<a href="3433725.html">${chapter[0].cname}</a>
+						最新更新：<a href="${caddress}">${cname}</a>
 					</p>
 				</div>
 
-				<div id="intro">简介：&nbsp;&nbsp;&nbsp;{novel_id[0].ndescription}</div>
+				<div id="intro">简介：&nbsp;&nbsp;&nbsp;${novel_id[0].ndescription}</div>
 
 			</div>
 			<div id="sidebar">
@@ -325,9 +324,7 @@ function searchNovel() {
 		<div id="footer" name="footer">
 			<div class="footer_link"></div>
 			<div class="footer_cont">
-				<p>《儒道至圣》情节跌宕起伏、扣人心弦，是一本情节与文笔俱佳的玄幻奇幻小说，笔下文学转载收集儒道至圣最新章节。</p>
-				<p>本站所有小说为转载作品，所有章节均由网友上传，转载至本站只是为了宣传本书让更多读者欣赏。</p>
-				<p>Copyright ? 2017三剑客文学</p>
+				<p>Copyright ? 2018IT类专业书籍管理网站</p>
 			</div>
 		</div>
 		<script>

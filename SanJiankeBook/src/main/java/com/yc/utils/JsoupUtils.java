@@ -41,10 +41,10 @@ public class JsoupUtils{
 		String TextValue=null;
 		for(int i=0;i<Chapter.size();i++){
 			String con=null;
-		
+			String filePath=System.getProperty("catalina.home")+"\\webapps\\";
 			String chapter=Chapter.get(i).getCaddress();
 			String url=chapter.substring(0,22);
-			String urll="F:\\apache-tomcat-7.0.47\\webapps\\"+chapter.substring(22); //服务器路径
+			String urll=filePath+chapter.substring(22); //服务器路径
 			File in = new File(urll);
 			Document doc = Jsoup.parse(in, "UTF-8", url); 
 			//Document doc = Jsoup.connect(chapter).get(); //你要抽取的地址
@@ -68,7 +68,17 @@ public class JsoupUtils{
 		     	String temp=title1.replace("<p>","");
 		     	temp=temp.replace("&nbsp;", " ");
 		     	String temp1=temp.replace("</p>","\n\r");
-		     	con=temp1.replace("<br>","\n\r");
+		     	temp1=temp1.replace("<br>","\n\r");
+		     	temp1=temp1.replace(" <br>","\n\r");
+		     	temp1=temp1.replace("<br> ","\n\r");
+		     	temp1=temp1.replace("</span>","\n\r");
+		     	temp1=temp1.replace("<span>","\n\r");
+		     	String s1="<h1 style=\"text-align: center\">";
+		     	temp1=temp1.replace(s1, "");
+		     	s1="<span style=\"font-family: 宋体, 宋体, Verdana, Arial, sans-serif; font-size: 20px; background-color: rgb(229, 236, 243);\">";
+		     	temp1=temp1.replace(s1, "");
+		     	s1="<h1 style=\"text-align: center\">";
+		     	con=temp1.replace(s1, "");
 	            System.out.println(con);
 	      
 //	         	con =m.replaceAll("").trim();

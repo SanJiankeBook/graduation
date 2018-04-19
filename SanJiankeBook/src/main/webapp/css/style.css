@@ -1,4 +1,4 @@
-﻿html,body,ul,ol,li,p,h1,h2,h3,h4,h5,h6,table,td,th,img,div,dl,dt,dd,input,select,form,fieldset{margin:auto;padding:0;}
+﻿html,body,ul,ol,li,p,h1,h2,h3,h4,h5,h6,td,th,img,div,dl,dt,dd,input,select,form,fieldset{margin:auto;padding:0;}
 body{background-color:#E9FAFF;color:#555;font-family:宋体;font-size:12px;margin:0 auto;}
 ul li{list-style:none outside none;}
 a{color:#6F78A7;text-decoration:none;}
@@ -34,9 +34,9 @@ a:hover {text-decoration:underline; top:-1px;}
 .nav ul li{float:left;line-height:44px;}
 .nav ul li a{color:#FFF;font-size:15px;font-weight:700;padding:0 10px;}
 #admin{ border:solid 2px #E1ECED; height:30px; line-height:30px; width:88%; text-align:center; margin:5px; padding:3px;}
-table.grid caption, .gridtop { background-color:#E1ECED; border:solid 2px #C3DFEA;border-bottom:0px; font-size: 14px; font-weight: bold; margin: auto; padding-bottom: 5px; padding-top: 5px; text-align: center; vertical-align: middle;}
+ table.grid caption, .gridtop { background-color:#E1ECED; border:solid 2px #C3DFEA;border-bottom:0px; font-size: 14px; font-weight: bold; margin: auto; padding-bottom: 5px; padding-top: 5px; text-align: center; vertical-align: middle;}
 table.grid { border: 2px solid #C3DFEA; border-collapse: collapse; margin: auto; padding: 3px;}
-table.grid td { background-color: #FFFFFF !important; border: 1px solid #C3DFEA; padding: 4px;}
+table.grid td { background-color: #FFFFFF !important; border: 1px solid #C3DFEA; padding: 4px;} 
 .hottext{color:red;}
 .MessageDiv {background: #FFF9D9; border: 1px solid #FFCC33; line-height: 150%; width:800px; margin: 10px auto auto; padding: 10px;text-align:center;}
 #main{width:980px;margin:auto;}

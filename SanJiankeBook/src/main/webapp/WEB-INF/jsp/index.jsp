@@ -299,16 +299,25 @@
 					<div class="content">
 						<h2>${list[1].tname}</h2>
 						<div class="top">
+						
+							<c:forEach items="${Alllist1}" var="Alllist1">
+							<div style="height: 82;width: 318px ;float: left;" >
 							<div class="image">
-								<img src="${n1[0].npicture}" alt="${n1[0].nname}" width="67"
+								<img src="${Alllist1.npicture}" alt="${Alllist1.nname}" width="67"
 									height="82" />
 							</div>
 							<dl>
 								<dt>
-									<a href="toindex_id/${n1[0].nid}"> ${n1[0].nname}</a>
+									<a href="toindex_id/${Alllist1.nid}"> ${Alllist1.nname}</a>
 								</dt>
-								<dd>${n1[0].ndescription}</dd>
+								<dd>${Alllist1.aname}</dd>
+								
+
 							</dl>
+							</div>
+							</c:forEach>
+							
+							
 							<div class="clear"></div>
 						</div>
 						<ul>
@@ -320,19 +329,25 @@
 					</div>
 					<div class="content">
 						<h2>${list[2].tname}</h2>
-
-
 						<div class="top">
+						
+						<c:forEach items="${Alllist2}" var="Alllist2">
+							<div style="height: 82;width: 318px ;float: left;" >
 							<div class="image">
-							<img src="${n2[0].npicture}" alt="${n2[0].nname}" width="67"
+								<img src="${Alllist2.npicture}" alt="${Alllist2.nname}" width="67"
 									height="82" />
 							</div>
 							<dl>
 								<dt>
-									<a href="toindex_id/${n2[0].nid}"> ${n2[0].nname}</a>
+									<a href="toindex_id/${Alllist2.nid}"> ${Alllist2.nname}</a>
 								</dt>
-								<dd>${n2[0].ndescription}</dd>
+								<dd>${Alllist2.aname}</dd>
+								
+
 							</dl>
+							</div>
+							</c:forEach>
+							
 							<div class="clear"></div>
 						</div>
 
@@ -354,16 +369,24 @@
 
 
 						<div class="top">
+						
+						<c:forEach items="${Alllist3}" var="Alllist1">
+							<div style="height: 82;width: 318px ;float: left;" >
 							<div class="image">
-								<img src="${n3[0].npicture}" alt="${n3[0].nname}" width="67"
+								<img src="${Alllist3.npicture}" alt="${Alllist3.nname}" width="67"
 									height="82" />
 							</div>
 							<dl>
 								<dt>
-									<a href="toindex_id/${n3[0].nid}"> ${n3[0].nname}</a>
+									<a href="toindex_id/${Alllist3.nid}"> ${Alllist3.nname}</a>
 								</dt>
-								<dd>${n3[0].ndescription}</dd>
+								<dd>${Alllist3.aname}</dd>
+								
+
 							</dl>
+							</div>
+							</c:forEach>
+							
 							<div class="clear"></div>
 						</div>
 
@@ -382,16 +405,24 @@
 
 
 						<div class="top">
+						
+						<c:forEach items="${Alllist4}" var="Alllist1">
+							<div style="height: 82;width: 318px ;float: left;" >
 							<div class="image">
-								<img src="${n4[0].npicture}" alt="${n4[0].nname}" width="67"
+								<img src="${Alllist4.npicture}" alt="${Alllist4.nname}" width="67"
 									height="82" />
 							</div>
 							<dl>
 								<dt>
-									<a href="toindex_id/${n4[0].nid}"> ${n4[0].nname}</a>
+									<a href="toindex_id/${Alllist4.nid}"> ${Alllist4.nname}</a>
 								</dt>
-								<dd>${n4[0].ndescription}</dd>
+								<dd>${Alllist4.aname}</dd>
+								
+
 							</dl>
+							</div>
+							</c:forEach>
+							
 							<div class="clear"></div>
 						</div>
 
@@ -409,16 +440,23 @@
 
 
 						<div class="top">
+						
+						<c:forEach items="${Alllist5}" var="Alllist1">
+							<div style="height: 82;width: 318px ;float: left;" >
 							<div class="image">
-								<img src="${n5[0].npicture}" alt="${n5[0].nname}" width="67"
+								<img src="${Alllist5.npicture}" alt="${Alllist5.nname}" width="67"
 									height="82" />
 							</div>
 							<dl>
 								<dt>
-									<a href="toindex_id/${n5[0].nid}"> ${n5[0].nname}</a>
+									<a href="toindex_id/${Alllist5.nid}"> ${Alllist5.nname}</a>
 								</dt>
-								<dd>${n5[0].ndescription}</dd>
+								<dd>${Alllist5.aname}</dd>
+								
+
 							</dl>
+							</div>
+							</c:forEach>
 							<div class="clear"></div>
 						</div>
 

@@ -302,8 +302,14 @@ public class ZpdNovelController {
 		List author = authorbizImpl.Show_Author(nid);
 		List chapter = novelChapterbizImpl.NewChapter(nid);
 		List<NovelChapter> nchapter = novelChapterbizImpl.ShowAllChapter(nid);
-		// System.out.println(list+"=你是什么");
-		// System.out.println(author+"=输出作者");
+		if(nchapter.size()>1){
+			for(int i=(nchapter.size()-1);i<nchapter.size();i++){
+				String caddress=nchapter.get(i).getCaddress();
+				String cname=nchapter.get(i).getCname();
+				model.addAttribute("caddress", caddress);
+				model.addAttribute("cname",cname);
+			}
+		}
 		model.addAttribute("nchapter", nchapter);
 		model.addAttribute("novel_id", list);
 		model.addAttribute("author", author);
