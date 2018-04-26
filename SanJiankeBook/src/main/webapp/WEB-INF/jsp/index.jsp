@@ -62,12 +62,6 @@
 		</div>
 	</div>
 	<div id="wrapper">
-		<script>
-			login();
-		</script>
-		<div style="display: none">
-
-		</div>
 
 
 		<div class="ywtop">
@@ -370,7 +364,7 @@
 
 						<div class="top">
 						
-						<c:forEach items="${Alllist3}" var="Alllist1">
+						<c:forEach items="${Alllist3}" var="Alllist3">
 							<div style="height: 82;width: 318px ;float: left;" >
 							<div class="image">
 								<img src="${Alllist3.npicture}" alt="${Alllist3.nname}" width="67"
@@ -406,7 +400,7 @@
 
 						<div class="top">
 						
-						<c:forEach items="${Alllist4}" var="Alllist1">
+						<c:forEach items="${Alllist4}" var="Alllist4">
 							<div style="height: 82;width: 318px ;float: left;" >
 							<div class="image">
 								<img src="${Alllist4.npicture}" alt="${Alllist4.nname}" width="67"
@@ -441,7 +435,7 @@
 
 						<div class="top">
 						
-						<c:forEach items="${Alllist5}" var="Alllist1">
+						<c:forEach items="${Alllist5}" var="Alllist5">
 							<div style="height: 82;width: 318px ;float: left;" >
 							<div class="image">
 								<img src="${Alllist5.npicture}" alt="${Alllist5.nname}" width="67"

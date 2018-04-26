@@ -55,7 +55,7 @@ public class TNovelUtils {
 	  		String snid=String.valueOf(nid);
 	  		String nname=TypeNovel.get(a).getNname();
 	      	List<Novel> author=authorbiz.Show_Author(nid);
-	      	String aname=author.get(0).getAuthor().getAname();
+	      	String aname=author.get(0).getAuthor().getPan_name();
 	      	allist1.setNid(snid);
 	      	allist1.setNname(nname);
 	      	allist1.setAname(aname);

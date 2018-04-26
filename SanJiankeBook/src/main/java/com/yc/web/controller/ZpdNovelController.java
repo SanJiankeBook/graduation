@@ -832,7 +832,7 @@ public class ZpdNovelController {
     	Integer st=(Integer.valueOf(page)-1)*Integer.valueOf(rows);//获取应取得第一个值得索引
     	Integer len=st+Integer.valueOf(rows);
     	for(int i=st;i<len;i++){
-    		if((lists.size()+st)<=i){//防止数组溢出
+    		if((lists.size())<=i){//防止数组溢出
     			break;
     		}
     		list.add(lists.get(i));
@@ -919,9 +919,14 @@ public class ZpdNovelController {
 	//首页标题的类型分类显示
 	@RequestMapping(value = "/toindex_Type/{tname}")
 	public String Index_Type(@PathVariable String tname, Model model) throws SQLException, UnsupportedEncodingException {
-		byte[] t_byte = tname.getBytes("ISO-8859-1");//把Windows默认的编码集解码
+		/*byte[] t_byte = tname.getBytes("ISO-8859-1");//把Windows默认的编码集解码
 		String str = new String(t_byte, "utf-8"); //组装成utf-8
-		List<NovelType> list = novelTypebizImpl.showType(noveltype); // 小说类型
+		*/
+	    String str=tname;
+	    if(tname=="c" || tname.equals("c")){
+	        str="c#/c/c++";
+	    }
+	    List<NovelType> list = novelTypebizImpl.showType(noveltype); // 小说类型
 		List<Alllist> list1=randomUtils.Type_infor(str);
 		List<NovelType> Tlist=novelTypebizImpl.TnameByType(str);
 		model.addAttribute("list",list);

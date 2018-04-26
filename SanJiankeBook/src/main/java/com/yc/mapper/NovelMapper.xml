@@ -68,7 +68,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<!-- 显示页面，根据tid类型编号分页查找所有小说信息 -->
 	<select id="TNovelBytname" parameterType="Novel" resultMap="NovelResultMap">
-		select novel.*,aname,tname
+		select novel.*,pan_name,tname
 		from novel_type
 		inner join novel
 		on novel_type.tid=novel.tid

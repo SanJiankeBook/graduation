@@ -63,7 +63,7 @@
 								 return "<a href='toindex_id/"+row.nid +"' >"+val+"</a>";
 							} 
 						}}, 
-						{field : 'aname',title : '作者',width : 20,align : 'center'},
+						{field : 'pan_name',title : '作者',width : 20,align : 'center'},
 						{field : 'nstatus',title : '小说状态',width : 20,align : 'center'}
 					]]
 		});	

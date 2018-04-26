@@ -50,7 +50,7 @@ public class RandomUtils {
 			int nid=list.get(i).getNid();
 			String Snid=String.valueOf(nid);
 			List<Novel> list1=authorbiz.Show_Author(nid); //查出作者信息
-			String aname=list1.get(0).getAuthor().getAname(); //作者名字
+			String aname=list1.get(0).getAuthor().getPan_name(); //作者笔名
 			List<Novel> nlist=novelbiz.ShowNovel_id(nid); //根据小说id取小说信息
 			String nname=nlist.get(0).getNname(); //小说名字
 			String ndescription=nlist.get(0).getNdescription(); //小说描述

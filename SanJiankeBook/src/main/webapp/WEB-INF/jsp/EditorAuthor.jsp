@@ -15,7 +15,7 @@
 </style>
 </head>
 <body>
-	
+	<div style="margin: 0 auto;text-align: center;">
 	<h1>作家信息编辑</h1>
 	<form action="saveAuthor" method="post">
 	<input name="aid" value="${author[0].aid }" type="hidden" />
@@ -27,5 +27,6 @@
 	<input type="submit" value="保存">
 	<input type="reset" value="重置">
 	</form>
+	</div>
 </body>
 </html>
