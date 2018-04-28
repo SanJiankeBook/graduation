@@ -175,12 +175,10 @@ function updatepassword(){
     <div class="footer_link">
     </div>
     <div class="footer_cont">
-        <p>
-            本站所有小说为转载作品，所有章节均由网友上传，转载至本站只是为了宣传本书让更多读者欣赏。</p>
-        <p>
-            Copyright © 2016
-            笔下文学</p>
-       <script>footer();</script>
+      <p>Copyright © 2018 IT类专业书籍</p>
+					<script>
+						footer();
+					</script>
     </div>
 </div>
     </div>

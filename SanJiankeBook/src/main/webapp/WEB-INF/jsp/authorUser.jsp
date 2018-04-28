@@ -13,7 +13,7 @@
 <title>作家注册专区</title>
 </head>
 <body style="text-align:center; margin:auto auto">
-	<h1>三剑客作家注册专区</h1>
+	<h1>IT类专业书籍管理作家注册专区</h1>
 	<form id="form1" action="#" method="post" style="margin-top:100px">
 		作家笔名&nbsp;&nbsp;&nbsp;<input type="text" id="uname" name="uname"> <label id="uname_1"></label></label><br/><br/>
 		作家真实姓名<input type="text" name="aname" id="aname"> <label id="aname_1"></label><br/><br/>
