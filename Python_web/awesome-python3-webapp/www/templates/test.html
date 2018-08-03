@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>>Test blogs - JustoneLab</title>
+</head>
+<body>
+	<h1>All blogs</h1>
+	{% for b in blogs %}
+	<p>{{ b.id }} - {{ b.name }} - {{ b.summary }} - {{ b.created_at }}</p>
+	{% endfor %}
+</body>
+</html>

@@ -1,0 +1,6 @@
+[Wed, 01 Aug 2018 15:23:02][orm.py][line:119][INFO] found model: User (table: User)
+[Wed, 01 Aug 2018 15:23:02][orm.py][line:125][INFO]   found mapping: id ==> <IntegerField, bigint:id>
+[Wed, 01 Aug 2018 15:23:02][orm.py][line:125][INFO]   found mapping: name ==> <StringField, varchar(100):username>
+[Wed, 01 Aug 2018 15:23:02][orm.py][line:125][INFO]   found mapping: email ==> <StringField, varchar(100):email>
+[Wed, 01 Aug 2018 15:23:02][orm.py][line:125][INFO]   found mapping: password ==> <StringField, varchar(100):password>
+[Wed, 01 Aug 2018 15:23:02][orm.py][line:24][INFO] create database connection pool

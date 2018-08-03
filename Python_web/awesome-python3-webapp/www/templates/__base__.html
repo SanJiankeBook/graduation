@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	{% block meta %}{% endblock %}
+	<title>{% block title %}{% endblock %} - JustoneLab</title>
+	<link rel="stylesheet" type="text/css" href="/static/css/uikit.min.css">
+	<link rel="stylesheet" type="text/css" href="/static/css/uikit.gradient.min.css">
+	<link rel="stylesheet" type="text/css" href="/static/css/awesome.css">
+	<script type="text/javascript" src="/static/js/jquery.min.js"></script>
+	<script type="text/javascript" src="/static/js/sha1.min.js"></script>
+	<script type="text/javascript" src="/static/js/uikit.min.js"></script>
+	<script type="text/javascript" src="/static/js/awesome.js"></script>
+	<script type="text/javascript" src="/static/js/sticky.min.js"></script>
+	<script type="text/javascript" src="/static/js/vue.min.js"></script>
+	{% block beforehead %}{% endblock %}
+</head>
+<body>
+	<nav class="uk-navbar uk-navbar-attached uk-margin-bottom">
+		<div class="uk-container uk-container-center">
+			<a href="/" class="uk-navbar-brand">JustoneLab</a>
+			<ul class="uk-navbar-nav">
+				<li data-url="blogs"><a href="/"><i class="uk-icon-home"></i> 日志</a></li>
+				<li><a target="_blank" href="#"><i class="uk-icon-map-signs"></i> 徒步</a></li>
+				<li><a target="_blank" href="#"><i class="uk-icon-paw"></i> 喵</a></li>
+			</ul>
+			<div class="uk-navbar-flip">
+				<ul class="uk-navbar-nav">
+				{% if __user__ %}
+					<li class="uk-parent" data-uk-dropdown>
+						<a href="#0"><i class="uk-icon-user"></i> {{ __user__.name }}</a>
+						<div class="uk-dropdown uk-dropdown-navbar">
+							<ul class="uk-nav uk-nav-navbar">
+								<li><a href="/signout"><i class="uk-icon-sign-out"></i> 登出</a></li>
+							</ul>
+						</div>
+					</li>
+				{% else %}
+					<li><a href="/signin"><i class="uk-icon-sign-in"></i> 登录</a></li>
+					<li><a href="/register"><i class="uk-icon-edit"></i> 注册</a></li>
+				{% endif %}
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div class="uk-container uk-container-center">
+		<div class="uk-grid">
+			{% block content %}
+			{% endblock %}
+		</div>
+	</div>
+	
+	<div class="uk-margin-large-top" style="background-color:#eee; border-top:1px solid #ccc;">
+		<div class="uk-container uk-container-center uk-text-center">
+			<div class="uk-panel uk-margin-top uk-margin-bottom">
+				<p>
+					<a href="#" target="_blank" class="uk-icon-button uk-icon-github"></a>
+					<a href="#" target="_blank" class="uk-icon-button uk-icon-smile-o"></a>
+				</p>
+				<p>Powered by <a href="#">JustoneLab</a>. Copyright &copy; 2018. [<a href="/manage/" target="_blank">Manage</a>]</p>
+				<p><a href="http://www.justonelab.com/" target="_blank">www.justonelab.com</a>. ALL rights reserved.</p>
+				<a href="_blank" href="#"><i class="uk-icon-html5" style="font-size:64px; color: #444;"></i></a>
+			</div>
+		</div>		
+	</div>
+</body>
+</html>
