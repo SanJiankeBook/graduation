@@ -5,6 +5,7 @@ Created on Aug 2, 2018
 '''
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+from aiohttp.client import request
 
 
 ' url handlers '
@@ -14,7 +15,7 @@ from webframe import get, post
 from models import User, Blog, Comment, next_id
 import time, json, hashlib
 import re, logging; logging.basicConfig(level=logging.INFO)
-from apis import APIError, APIValueError
+from apis import APIError, APIValueError,Page
 from aiohttp import web
 from config import configs
 
@@ -41,6 +42,7 @@ def text2html(text):
     lines = map(lambda s: '<p>%s</p>' % s.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;'), filter(lambda s: s.strip() != '', text.split('\n')))
     return ''.join(lines)
 
+#用于选择当前页面
 def get_page_index(page_str):#获取当前页索引
     p = 1
     try:
@@ -106,21 +108,27 @@ async def cookie2user(cookie_str):
         logging.exception(e)
         return None
 
-
+#检测有否登录且是否为管理员
+def check_admin(request):
+    if request.__user__ is None or request.__user__.admin:
+        raise APIPermissionError()
 
 
 
 @get('/')  # 调用了get装饰器
-def index(request):
-    summary = '成长，是一段渐行渐远的分离。'
-    blogs = [
-        Blog(id='1', name='Test Blog', summary=summary, created_at=time.time()-120),
-        Blog(id='2', name='Something New', summary=summary, created_at=time.time()-3600),
-        Blog(id='3', name='Learn Swift', summary=summary, created_at=time.time()-7200)
-    ]
+async def index(request):
+    '''Blog首页'''
+    page_index = get_page_index(page)
+    num = await Blog.findNumber('count(id)')
+    page = Page(num)
+    if num == 0:
+        blogs = []
+    else:
+        blogs = await Blog.findAll(orderBy='created_at desc', limit=(page.offset, page.limit))
     return {
         '__template__': 'blogs.html',
         'blogs': blogs,
+        'page':page,
         '__user__': request.__user__
     }
     
@@ -201,6 +209,82 @@ def signout(request):
     logging.info('user: %s signout.' % request.__user__.name)
     return resp
 
+#显示创建blog页面
+@get('/manage/blogs/create')
+def manage_create_blog(request):
+    return {
+        '__template__': 'manage_blog_edit.html',
+        'id': '',
+        'action': '/api/blogs',
+        '__user__': request.__user__
+    }
+
+#创建blog
+@post('/api/blogs')
+async def api_create_blogs(request, *, name, summary, content):
+    check_admin(request)
+    if not name or not name.strip():
+        raise APIValueError('name','name can not empty.')
+    if not summary or not summary.strip():
+        raise APIVauleError('summary','summary can not empty.')
+    if not content or not content.strip():
+        raise APIValueError('content','content can not empty.')
+    blog = Blog(user_id=request.__user__.id, user_name=request.__user__.name, user_image=request.__user__.image, summary=summary.strip(), name=name.strip(), content=content.strip())
+    await blog.save()
+    return blog
+
+#接口用于数据库返回日志,见manage_blogs.html,进行日志管理的，根据条件显示相应数据
+@get('/api/blogs')
+async def api_blogs(*, page='1'):
+    page_index = get_page_index(page)
+    num = await Blog.findNumber('count(id)')#查询日志总数
+    p = Page(num, page_index)
+    if num == 0: #数据库没日志
+        return dict(page=p, blogs=())
+    blogs = await Blog.findAll(orderBy='created_at desc', limit=(p.offset, p.limit)) #选取对应的日志
+    return dict(page=p, blogs=blogs)#返回管理页面信息，及显示日志数
+
+
+@get('/api/blogs/{id}') #根据日志id来得到日志信息
+async def api_get_blog(*, id):
+    blog =await Blog.find(id)
+    return blog
+
+@post('/api/blogs/{blog_id}')#保存编辑过的日志
+async def apiAmendBlog(blog_id, request, *, name, summary, content):
+    check_admin(request)
+    blog = await Blog.find(blog_id)
+    if not name or not name.strip():
+        raise APIValueError('name', 'name cannot be empty')
+    if not summary or not summary.strip():
+        raise APIValueError('summary', 'summary cannot be empty')
+    if not content or not content.strip():
+        raise APIValueError('content', 'content cannot be empty')
+    blog.name = name.strip()
+    blog.summary = summary.strip()
+    blog.content = content.strip()
+    await blog.update()
+    return blog
+
+@get('/manage/blogs')#进入日志管理界面
+def manage_blogs(*, page='1'):
+    return {
+        '__template__': 'manage_blogs.html',
+        'page_index': get_page_index(page)
+    }
+    
+
+#对日志进行编辑
+@get('/manage/blogs/edit') #进入编辑页面
+async def api_blog_edtior(*,id,request):
+     return {
+        '__template__': 'manage_blog_edit.html',
+        'id': id,
+        'action': '/api/blogs',#
+        '__user__': request.__user__
+    }
+
+
 @get('/blog/{blog_id}')#查看日志
 async def viewBlog(*, blog_id):
     '''查阅一篇日志'''
@@ -215,16 +299,16 @@ async def viewBlog(*, blog_id):
         'comments': comments
     }
 
-@get('/blog/create')#添加博客
-async def viewBlog():
-    '''查阅一篇日志'''
-    summary = '成长，是一段渐行渐远的分离。'
-    blogs = [
-        Blog(id='1', name='Test Blog', summary=summary, created_at=time.time()-120),
-        Blog(id='2', name='Something New', summary=summary, created_at=time.time()-3600),
-        Blog(id='3', name='Learn Swift', summary=summary, created_at=time.time()-7200)
-    ]
-    for blog in blogs:
-        await blog.save()
-        logging.info("插入一条博客内容为" +blog.summary)
+# @get('/blog/create')#添加博客
+# async def addBlog():
+#     '''查阅一篇日志'''
+#     summary = '成长，是一段渐行渐远的分离。'
+#     blogs = [
+#         Blog(id='1',user_id='001533350592512cac6738a32e44b39b9ce9a6fb981e8a7000', name='Test Blog', summary=summary, created_at=time.time()-120),
+#         Blog(id='2',user_id='001533350592512cac6738a32e44b39b9ce9a6fb981e8a7000', name='Something New', summary=summary, created_at=time.time()-3600),
+#         Blog(id='3',user_id='001533350592512cac6738a32e44b39b9ce9a6fb981e8a7000',name='Learn Swift', summary=summary, created_at=time.time()-7200)
+#     ]
+#     for blog in blogs:
+#         await blog.save()
+#         logging.info("插入一条博客内容为" +blog.summary)
         

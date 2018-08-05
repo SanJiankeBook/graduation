@@ -3,5 +3,7 @@ encoding//awesome-python3-webapp/www/app.py=utf-8
 encoding//awesome-python3-webapp/www/config.py=utf-8
 encoding//awesome-python3-webapp/www/orm.py=utf-8
 encoding//awesome-python3-webapp/www/templates/blogs.html=UTF-8
+encoding//awesome-python3-webapp/www/templates/manage_blog_edit.html=UTF-8
+encoding//awesome-python3-webapp/www/templates/manage_blogs.html=UTF-8
 encoding//awesome-python3-webapp/www/templates/register.html=UTF-8
 encoding/<project>=UTF-8

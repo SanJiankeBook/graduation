@@ -10,9 +10,9 @@
 	<script type="text/javascript" src="/static/js/jquery.min.js"></script>
 	<script type="text/javascript" src="/static/js/sha1.min.js"></script>
 	<script type="text/javascript" src="/static/js/uikit.min.js"></script>
-	<script type="text/javascript" src="/static/js/awesome.js"></script>
 	<script type="text/javascript" src="/static/js/sticky.min.js"></script>
 	<script type="text/javascript" src="/static/js/vue.min.js"></script>
+	<script type="text/javascript" src="/static/js/awesome.js"></script>
 	{% block beforehead %}{% endblock %}
 </head>
 <body>
@@ -32,6 +32,10 @@
 						<div class="uk-dropdown uk-dropdown-navbar">
 							<ul class="uk-nav uk-nav-navbar">
 								<li><a href="/signout"><i class="uk-icon-sign-out"></i> 登出</a></li>
+								<li><a href="/manage/blogs/create"><i class="uk-icon-edit"></i> 日志编写</a></li>
+                                <li><a href="/manage/blogs">日志管理 </a></li>
+                                <li><a href="/manage/comments">评论管理</a></li>
+                                <li><a href="/manage/users">用户管理</a></li>
 							</ul>
 						</div>
 					</li>
