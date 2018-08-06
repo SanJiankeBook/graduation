@@ -15,7 +15,7 @@ from webframe import get, post
 from models import User, Blog, Comment, next_id
 import time, json, hashlib
 import re, logging; logging.basicConfig(level=logging.INFO)
-from apis import APIError, APIValueError,Page
+from apis import APIError, APIValueError,Page,APIPermissionError
 from aiohttp import web
 from config import configs
 
@@ -33,7 +33,7 @@ _reSha1 = re.compile(r'^[0-9a-f]{40}$') # SHA1不够安全，后续需升级
 
 #检测有否登录且是否为管理员
 def check_admin(request):
-    if request.__user__ is None or request.__user__.admin:
+    if request.__user__ is None or not request.__user__.admin:
         raise APIPermissionError()
     
     
@@ -107,16 +107,10 @@ async def cookie2user(cookie_str):
     except Exception as e:
         logging.exception(e)
         return None
+'''用户浏览页面'''
 
-#检测有否登录且是否为管理员
-def check_admin(request):
-    if request.__user__ is None or request.__user__.admin:
-        raise APIPermissionError()
-
-
-
-@get('/')  # 调用了get装饰器
-async def index(request):
+@get('/')  # 调用了get装饰器   进入首页
+async def index(*,page='1'):
     '''Blog首页'''
     page_index = get_page_index(page)
     num = await Blog.findNumber('count(id)')
@@ -129,24 +123,96 @@ async def index(request):
         '__template__': 'blogs.html',
         'blogs': blogs,
         'page':page,
+#        '__user__': request.__user__   前面在cookie解析时已经已经直接添加进去了
+    }
+    
+
+@get('/manage/blogs')#进入日志管理界面
+def manage_blogs(*, page='1'):
+    return {
+        '__template__': 'manage_blogs.html',
+        'page_index': get_page_index(page)
+    }
+#显示创建blog页面  进入创建日志界面
+@get('/manage/blogs/create')
+def manage_create_blog(request):
+    return {
+        '__template__': 'manage_blog_edit.html',
+        'id': '',
+        'action': '/api/blogs',
         '__user__': request.__user__
     }
     
+@get('/manage/comments')#进入评论页面
+def manage_comments(*, page='1'):
+    return {
+        '__template__': 'manage_comments.html',
+        'page_index': get_page_index(page)
+    }
+#对日志进行编辑
+@get('/manage/blogs/edit') #进入日志编辑页面
+async def api_blog_edtior(*,id,request):
+     return {
+        '__template__': 'manage_blog_edit.html',
+        'id': id,
+        'action': '/api/blogs/%s' % id,#
+        '__user__': request.__user__
+    }
+
+
+@get('/signout') #用户进入登出界面，退出登录
+def signout(request):
+    '''用户退出，将SESSION中的用户信息设置为无效，返回当前页面或首页'''
+    referer = request.headers.get('Referer') # 获取当前URL
+    resp = web.HTTPFound(referer or '/')
+    resp.set_cookie(COOKIE_NAME, '-signout-', max_age=0, httponly=True)
+    # 也可以直接清除
+    # resp.del_cookie(COOKIE_NAME)
+    logging.info('user: %s signout.' % request.__user__.name)
+    return resp
+
+
+@get('/register') #进入注册界面
+def register():
+    return { '__template__': 'register.html'}
+
+
+@get('/signin') #进入登录界面
+def signin():
+    return { '__template__': 'signin.html'}
+
+@get('/blog/{blog_id}')#查看日志 进入日志显示页面
+async def viewBlog(*, blog_id):
+    '''查阅一篇日志'''
+    blog = await Blog.find(blog_id)
+    comments = await Comment.findAll('blog_id=?', [blog_id], orderBy='created_at desc')#查询出所有的评论
+    for comment in comments:
+        comment.html_content = text2html(comment.content)
+    blog.html_content = text2html(blog.content)
+    return {
+        '__template__': 'blog.html',
+        'blog': blog,
+        'comments': comments
+    }
+    
+@get('/manage/users')#进入用户管理界面
+def manageUsers(*, page='1'):
+    '''返回用户管理页'''
+    return {
+        '__template__': 'manage_users.html',
+        'page_index': get_page_index(page)
+    }
+ 
+ 
+ 
+#  ''' 下面这些方法全是API的，即全是数据处理的路由''''
+ 
 @get('/api/users')
 async def api_get_users():
     users = await User.findAll(orderBy='created_at desc')
     for u in users:
         u.passwd = '******'
     return dict(users=users)
-
-@get('/register')
-def register():
-    return { '__template__': 'register.html'}
-
-
-@get('/signin')
-def signin():
-    return { '__template__': 'signin.html'}
 
 
 @post('/api/users') #用户注册
@@ -198,28 +264,7 @@ async def authenticate(*, email, passwd):
     r.body = json.dumps(user, ensure_ascii=False).encode('utf-8') # 转换成JSON格式
     return r
 
-@get('/signout')
-def signout(request):
-    '''用户退出，将SESSION中的用户信息设置为无效，返回当前页面或首页'''
-    referer = request.headers.get('Referer') # 获取当前URL
-    resp = web.HTTPFound(referer or '/')
-    resp.set_cookie(COOKIE_NAME, '-signout-', max_age=0, httponly=True)
-    # 也可以直接清除
-    # resp.del_cookie(COOKIE_NAME)
-    logging.info('user: %s signout.' % request.__user__.name)
-    return resp
-
-#显示创建blog页面
-@get('/manage/blogs/create')
-def manage_create_blog(request):
-    return {
-        '__template__': 'manage_blog_edit.html',
-        'id': '',
-        'action': '/api/blogs',
-        '__user__': request.__user__
-    }
-
-#创建blog
+#创建blog  添加一个日志
 @post('/api/blogs')
 async def api_create_blogs(request, *, name, summary, content):
     check_admin(request)
@@ -233,7 +278,7 @@ async def api_create_blogs(request, *, name, summary, content):
     await blog.save()
     return blog
 
-#接口用于数据库返回日志,见manage_blogs.html,进行日志管理的，根据条件显示相应数据
+#接口用于数据库返回日志,见manage_blogs.html,进行日志管理的，根据条件显示相应数据  ，显示日志数据
 @get('/api/blogs')
 async def api_blogs(*, page='1'):
     page_index = get_page_index(page)
@@ -243,7 +288,6 @@ async def api_blogs(*, page='1'):
         return dict(page=p, blogs=())
     blogs = await Blog.findAll(orderBy='created_at desc', limit=(p.offset, p.limit)) #选取对应的日志
     return dict(page=p, blogs=blogs)#返回管理页面信息，及显示日志数
-
 
 @get('/api/blogs/{id}') #根据日志id来得到日志信息
 async def api_get_blog(*, id):
@@ -266,38 +310,57 @@ async def apiAmendBlog(blog_id, request, *, name, summary, content):
     await blog.update()
     return blog
 
-@get('/manage/blogs')#进入日志管理界面
-def manage_blogs(*, page='1'):
-    return {
-        '__template__': 'manage_blogs.html',
-        'page_index': get_page_index(page)
-    }
-    
-
-#对日志进行编辑
-@get('/manage/blogs/edit') #进入编辑页面
-async def api_blog_edtior(*,id,request):
-     return {
-        '__template__': 'manage_blog_edit.html',
-        'id': id,
-        'action': '/api/blogs',#
-        '__user__': request.__user__
-    }
-
-
-@get('/blog/{blog_id}')#查看日志
-async def viewBlog(*, blog_id):
-    '''查阅一篇日志'''
+@post('/api/blogs/{blog_id}/delete')#删除日志
+async def api_blog_delete(request,*,blog_id):
+    check_admin(request)
     blog = await Blog.find(blog_id)
-    comments = await Comment.findAll('blog_id=?', [blog_id], orderBy='created_at desc')
-    for comment in comments:
-        comment.html_content = text2html(comment.content)
-    blog.html_content = text2html(blog.content)
-    return {
-        '__template__': 'blogs.html',
-        'blog': blog,
-        'comments': comments
-    }
+    await blog.remove()
+    return dict(id=blog_id)
+
+@post('/api/blogs/{blog_id}/comments')#在日志里面添加评论
+async def apiCreateComment(blog_id, request, *, content):
+    user = request.__user__
+    if user is None:
+        raise APIPermissionError('please signin first.')
+    if not content or not content.strip():
+        raise APIValueError('content')
+    blog = await Blog.find(blog_id)
+    if blog is None:
+        raise APIResourceNotFoundError('Blog')
+    comment = Comment(blog_id=blog.id, user_id=user.id, user_name=user.name, user_image=user.image, content=content.strip())
+    await comment.save()
+    return comment
+
+@post('/api/comments/{comment_id}/delete')#在评论管理界面删除评论
+async def apiDeleteComment(comment_id, request):
+    check_admin(request) #判断权限
+    comment = await Comment.find(comment_id)
+    if comment is None:
+        raise APIResourceNotFoundError('Comment')
+    await comment.remove()
+    return dict(id=comment_id)
+
+@get('/api/comments') #获取所有的评论
+async def apiGetComments(*, page='1'):
+    page_index = get_page_index(page)
+    num = await Comment.findNumber('count(id)')
+    p = Page(num, page_index)
+    if num == 0:
+        return dict(page=p, comments=())
+    comments = await Comment.findAll(orderBy='created_at desc', limit=(p.offset, p.limit))
+    return dict(page=p, comments=comments)
+
+@get('/api/users')#获取所有用户
+async def apiGetUsers(*, page='1'):
+    page_index = get_page_index(page)
+    num = await User.findNumber('count(id)')
+    p = Page(num, page_index)
+    if num == 0:
+        return dict(page=p, users=())
+    users = await User.findAll(orderBy='created_at desc', limit=(p.offset, p.limit))
+    for u in users:
+        u.passwd = '******'
+    return dict(page=p, users=users)
 
 # @get('/blog/create')#添加博客
 # async def addBlog():

@@ -56,6 +56,7 @@ async def response_factory(app, handler):
             return resp #返回HTML
         if isinstance(r, dict):
             # 处理字典类响应
+            r['__user__'] = request.__user__#重新将用户设置进request里面去
             template = r.get('__template__')
             if template is None:
                 # 返回JSON类响应
@@ -94,7 +95,12 @@ async def auth_factory(app, handler): #cookie解析，每次用户发送请求�
             if user:
                 logging.info('当前登录用户为: %s' % user.email)
                 request.__user__ = user
+                logging.info(request.__user__)
+                
+        if request.path.startswith('/manage/') and (request.__user__ is None or not request.__user__.admin): #所有manage里面的页面进行权限验证
+            return web.HTTPFound('/signin')
         return (await handler(request))
+    
     return auth
 
 
