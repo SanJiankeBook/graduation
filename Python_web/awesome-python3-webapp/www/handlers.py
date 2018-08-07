@@ -340,6 +340,15 @@ async def apiDeleteComment(comment_id, request):
     await comment.remove()
     return dict(id=comment_id)
 
+@post('/api/user/{user_id}/delete')
+async def apiDeleteUser(user_id, request):
+    check_admin(request) #判断权限
+    user = await User.find(user_id)
+    if user is None:
+        raise APIResourceNotFoundError('user')
+    await user.remove()
+    return dict(id=user_id)
+
 @get('/api/comments') #获取所有的评论
 async def apiGetComments(*, page='1'):
     page_index = get_page_index(page)

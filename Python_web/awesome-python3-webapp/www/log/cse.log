@@ -4,3 +4,162 @@
 [Wed, 01 Aug 2018 15:23:02][orm.py][line:125][INFO]   found mapping: email ==> <StringField, varchar(100):email>
 [Wed, 01 Aug 2018 15:23:02][orm.py][line:125][INFO]   found mapping: password ==> <StringField, varchar(100):password>
 [Wed, 01 Aug 2018 15:23:02][orm.py][line:24][INFO] create database connection pool
+INFO:root:found model: User (table: users)
+INFO:root:  found mapping: id ==> <StringField, varchar(50):None>
+INFO:root:  found mapping: email ==> <StringField, varchar(50):None>
+INFO:root:  found mapping: passwd ==> <StringField, varchar(50):None>
+INFO:root:  found mapping: admin ==> <BooleanField, boolean:None>
+INFO:root:  found mapping: name ==> <StringField, varchar(50):None>
+INFO:root:  found mapping: image ==> <StringField, varchar(500):None>
+INFO:root:  found mapping: created_at ==> <FloatField, real:None>
+INFO:root:found model: Blog (table: blogs)
+INFO:root:  found mapping: id ==> <StringField, varchar(50):None>
+INFO:root:  found mapping: user_id ==> <StringField, varchar(50):None>
+INFO:root:  found mapping: user_name ==> <StringField, varchar(50):None>
+INFO:root:  found mapping: user_image ==> <StringField, varchar(500):None>
+INFO:root:  found mapping: name ==> <StringField, varchar(50):None>
+INFO:root:  found mapping: summary ==> <StringField, varchar(200):None>
+INFO:root:  found mapping: content ==> <TextField, text:None>
+INFO:root:  found mapping: created_at ==> <FloatField, real:None>
+INFO:root:found model: Comment (table: comments)
+INFO:root:  found mapping: id ==> <StringField, varchar(50):None>
+INFO:root:  found mapping: blog_id ==> <StringField, varchar(50):None>
+INFO:root:  found mapping: user_id ==> <StringField, varchar(50):None>
+INFO:root:  found mapping: user_name ==> <StringField, varchar(50):None>
+INFO:root:  found mapping: user_image ==> <StringField, varchar(500):None>
+INFO:root:  found mapping: content ==> <TextField, text:None>
+INFO:root:  found mapping: created_at ==> <FloatField, real:None>
+INFO:root:create database connection pool
+INFO:root:当前数据库连接池里面属性是{'host': '127.0.0.1', 'port': 3306, 'user': 'root', 'password': 'root', 'db': 'awesome', 'charset': 'utf8', 'autocommit': True}
+INFO:root:add route POST /api/blogs/{blog_id} => apiAmendBlog(blog_id, request, name, summary, content)
+INFO:root:add route POST /api/blogs/{blog_id}/comments => apiCreateComment(blog_id, request, content)
+INFO:root:add route POST /api/comments/{comment_id}/delete => apiDeleteComment(comment_id, request)
+INFO:root:add route GET /api/comments => apiGetComments(page)
+INFO:root:add route GET /api/users => apiGetUsers(page)
+INFO:root:add route POST /api/blogs/{blog_id}/delete => api_blog_delete(request, blog_id)
+INFO:root:add route GET /manage/blogs/edit => api_blog_edtior(id, request)
+INFO:root:add route GET /api/blogs => api_blogs(page)
+INFO:root:add route POST /api/blogs => api_create_blogs(request, name, summary, content)
+INFO:root:add route GET /api/blogs/{id} => api_get_blog(id)
+INFO:root:add route GET /api/users => api_get_users()
+INFO:root:add route POST /api/users => api_register_user(email, name, passwd)
+INFO:root:add route POST /api/authenticate => authenticate(email, passwd)
+INFO:root:add route GET / => index(page)
+INFO:root:add route GET /manage/users => manageUsers(page)
+INFO:root:add route GET /manage/blogs => manage_blogs(page)
+INFO:root:add route GET /manage/comments => manage_comments(page)
+INFO:root:add route GET /manage/blogs/create => manage_create_blog(request)
+INFO:root:add route GET /register => register()
+INFO:root:add route GET /signin => signin()
+INFO:root:add route GET /signout => signout(request)
+INFO:root:add route GET /blog/{blog_id} => viewBlog(blog_id)
+INFO:root:add static /static/ => F:\gitwork\Python_web\awesome-python3-webapp\www\static
+INFO:root:init jinja2
+INFO:root:set jinja2 template path: F:\gitwork\Python_web\awesome-python3-webapp\www\templates
+INFO:root:Server started at http://127.0.0.1:9000
+INFO:root:found model: User (table: users)
+INFO:root:  found mapping: id ==> <StringField, varchar(50):None>
+INFO:root:  found mapping: email ==> <StringField, varchar(50):None>
+INFO:root:  found mapping: passwd ==> <StringField, varchar(50):None>
+INFO:root:  found mapping: admin ==> <BooleanField, boolean:None>
+INFO:root:  found mapping: name ==> <StringField, varchar(50):None>
+INFO:root:  found mapping: image ==> <StringField, varchar(500):None>
+INFO:root:  found mapping: created_at ==> <FloatField, real:None>
+INFO:root:found model: Blog (table: blogs)
+INFO:root:  found mapping: id ==> <StringField, varchar(50):None>
+INFO:root:  found mapping: user_id ==> <StringField, varchar(50):None>
+INFO:root:  found mapping: user_name ==> <StringField, varchar(50):None>
+INFO:root:  found mapping: user_image ==> <StringField, varchar(500):None>
+INFO:root:  found mapping: name ==> <StringField, varchar(50):None>
+INFO:root:  found mapping: summary ==> <StringField, varchar(200):None>
+INFO:root:  found mapping: content ==> <TextField, text:None>
+INFO:root:  found mapping: created_at ==> <FloatField, real:None>
+INFO:root:found model: Comment (table: comments)
+INFO:root:  found mapping: id ==> <StringField, varchar(50):None>
+INFO:root:  found mapping: blog_id ==> <StringField, varchar(50):None>
+INFO:root:  found mapping: user_id ==> <StringField, varchar(50):None>
+INFO:root:  found mapping: user_name ==> <StringField, varchar(50):None>
+INFO:root:  found mapping: user_image ==> <StringField, varchar(500):None>
+INFO:root:  found mapping: content ==> <TextField, text:None>
+INFO:root:  found mapping: created_at ==> <FloatField, real:None>
+INFO:root:create database connection pool
+INFO:root:当前数据库连接池里面属性是{'host': '127.0.0.1', 'port': 3306, 'user': 'root', 'password': 'root', 'db': 'awesome', 'charset': 'utf8', 'autocommit': True}
+INFO:root:add route POST /api/blogs/{blog_id} => apiAmendBlog(blog_id, request, name, summary, content)
+INFO:root:add route POST /api/blogs/{blog_id}/comments => apiCreateComment(blog_id, request, content)
+INFO:root:add route POST /api/comments/{comment_id}/delete => apiDeleteComment(comment_id, request)
+INFO:root:add route GET /api/comments => apiGetComments(page)
+INFO:root:add route GET /api/users => apiGetUsers(page)
+INFO:root:add route POST /api/blogs/{blog_id}/delete => api_blog_delete(request, blog_id)
+INFO:root:add route GET /manage/blogs/edit => api_blog_edtior(id, request)
+INFO:root:add route GET /api/blogs => api_blogs(page)
+INFO:root:add route POST /api/blogs => api_create_blogs(request, name, summary, content)
+INFO:root:add route GET /api/blogs/{id} => api_get_blog(id)
+INFO:root:add route GET /api/users => api_get_users()
+INFO:root:add route POST /api/users => api_register_user(email, name, passwd)
+INFO:root:add route POST /api/authenticate => authenticate(email, passwd)
+INFO:root:add route GET / => index(page)
+INFO:root:add route GET /manage/users => manageUsers(page)
+INFO:root:add route GET /manage/blogs => manage_blogs(page)
+INFO:root:add route GET /manage/comments => manage_comments(page)
+INFO:root:add route GET /manage/blogs/create => manage_create_blog(request)
+INFO:root:add route GET /register => register()
+INFO:root:add route GET /signin => signin()
+INFO:root:add route GET /signout => signout(request)
+INFO:root:add route GET /blog/{blog_id} => viewBlog(blog_id)
+INFO:root:add static /static/ => F:\gitwork\Python_web\awesome-python3-webapp\www\static
+INFO:root:init jinja2
+INFO:root:set jinja2 template path: F:\gitwork\Python_web\awesome-python3-webapp\www\templates
+INFO:root:Server started at http://127.0.0.1:9000
+INFO:root:found model: User (table: users)
+INFO:root:  found mapping: id ==> <StringField, varchar(50):None>
+INFO:root:  found mapping: email ==> <StringField, varchar(50):None>
+INFO:root:  found mapping: passwd ==> <StringField, varchar(50):None>
+INFO:root:  found mapping: admin ==> <BooleanField, boolean:None>
+INFO:root:  found mapping: name ==> <StringField, varchar(50):None>
+INFO:root:  found mapping: image ==> <StringField, varchar(500):None>
+INFO:root:  found mapping: created_at ==> <FloatField, real:None>
+INFO:root:found model: Blog (table: blogs)
+INFO:root:  found mapping: id ==> <StringField, varchar(50):None>
+INFO:root:  found mapping: user_id ==> <StringField, varchar(50):None>
+INFO:root:  found mapping: user_name ==> <StringField, varchar(50):None>
+INFO:root:  found mapping: user_image ==> <StringField, varchar(500):None>
+INFO:root:  found mapping: name ==> <StringField, varchar(50):None>
+INFO:root:  found mapping: summary ==> <StringField, varchar(200):None>
+INFO:root:  found mapping: content ==> <TextField, text:None>
+INFO:root:  found mapping: created_at ==> <FloatField, real:None>
+INFO:root:found model: Comment (table: comments)
+INFO:root:  found mapping: id ==> <StringField, varchar(50):None>
+INFO:root:  found mapping: blog_id ==> <StringField, varchar(50):None>
+INFO:root:  found mapping: user_id ==> <StringField, varchar(50):None>
+INFO:root:  found mapping: user_name ==> <StringField, varchar(50):None>
+INFO:root:  found mapping: user_image ==> <StringField, varchar(500):None>
+INFO:root:  found mapping: content ==> <TextField, text:None>
+INFO:root:  found mapping: created_at ==> <FloatField, real:None>
+INFO:root:create database connection pool
+INFO:root:当前数据库连接池里面属性是{'host': '127.0.0.1', 'port': 3306, 'user': 'root', 'password': 'root', 'db': 'awesome', 'charset': 'utf8', 'autocommit': True}
+INFO:root:add route POST /api/blogs/{blog_id} => apiAmendBlog(blog_id, request, name, summary, content)
+INFO:root:add route POST /api/blogs/{blog_id}/comments => apiCreateComment(blog_id, request, content)
+INFO:root:add route POST /api/comments/{comment_id}/delete => apiDeleteComment(comment_id, request)
+INFO:root:add route GET /api/comments => apiGetComments(page)
+INFO:root:add route GET /api/users => apiGetUsers(page)
+INFO:root:add route POST /api/blogs/{blog_id}/delete => api_blog_delete(request, blog_id)
+INFO:root:add route GET /manage/blogs/edit => api_blog_edtior(id, request)
+INFO:root:add route GET /api/blogs => api_blogs(page)
+INFO:root:add route POST /api/blogs => api_create_blogs(request, name, summary, content)
+INFO:root:add route GET /api/blogs/{id} => api_get_blog(id)
+INFO:root:add route GET /api/users => api_get_users()
+INFO:root:add route POST /api/users => api_register_user(email, name, passwd)
+INFO:root:add route POST /api/authenticate => authenticate(email, passwd)
+INFO:root:add route GET / => index(page)
+INFO:root:add route GET /manage/users => manageUsers(page)
+INFO:root:add route GET /manage/blogs => manage_blogs(page)
+INFO:root:add route GET /manage/comments => manage_comments(page)
+INFO:root:add route GET /manage/blogs/create => manage_create_blog(request)
+INFO:root:add route GET /register => register()
+INFO:root:add route GET /signin => signin()
+INFO:root:add route GET /signout => signout(request)
+INFO:root:add route GET /blog/{blog_id} => viewBlog(blog_id)
+INFO:root:add static /static/ => F:\gitwork\Python_web\awesome-python3-webapp\www\static
+INFO:root:init jinja2
+INFO:root:set jinja2 template path: F:\gitwork\Python_web\awesome-python3-webapp\www\templates
+INFO:root:Server started at http://127.0.0.1:9000
