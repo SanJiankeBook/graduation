@@ -1,0 +1,108 @@
+<link id="easyuiTheme" rel="stylesheet" type="text/css"
+	href="../../jslib/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css"
+	href="../../jslib/themes/icon.css">
+<script type="text/javascript">
+!window.jQuery && document.write('<script src=../../js/jquery-1.9.1.js><\/script>');
+</script>
+<script type="text/javascript" src="../../jslib/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../jslib/jeasyui.common.js"></script>
+<script type="text/javascript"
+	src="../../jslib/locale/easyui-lang-zh_CN.js"></script>
+<link rel="stylesheet" href="../../css/szindex.css" type="text/css"></link>
+<!-- <script src="http://lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.js"></script> -->
+
+
+<script type="text/javascript" src="../../js/dateChoose.js"></script>
+<script type="text/javascript" src="../../js/updateclass.js"></script>
+
+<body>
+	<form id="frmClass" name="frmClass">
+		<table width="630" border="0" cellpadding="0" cellspacing="0">
+			<tr>
+				<td height="65" align="center"><img
+					src="../../images/examineeclass/update.gif" width="595" height="33">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<table width="630" border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td>
+								<table width="630" height="403" border="0" cellpadding="0"
+									cellspacing="0">
+									<tr>
+										<td width="11%" height="29" class="fontColor">学期编号:</td>
+										<td><input id="semesterS1" name="semester" type="radio"
+											value="S1"> S1 <input id="semesterS2" name="semester"
+											type="radio" value="S2"> S2 <input id="semesterS3"
+											name="semester" type="radio" value="S3"> S3</td>
+										<td width="63%" id="className_text"><input type="hidden"
+											name="id" id="id" value="">
+										</td>
+									</tr>
+									<tr>
+										<td height="26" class="fontColor">班级名:</td>
+										<td class="STYLE4"><input name="className" type="text"
+											class="text4" id="className" size="20" value="" read-only="true" disabled="disabled"
+											 maxlength="10" /> <span
+											class="prompt"> * </span>
+										</td>
+										<td id="className_text"><span class="yellow"
+											id="classSpan">(格式:YC_1,YC_2,YC_..)</span><span id="classTip"
+											class="yellow"></span>
+										</td>
+									</tr>
+									<tr>
+										<td height="26" class="fontColor">开班时间:</td>
+										<td width="26%" class="STYLE4"><label> <input
+												type="text" id="openTime" readonly="readonly"
+												onclick="fPopCalendar(event,this,this)"
+												onfocus="this.select()" /> <span class="prompt">* </span> </label>
+										</td>
+										<td class="yellow" id="openTime_text">(格式:2007-05-09)</td>
+									</tr>
+									<tr>
+										<td height="26"><span class="fontColor">结束时间:</span>
+										</td>
+										<td><span class="STYLE4"> <input type="text"
+												id="overTime" readonly="readonly"
+												onclick="fPopCalendar(event,this,this)"
+												onfocus="this.select()" /></input> </span>
+										</td>
+										<td id="overTime_text"></td>
+									</tr>
+									<tr>
+										<td height="55" valign="middle" class="fontColor">班级描述:</td>
+										<td height="55" colspan="2"><textarea name="remark"
+												cols="25" rows="3" class="texta" id="textarea"></textarea></td>
+									</tr>
+									<tr>
+										<label  style="color:red;font-size:15px;"> 温馨提示：点击修改，修改班级信息的同时会更新班级在读人数信息 </label>
+									</tr>
+									<tr valign="top">
+										<td colspan="3"><table width="100%" height="111"
+												border="0" cellpadding="0" cellspacing="0"
+												background="images/3.jpg">
+												<tr>
+													<td width="62%" valign="top" id="addclass_text"><span
+														class="fontColor" id="strPromp"></span>
+													</td>
+													<td align="center" valign="top"><br> <input
+														name="update" type="button" class="inp_L1" id="add3"
+														onMouseOver="this.className='inp_L2'"
+														onMouseOut="this.className='inp_L1'" value="修 改"
+														onClick="submitForm()" /> <label></label>
+													</td>
+												</tr>
+											</table></td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+	</form>
+</body>

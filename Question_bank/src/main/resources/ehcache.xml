@@ -1,0 +1,28 @@
+<ehcache>
+
+	<!-- 将数据缓存到哪里 diskStore：磁盘 java.io.tmpdir->jdk中io包指定的路径 -->
+	<diskStore path="java.io.tmpdir" />
+
+
+	<!-- 默认的缓存策略 maxElementsInMemory：在内存中最多缓存的对象 timeToIdleSeconds：空闲的时间 timeToLiveSeconds：生存的时间 
+		激活时间 overflowToDisk：如果内存保存不下了，是否保存到磁盘 -->
+	<defaultCache maxElementsInMemory="10000" eternal="false"
+		timeToIdleSeconds="120" timeToLiveSeconds="120" overflowToDisk="true"  maxElementsOnDisk="10000000" 
+		 diskExpiryThreadIntervalSeconds="120"  
+            memoryStoreEvictionPolicy="LRU" 
+		/>
+		
+	<!-- 	maxElementsInMemory="10000" // 内存中最大对象数量 ，超过数量，数据会被缓存到硬盘 
+            eternal="false"
+            timeToIdleSeconds="120" // 是否缓存为永久性 false 不永久
+            timeToLiveSeconds="120" // 存活时间，对象不管是否使用，到了时间回收
+            overflowToDisk="true" // 是否可以缓存到硬盘
+            maxElementsOnDisk="10000000" // 硬盘缓存最大对象数量 
+            // 当jvm结束时是否持久化对象 true false 默认是false
+            diskExpiryThreadIntervalSeconds="120"  // 指定专门用于清除过期对象的监听线程的轮询时间 
+            memoryStoreEvictionPolicy="LRU" 默认策略是LRU（最近最少使用）
+
+            /> -->
+ 
+
+</ehcache>

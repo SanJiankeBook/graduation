@@ -1,0 +1,88 @@
+<link rel="stylesheet" href="../../css/szindex.css" type="text/css"></link>
+<link id="easyuiTheme" rel="stylesheet" type="text/css" href="../../jslib/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="../../jslib/themes/icon.css">
+
+<!-- <script type="text/javascript" src="http://lib.sinaapp.com/js/jquery/2.0/jquery.min.js"></script> -->
+<script type="text/javascript">
+!window.jQuery && document.write('<script src=../../jslib/jquery.min.js><\/script>');
+</script>
+
+<script type="text/javascript" src="../../jslib/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../jslib/jeasyui.common.js"></script>
+<script type="text/javascript" src="../../js/createoption.js"></script>
+<script type="text/javascript" src="../../jslib/locale/easyui-lang-zh_CN.js"></script>
+	<script type="text/javascript">
+	var pid=0;
+		$(function(){
+			pid= window.localStorage? localStorage.getItem("wpid"): Cookie.read("wpid");
+			showPointPaperInfo(pid);
+		});
+		
+		//根据pid查询试卷信息
+  		function showPointPaperInfo(pid){
+  		$.ajaxSettings.async = false; 
+  			$.ajax({
+  				url:"/Examination2.0/assessmentpaper_findPointPapertemplate.action",
+  				type:"post",
+  				data:{"pid":pid},
+  				datatype:"json",
+  				success:function(data){
+  					var examineeClassList=data;
+  					for(var i=0;i<examineeClassList.obj.length;i++){
+  						var title=examineeClassList.obj[i].ptitle;
+  						showPointInfo(title);
+  					}
+  				}
+  			});
+  		}
+  		function showPointInfo(title){
+  			$.ajax({
+  				url:"/Examination2.0/assessmentpaper_showPointInfo.action",
+  				type:"post",
+  				data:{"ptitle":title},
+  				datatype:"json",
+  				success:function(data){
+  					var examineeClassList=data;
+  					var tablestr="";
+  					if(examineeClassList.responseCode==0){
+  						for(var i=0;i<examineeClassList.obj.length;i++){
+  							tablestr+="<tr id='"+(i+1)+"' bgcolor='#EDECEB' align='left'>";
+  							tablestr+="<td width='14%' >"+(i+1)+" </td>";
+  							tablestr+="<td colspan='4'>"+examineeClassList.obj[i]+" </td>";
+  							tablestr+="</tr>"
+  						}
+  					}else{
+  						tablestr+="<td height='60' colspan='3'><span class='fontColor'>暂无测评点信息</span></td>";
+  					}
+  					$("#pointInfo").html(tablestr);
+  				}
+  			});
+  		}
+  		function back(){
+  			window.location.href='/WebExamination/Jsp/assessment/admin/showpointpaper.html';
+  		}
+	</script>
+	
+	<table width="680" border="1" cellpadding="1" bordercolor="#FFFFFF" cellspacing="1" >
+		
+		<tr>
+			<td height="50" colspan="3" width="40%"><span class="fontColor">测试试题信息如下:</span></td>
+<!-- 			<td align="right"><input name="btnView" type="button" class="inp_L1" id="btnView" onClick="back()" onMouseOver="this.className='inp_L2'" onMouseOut="this.className='inp_L1'" value="返回"></td>
+ -->		</tr>
+		<tr>
+			<th bordercolor="#7EA6DC" width="14%">编号</th>
+			<th bordercolor="#7EA6DC" colspan="4">题目</th>
+		</tr>
+	</table>
+	<div id="showpointInfo">
+	<table width="680" border="1" cellpadding="1" bordercolor="#FFFFFF" cellspacing="1" id="pointInfo">
+		
+
+
+
+
+
+	</table>
+	</div>
+	<br/><br/>
+

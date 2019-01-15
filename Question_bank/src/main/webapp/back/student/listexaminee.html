@@ -1,0 +1,132 @@
+
+<link rel="stylesheet" href="../../css/szindex.css" type="text/css"></link>
+<!-- <script src="http://lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.js"></script> -->
+<script type="text/javascript">
+!window.jQuery && document.write('<script src=../../js/jquery-1.9.1.js><\/script>');
+</script>
+<script type="text/javascript" src="../../js/layer.js"></script>
+<script type="text/javascript" src="../../js/listexamine.js"></script>
+<style>
+#changeClass{
+	margin-left:130px;
+	margin-top:60px;
+
+}
+.find_table_slelct{
+border: 1px solid #F8D880 ;
+border-radius:5px;
+width: 100%;
+margin-top: 10px;
+background-color: #F3F3F3;
+padding-bottom: 10px;
+}
+</style>
+
+</head>
+
+<body>
+	<form name="frmListExaminee"  >
+		<table width="90%" align="center" border="0" cellpadding="0" cellspacing="0">
+			<tr>
+				<td valign="middle" height="65" align="center"><img
+					src="images/t04.gif" width="595"
+					height="33" alt="考生列表">
+				</td>
+			</tr>
+			<tr>
+				<td align="center">
+					<table width="100%" align="center" border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td>
+							<div class="find_table_slelct">
+								<table width="80%" align="center" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<td width="15%" height="36"><label align="left"
+										class="fontColor">学期名称：</label>
+									</td>
+									<td width="30%"><input id="semesterS1" name="semester"
+										type="radio" value="S1" checked
+										onClick="changeSemester(this.value);">S1 <input
+										id="semesterS2" name="semester" type="radio" value="S2"
+										onClick="changeSemester(this.value);">S2 <input
+										id="semesterS3" name="semester" type="radio" value="S3"
+										onClick="changeSemester(this.value);">S3</td>
+
+									<td width="36%"><span id="message" class="fontColor">
+											</span>
+									</td>
+									<td width="20%"><span id="back" style="display:none;cursor:pointer;color:green;"  onclick="backPage()">返回</span>   </td>
+									</tr>
+									<tr>
+										<td>
+											<div align="left" class="fontColor">
+												班级编号: <br> <br>
+											</div>
+										</td>
+										<td>
+											<div align="left">
+												<label> <select name="className" id="className">
+														
+												</select> <br> <br> </label>
+											</div>
+										</td>
+										<td><input name="search" id="search" type="button"
+											class="inp_L1" value="查 询" onclick="serchExaminee()"
+											onMouseOver="this.className='inp_L2'"
+											onMouseOut="this.className='inp_L1'" />
+										</td>
+									</tr>
+								</table>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<table width="100%" align="center" border="0" cellspacing="0" cellpadding="0">
+									<tr>
+										<td height="15" class="style3" id="edit_text"></td>
+									</tr>
+									<tr>
+										<td height="15">
+											<table width="100%" align="center" id="listexaminee" border="1" align="center" cellpadding="1"
+												style="display: none" bordercolor="#FFFFFF" cellspacing="0">
+												<thead>
+												<tr>
+													<th bordercolor="#7EA6DC">编号</th>
+													<th bordercolor="#7EA6DC">考生姓名</th>
+													<th bordercolor="#7EA6DC">考生状态</th>
+													<th bordercolor="#7EA6DC">联系电话</th>
+												</tr>
+												</thead>
+												<tbody id="examineerows">
+												
+												 </tbody>
+											</table>
+									</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+	</form>
+	<div id="changeClass">
+		<form method="post">
+			
+			<div align="left">
+				<label >转班班级:</label>
+				&nbsp;&nbsp;&nbsp;<label> <select name="classNameChoose" id="classNameChoose">
+						
+				</select>
+				</label>
+			</div>
+			<br><br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="button" onclick="changeClass();" value="确定">
+
+		</form>
+	</div>
+	
+</body>
+</html>

@@ -1,0 +1,508 @@
+<link id="easyuiTheme" rel="stylesheet" type="text/css"
+	href="../../jslib/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css"
+	href="../../jslib/themes/icon.css">
+<!-- <script type="text/javascript"
+	src="http://lib.sinaapp.com/js/jquery/2.0/jquery.min.js"></script> -->
+<script type="text/javascript">
+	!window.jQuery
+			&& document
+					.write('<script src=../../jslib/jquery.min.js><\/script>');
+</script>
+<script type="text/javascript" src="../../jslib/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../jslib/jeasyui.common.js"></script>
+<link rel="stylesheet" href="../../css/szindex.css" type="text/css"></link>
+<script type="text/javascript" src="../../js/createoption.js"></script>
+<script type="text/javascript" src="../../js/ajax.js"></script>
+<script type="text/javascript"
+	src="../../jslib/locale/easyui-lang-zh_CN.js"></script>
+
+<script type="text/javascript">
+	$(function() {
+		showEditiontName();
+		//showSubjectNames();
+	})
+	
+	function showSubjectNames(){
+	$.post("/Examination2.0/chapter_subjectName.action", function(obj){
+		$("#subject").html("<option value='0'></option>");
+		var obj = obj.obj;
+	 for(var i=0; i<obj.length;i++){
+		$("#subject").append(
+									"<option value='"+(i+1)+"'>"
+											+ obj[i].subjectName
+											+ "</option>");	
+	 }
+	});
+}
+	
+	function showEditiontName() {
+		$.post("/Examination2.0/course_edition.action",
+						function(obj) {
+							$("#version").html("<option value='0'></option>");
+							for (var i = 0; i < obj.length; i++) {
+								$("#version").append(
+										"<option value='" + obj[i].id+ "'>"
+												+ obj[i].editionName
+												+ "</option>");
+							}
+							$("#version").get(0).selectedIndex = 1;
+							$('#back_zjwh_datagrid').datagrid(
+											{
+												url : '/Examination2.0/chapter_showAllChapter.action',
+												fit : true,
+												border : true,
+												fitColumns : true,
+												pagination : true,
+												sortOrder : 'asc', //排序规则
+												pageList : [ 5, 10, 15, 20, 30, 50, 100 ], //每页多少条
+												pageSize : 50, //默认每页多少条
+												rownumbers : true, //排序ID
+												sortName: 'seq',
+												remoteSort:false,//前端排序而不是服务器端排序
+												singleSelect : true,
+											    
+												columns : [ [
+														{
+															filed : 'id',
+															title : '编号',
+															checkbox : true,
+														},
+														{
+															field : 'editionName',
+															title : '版本',
+															width : 100,
+															align : 'center',
+														},
+														{
+															field : 'semester',
+															title : '学期',
+															width : 100,
+															align : 'center',
+															sortable : true
+														//可排序
+														},
+														{
+															field : 'subjectName',
+															title : '科目名',
+															width : 150,
+															align : 'center'
+														},
+														{
+															field : 'chapterName',
+															title : '章节名',
+															width : 150,
+															align : 'center',
+															editor : {
+																type : 'validatebox',
+															}
+
+														},
+														{
+															field : 'remark',
+															title : '备注',
+															width : 150,
+															align : 'center',
+															editor : {
+																type : 'validatebox',
+															}
+														},
+														{
+															field : 'seq',
+															title : '排序',
+															width : 150,
+															align : 'center',
+															sortable : true,
+															editor : {
+																type : 'validatebox',
+															}
+														},
+														{
+															field : 'action',
+															title : '操作',
+															width : 150,
+															align : 'center',
+															formatter : function(value, row, index) {
+																if (row.editing) {
+																	var sc = '<a href="#" onclick="saverow('
+																			+ index + ')">保存</a> ';
+																	var cc = '<a href="#" onclick="cancelrow('
+																			+ index + ')">取消</a>';
+																	return sc + cc;
+																} else {
+																	var ec = '<a href="#" onclick="editrow('
+																			+ index + ')">编辑</a> ';
+																	var dc = '<a href="#" onclick="deleterow('
+																			+ index + ')">删除</a>';
+																	return ec + dc;
+																}
+															}
+
+														} ] ],
+
+												toolbar : [ {
+													text : '添加',
+													iconCls : 'icon-add',
+													handler : function() {
+														add();
+														showSubjectName();
+													}
+												}, '-', {
+													text : '取消',
+													iconCls : 'icon-cancel',
+													handler : cancelall
+												} ],
+												onBeforeEdit : function(index, row) {
+													row.editing = true;
+													$('#back_zjwh_datagrid').datagrid('refreshRow', index);
+													editcount++;
+												},
+												onAfterEdit : function(index, row) {
+													row.editing = false;
+													$('#back_zjwh_datagrid').datagrid('refreshRow', index);
+													editcount--;
+												},
+												onCancelEdit : function(index, row) {
+													row.editing = false;
+													$('#back_zjwh_datagrid').datagrid('refreshRow', index);
+													editcount--;
+												}
+											});
+						});
+	}
+	var editcount = 0;
+	var OchapterName = "";
+	var Oremark = "";
+	function editrow(index) {
+		$('#back_zjwh_datagrid').datagrid('selectRow', index);
+		var rows = $('#back_zjwh_datagrid').datagrid('getChecked');
+		OchapterName = rows[0].chapterName;
+		$('#back_zjwh_datagrid').datagrid('beginEdit', index);
+
+	}
+	function deleterow(index) {
+		$('#back_zjwh_datagrid').datagrid('selectRow', index);
+		var rows = $('#back_zjwh_datagrid').datagrid('getChecked');
+
+		$.messager.confirm('确认', '是否真的删除?', function(r) {
+			if (r) {
+				$('#back_zjwh_datagrid').datagrid('deleteRow', index);
+				var id = rows[0].id;
+				$.ajax({
+					url : '/Examination2.0/chapter_deleteChapter.action',
+					data : {
+						id : id
+					},
+					dataType : 'json',
+					success : function(obj) {
+						$("#back_zjwh_datagrid").datagrid('load', {});
+						$("#back_zjwh_datagrid").datagrid('clearSelections');
+					}
+				});
+			}
+		});
+	}
+	function saverow(index) {
+		$('#back_zjwh_datagrid').datagrid('endEdit', index);
+		$('#back_zjwh_datagrid').datagrid('selectRow', index);
+		var rows = $('#back_zjwh_datagrid').datagrid('getChecked');
+		var id = rows[0].id;
+		var chapterName = rows[0].chapterName;
+		var remark = rows[0].remark;
+		if (chapterName == OchapterName || chapterName == ""
+				|| chapterName == null) {
+			alert("章节名不能为空或值必须改变");
+			$('#back_zjwh_datagrid').datagrid('beginEdit', index);
+			return;
+		}
+		
+		$.ajax({
+			url : '/Examination2.0/chapter_updateChapter.action',
+			data : {
+				id : id,
+				chapterName : chapterName,
+				remark : remark
+			},
+			type:"post",
+			dataType : 'json',
+			success : function(obj) {
+				if (obj.responseCode == 1) {
+					alert(obj.errorMessage);
+				} else {
+					$("#back_zjwh_datagrid").datagrid('load', {});
+					$("#back_zjwh_datagrid").datagrid('clearSelections');
+				}
+
+			}
+		});
+
+	}
+	function cancelrow(index) {
+		$('#back_zjwh_datagrid').datagrid('cancelEdit', index);
+		$('#back_zjwh_datagrid').datagrid('unselectRow', index);
+	}
+	function cancelall() {
+		$('#back_zjwh_datagrid').datagrid('rejectChanges');
+	}
+
+	function add() {
+		$('#reg_regForm input').val('');
+		$('#addchapterForm').dialog('open');
+	}
+
+	function searchChapter() {
+		var editionName = $("#version").find("option:selected").text().trim();
+		var semester  =   $("#chapter_semester").find("option:selected").text().trim();
+		var subjectName = $("#subject").find("option:selected").text().trim();
+		subjectName=subjectName.substr(0,10);
+		var chapterName =$("#chapter_chapterName").val();
+		$('#back_zjwh_datagrid').datagrid('load', {
+			"editionName" : editionName,
+			"semester"    :semester,
+			"subjectName" : subjectName,
+			"chapterName" : chapterName
+		});
+	}
+	
+	//TODO: 根据版本和学期查找科目，显示到下拉列表中
+	function searchSubject() {
+		var editionName = $("#subject_editionName").find("option:selected")
+				.text().trim();
+		var semester = $("#semester").find("option:selected").text().trim();
+		$('#back_kcwh_datagrid').datagrid('load', {
+			"editionName" : editionName,
+			"semester" : semester
+		});
+	}
+
+	function clearChapter() {
+		$("#version").val("");
+		$("#chapter_semester").val("");
+		$("#subject").val("");
+		$("#chapter_chapterName").val("");
+		$('#back_zjwh_datagrid').datagrid('load', {});
+	}
+
+	//当添加框一加载  就显示科目
+	function showSubjectName() {
+		$.post("/Examination2.0/course_edition.action", function(obj) {
+			$("#addEditionName").html("");
+			for (var i = 0; i < obj.length; i++) {
+				if(i==0){
+					$("#addEditionName").append(
+							"<option  value='" +obj[i].id + "' selected>" + obj[i].editionName
+									+ "</option>");
+				}else{
+					$("#addEditionName").append(
+							"<option  value='" +obj[i].id + "'>" + obj[i].editionName
+									+ "</option>");
+				}
+			}
+			showSubjectByeditid();
+		});
+		
+		
+	}
+	
+	function showSubjectByeditid(){
+		var editid=$("#addEditionName").find("option:selected").val();
+		
+		$.post("/Examination2.0/chapter_subjectName.action",{"id":editid}, function(json) {
+			//var obj = eval(json);// 转换后的JSON对象
+			
+			$("#editionName-subjectName").html("");
+			if(json!=null && json!=""){
+			var obj=json.obj;
+				if(obj!=null && obj!="" && json.responseCode==0){
+					
+					for ( var i = 0; i < obj.length; i++) {
+						if(i==0){
+							$("#editionName-subjectName").append(
+									"<option  value='"+obj[i].id+"' selected>"
+											+ obj[i].subjectName + "</option>");
+						}else{
+							$("#editionName-subjectName").append(
+									"<option   value='"+obj[i].id+"' >"
+											+ obj[i].subjectName + "</option>");
+						}
+		
+					}
+				}
+			}
+			
+		});
+		
+	}
+	//添加章节
+	function chkAddForm() {
+		var subjectNames = $("#editionName-subjectName").find("option:selected").val().trim();
+		var editionName = $("#addEditionName").find("option:selected").text().trim();
+		var chapterName = $("#cName").val();
+		var remark = $("#cRemark").val();
+		var seq=$("#addSubjectSeq").val();
+		if (chapterName == null || chapterName == "") {
+			alert("章节名不能为空");
+			return;
+		}
+
+		$.post("/Examination2.0/chapter_addChapter.action", {
+			editionName : editionName,
+			subjectName : subjectNames,
+			chapterName : chapterName,
+			remark : remark,
+			seq : seq
+		}, function(json) {
+			var obj=json
+			//var obj = $.parseJSON(json);
+			if (obj.responseCode == 0) {
+				alert("添加章节成功");
+				$("#cName").val("");
+				$("#cRemark").val("");
+			} else if (obj.responseCode == 1) {
+				alert(obj.obj);
+			}
+
+		});
+	}
+	
+	//选择版本
+		function changeVersion(){
+			semester=$('#chapter_semester').val();
+			version=$('#version').val();
+			createSubjectOption(version,semester);
+			searchChapter();
+		}
+		//更改学期
+		function cretsubject() {
+			semester=$('#chapter_semester').val();
+			version = $('#version').val();
+			createSubjectOption(version, semester);
+			searchChapter();
+		}
+		function createSubjectOption(version, semester) {
+			$.ajaxSettings.async = false;
+			$
+					.ajax({
+						url : "/Examination2.0/initData_subject.action",
+						type : "post",
+						data : {
+							"editionId" : version,
+							"semester" : semester
+						},
+						datatype : "json",
+						success : function(data) {
+							var examineeClassList =data;
+							var optionstr = "<option value='0'></option>";
+							if (semester == null || semester == "") {
+								$("#subject").html(optionstr);
+								return;
+							}
+							if (examineeClassList.responseCode != 1) {
+								for ( var i = 0,len=examineeClassList.obj.length; i <len ; i++) {
+									optionstr += "<option value='"+examineeClassList.obj[i].id+"'>"
+											+ examineeClassList.obj[i].subjectName
+											+ "</option>";
+								}
+							} 
+							$("#subject").html(optionstr);
+						}
+					});
+		}
+		
+</script>
+
+
+
+<body>
+
+	<div id="cc" class="easyui-layout" style="width: 600px; height: 400px;"
+		data-options="fit:true">
+
+		<div data-options="region:'north',title:'综合查询',split:true"
+			style="height: 100px">
+			<form id="search">
+				<table>
+					<tr>
+						<td>版本</td>
+						<td><select id="version"
+							onChange="changeVersion()">
+
+						</select></td>
+
+						<td>学期</td>
+						<td><select id="chapter_semester" onchange="cretsubject()"><option value="0"></option>
+								<option value="S1">S1</option>
+								<option value="S2">S2</option>
+								<option value="S3">S3</option>
+						</select></td>
+
+						<td>科目名</td>
+						<td><select id="subject" name="subjectName" onchange="searchChapter()"><option
+									value="0"></option>
+						</select></td>
+
+						<td>章节名(模糊)</td>
+						<td><input type="text" id="chapter_chapterName"
+							name="chapterName" /></td>
+
+
+						<td colspan="2"><a id="btn" href="#"
+							onclick="searchChapter()" class="easyui-linkbutton"
+							data-options="iconCls:'icon-search'">查询</a> <a id="btn1" href="#"
+							onclick="clearChapter()" class="easyui-linkbutton"
+							data-options="iconCls:'icon-no'">清空</a></td>
+					</tr>
+				</table>
+			</form>
+		</div>
+
+		<div id="back_zjwh_datagrid_div"
+			data-options="region:'center',title:'课程章节列表'">
+			<table id="back_zjwh_datagrid">
+
+			</table>
+		</div>
+
+		<div id="addchapterForm" class="easyui-dialog"
+			style="width: 800px; height: 150px;"
+			data-options="title:'添加章节',closed:true">
+
+			<form id="chapterForm" method="post">
+				<table>
+					<thead>
+						<tr>
+							<th align="center" bgcolor="#CCCCCC" width="20%">版本</th>
+							<th align="center" bgcolor="#CCCCCC">科目名</th>
+							<th align="center" bgcolor="#CCCCCC">章节名</th>
+							<th align="center">备 注</th>
+							<th align="center" width="10%">排序</th>
+							<th align="center">操 作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><select name="addEditionName" id="addEditionName"
+								style="width: 100px" onchange="showSubjectByeditid()"></select></td>
+
+							<td><select name="subjectName" id="editionName-subjectName"
+								style="width: 100px;" id="sid">
+									<option value="" title=""></option>
+							</select></td>
+
+							<td align="center"><input name="chapterName" type="text"
+								id="cName" size="32" maxlength="50" /></td>
+
+							<td align="center"><input name="chapterRemark" type="text"
+								class="text4" id="cRemark" size="8" maxlength="30" /></td>
+
+							<td align="center"><input name="seq" id="addSubjectSeq"
+								type="text" /></td>
+
+							<td align="center"><a id="btn_add" href="#"
+								onclick="chkAddForm()" class="easyui-linkbutton">添加</a></td>
+					</tbody>
+				</table>
+			</form>
+		</div>
+	</div>
+	<br>

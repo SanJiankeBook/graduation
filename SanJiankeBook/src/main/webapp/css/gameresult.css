@@ -1,0 +1,361 @@
+/*result-filter*/
+ body, button, input, select, textarea {
+    font: 12px/1.5 Helvetica, Arial, \5b8b\4f53, sans-serif;
+}
+a em{
+    text-decoration : none;
+}
+.result-filter {
+    //border: 1px solid #E6E6E7;
+    margin-bottom: 10px;
+    /*width: 648px;*/
+    width: 538px;
+}
+.result-filter-hd {
+    //background-color: #F6F6F8;
+    font-weight: 700;
+    overflow: hidden;
+    *zoom: 1;
+    padding: 6px 0 6px 0;
+}
+.result-filter-hd-title {
+   /* padding-top: 2px;*/
+    float: left;
+    font-weight: 700;
+    line-height: 24px;
+}
+.result-filter-hd-list {
+    /*float: left;
+    width: 539px;*/
+    /*width = 648-100-9*/
+    overflow: hidden;
+    *zoom: 1;
+}
+.result-filter-hd-list-inner {
+    overflow: hidden;
+    *zoom: 1;
+}
+.result-filter-hd-list-item {
+    height: 19px;
+    line-height: 19px;
+    border: 1px solid #C2C2C2;
+    float: left;
+    margin-right: 8px;
+    margin-bottom: 3px;
+    padding: 0 20px 0 7px;
+    position: relative;
+    white-space: nowrap;
+    /*display: inline-block;
+    *display: inline;
+    *zoom: 1;*/
+}
+.result-filter-hd-list-current {
+    border: 1px solid #3CA2EB;
+    color: #388bff;
+    font-weight: normal;
+}
+.result-filter-hd-list-item-close {
+    display: block;
+    position: absolute;
+    top: 2px;
+    _top: 2px;
+    right: 2px;
+    width: 15px;
+    height: 15px;
+    background: url(/static/img/close-current-new.png) no-repeat center center;
+}
+.result-filter-hd-list-current .result-filter-hd-list-item-close {
+    background: url(/static/img/close-current-new.png) no-repeat center center;
+}
+
+.result-filter-bd {
+    padding: 20px 0;
+}
+.result-filter-bd-row {
+    overflow: hidden;
+    *zoom: 1;
+    margin-bottom: 5px;
+}
+.result-filter-bd-row-title {
+    font-weight: 700;
+    float: left;
+    width: 72px;
+}
+.result-filter-bd-row-list {
+    /*float: left;*/
+    overflow: hidden;
+    *zoom: 1;
+}
+.result-filter-bd-row-list-inner {
+    overflow: hidden;
+    *zoom: 1;
+}
+.result-filter-bd-row-list-item {
+    float: left;
+    _display: inline;
+    margin-bottom: 3px;
+    white-space: nowrap;
+}
+.result-filter-bd-row-list-item-link {
+    float: left;
+    text-decoration: none;
+    color: #002CC4;
+    height: 16px;
+    line-height: 16px;
+    border: 1px solid #FFF;
+    padding: 0 5px;
+}
+.result-filter-bd-row-list-item-link-current {
+    float: left;
+    text-decoration: none;
+    color: #002CC4;
+    height: 16px;
+    line-height: 16px;
+    border: 1px solid #FFF;
+    padding: 0 12px;
+}
+.result-filter-bd-row-list-current .result-filter-bd-row-list-item-link {
+    color: #FFF;
+    border: 1px solid #088FDF;
+    background-color: #388cff;
+}
+.result-filter-bd-row-list-current .result-filter-bd-row-list-item-link-current {
+    color: #FFF;
+    border: 1px solid #088FDF;
+    background-color: #3CA2EB;
+}
+.result-filter-bd-row-list-item-link:hover {
+    background-color: #3CA2EB;
+}
+.result-filter-bd-row-list-item-pipe {
+    font-family: simsun;
+    color: #BFBFBF;
+    padding: 0 5px;
+}
+/*result-sort*/
+.result-sort-game {
+    background-color: #fafafa;
+    height: 30px;
+    //border: 1px solid #E5E5E5;
+    margin-bottom: 25px;
+   // margin-top: 25px;
+    //overflow: hidden;
+    *zoom: 1;
+    -moz-box-shadow:  0 1px 1px #e2e2e2; /* 老的 Firefox */
+    box-shadow: 0 1px 1px #e2e2e2;
+    border-bottom: solid 1px #e2e2e2\9;
+}
+.result-sort-item-game {
+    height: 30px;
+    line-height: 30px;
+    float: left;
+    display: block;
+    color: #323232;
+    text-decoration: none;
+    border-left: 1px solid  #E4E4E4;
+    padding: 0 18px 0 15px;
+}
+.result-sort-item-game-first {
+    height: 30px;
+    line-height: 30px;
+    float: left;
+    display: block;
+    color: #323232;
+    text-decoration: none;
+    padding: 0 18px 0 15px;
+}
+.result-sort-current-game {
+    font-weight: 700;
+    background-color: #FFF;
+    border-top: solid 2px #088FDF;
+    border-bottom: solid 2px #ffffff;
+    height: 28px;
+    line-height: 28px;
+    border-left: 1px solid  #E4E4E4;
+    border-right: 1px solid  #E4E4E4;
+}
+.result-sort-current-game-first {
+    font-weight: 700;
+    background-color: #FFF;
+    border-top: solid 2px #088FDF;
+    border-left: 1px solid  #E4E4E4;
+    border-bottom: solid 2px #ffffff;
+    height: 28px;
+    line-height: 28px;
+}
+.result-sort-current-game-middle {
+    font-weight: 700;
+    background-color: #FFF;
+    border-top: solid 2px #088FDF;
+    border-bottom: solid 2px #ffffff;
+    height: 28px;
+    line-height: 28px;
+}
+.result-sort-asc .result-sort-item-icon{
+    display: inline-block;
+    width: 7px;
+    vertical-align: middle;
+    overflow: hidden;
+    background: url(/static/img/arrow-default-up.png) no-repeat center center;
+    margin-left: 2px;
+    cursor: pointer;
+}
+.result-sort-desc .result-sort-item-icon{
+    display: inline-block;
+    width: 7px;
+    vertical-align: middle;
+    overflow: hidden;
+    background: url(/static/img/arrow-default-down.png) no-repeat center center;
+    margin-left: 2px;
+    cursor: pointer;
+}
+/*.result-sort-item-icon {
+    display: inline-block;
+    width: 7px;
+    vertical-align: middle;
+    overflow: hidden;
+    background: url(/static/img/arrow-default-down.png) no-repeat center center;
+    margin-left: 2px;
+    cursor: pointer;
+}*/
+/*.result-sort-current .result-sort-item-icon {
+    background-image: url(/static/img/arrow-current-down.png);
+}*/
+
+
+/*.result-sort-asc {
+   background: url(/static/img/arrow-default-up.png) no-repeat center center;
+}*/
+/*result-item*/
+.result-item {
+    margin-bottom: 15px;
+    word-wrap: break-word;
+    /*no width*/
+}
+
+.result-item-title {
+    /*white-space: nowrap;*/
+    overflow: hidden;
+}
+/*result-game-item*/
+/*@require cse-result:widget/result-item/result-item.css*/
+
+.result-game-item {
+    //border-bottom: 1px solid #F1F1F1;
+    padding-bottom: 10px;
+    width: 540px;
+    overflow: hidden;
+    *zoom: 1;
+    //color: #696969;
+    margin-bottom: 10px;
+}
+.result-game-item-last {
+    border-bottom: none;
+}
+
+.result-game-item-pic {
+    float: left;
+    margin-right: 20px;
+}
+.result-game-item-pic-link {
+    display: block;
+    width: 90px;
+    height: 90px;
+}
+.result-game-item-pic-link-img {
+    width: 100%;
+    height: 100%;
+}
+
+.result-game-item-detail {
+    overflow: hidden;
+    *zoom: 1;
+    position: relative;
+}
+.result-game-item-title{
+    /*height: 20px;*/
+    line-height: 20px;
+    margin-bottom: 6px;
+    width: 280px;
+    font: 15px/1.5 Helvetica,Arial,宋体,sans-serif
+}
+.result-game-item-title-link {
+    //color: #323232;
+    //text-decoration: none;
+    font-weight: normal;
+}
+.result-game-item-desc {
+    line-height: 20px;
+    height: 40px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.result-game-item-info {
+    line-height: 20px;
+}
+.result-game-item-info-tag-item {
+    color: #002CC4;
+    text-decoration: none;
+}
+.result-game-item-info-time {
+    position: absolute;
+    top: 0px;
+    right: 0;
+    color: #989898;
+}
+
+/*分区展示*/
+.result-title{
+    display: block;
+    float: left;
+    line-height: 28px;
+    margin-left: 10px;
+}
+.result-title-div {
+    background: #fafafa;
+    //border: solid 1px #E8E8E8;
+    height: 28px;
+    line-height: 28px;
+    margin-bottom: 20px;
+    margin-top: 7px;
+    -moz-box-shadow:  0 1px 1px #E8E8E8; /* 老的 Firefox */
+    box-shadow: 0 1px 1px #E8E8E8;
+    border-bottom: solid 1px #E8E8E8\9;
+    //filter: progid:DXImageTransform.Microsoft.Shadow(color='#969696', Direction=135, Strength=5);
+}
+.result-title-more {
+    display: inline-block;
+    float: right;
+    margin-right: 12px;
+}
+.result-title-more a {
+    text-decoration: none;
+}
+.block-line{
+    border: 1px solid #f0f0f0;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.gameblock-result-list{
+    position: relative;
+}
+.gameblock-result-list  .result-game-item {
+    border: none;
+}
+
+.gameblock-result-list  .f{
+    line-height: 20px;
+}
+.gameblock-result-list  .gameblock-more{
+    position: relative;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+.gameblock-result-list  .gameblock-more .gameblock-more-item{
+    text-decoration: none;
+    color: #0000c0;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}

@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yc.mapper.NovelMapper">
+
+	<insert id="addNovel" parameterType="Novel" useGeneratedKeys="true"
+		keyProperty="nid">
+		insert into
+		novel(tid,aid,nname,npicture,ndescription,nstatus,standby_1)
+		values(#{tid},#{aid},#{nname},#{npicture},#{ndescription},#{nstatus},#{standby_1})
+	</insert>
+
+	<!-- 查找所有小说 -->
+	<select id="findAllNovel" parameterType="Novel" resultMap="NovelResultMap">
+		select
+		nid,novel_type.tname,author.aname,author.pan_name,nname,npicture,ndescription,nstatus
+		from novel_type
+		inner join novel
+		on novel_type.tid=novel.tid
+		inner join author
+		on author.aid=novel.aid where novel.standby_1='通过'
+	</select>
+	<!-- 根据名字查找所有小说 -->
+	<select id="findNovleByName" parameterType="Novel" resultMap="NovelResultMap">
+		select
+		nid,novel_type.tname,author.aname,author.pan_name,nname,npicture,ndescription,nstatus
+		from novel_type inner join novel on novel_type.tid=novel.tid inner
+		join author on author.aid=novel.aid where author.pan_name like
+		#{pan_name} or nname like #{nname}
+	</select>
+		
+		<!-- 分页查询小说 -->
+		<select id="findNovelByPage" parameterType="Novel" resultMap="NovelResultMap">
+			select nid,novel_type.tname,author.aname,author.pan_name,nname,npicture,ndescription,nstatus,novel.standby_1 from novel_type
+			inner join novel
+			on novel_type.tid=novel.tid
+			inner join author
+			on author.aid=novel.aid 
+			limit #{start},#{end}
+		</select>
+		
+		
+
+	<!-- 删除小说 -->
+	<delete id="delNovel" parameterType="Novel">
+		<!--delete from novel where nid=#{nid}  -->
+		delete novel.*,novel_chapter.*
+		from novel_chapter left join novel
+		on novel.nid=novel_chapter.nid 
+		where novel_chapter.nid in(#{nid})
+	</delete>
+
+
+	
+	<!-- 作者专区分页查询小说 -->
+	<select id="NovelByaid" parameterType="Novel" resultMap="NovelResultMap">
+		select novel.*,tname
+		from novel_type
+		inner join novel
+		on novel_type.tid=novel.tid
+		inner join author
+		on author.aid=novel.aid
+		where author.aid=#{aaid} and novel.standby_1='通过'
+		limit #{start},#{end}
+	</select>
+	
+	<!-- 显示页面，根据tid类型编号分页查找所有小说信息 -->
+	<select id="TNovelBytname" parameterType="Novel" resultMap="NovelResultMap">
+		select novel.*,pan_name,tname
+		from novel_type
+		inner join novel
+		on novel_type.tid=novel.tid
+		inner join author
+		on author.aid=novel.aid
+		where novel.tid=#{tid} and novel.standby_1='通过'
+		limit #{start},#{end}
+	</select>
+
+		
+		<!-- 根据搜索分页查询小说 -->
+	<select id="findNovelByPageName" parameterType="Novel"
+		resultMap="NovelResultMap">
+		select
+		nid,novel_type.tname,author.aname,author.pan_name,nname,npicture,ndescription,nstatus
+		from novel_type
+		inner join novel
+		on novel_type.tid=novel.tid
+		inner join author
+		on author.aid=novel.aid where author.pan_name like #{ssnname} or nname
+		like #{ssnname}
+		limit #{start},#{end}
+	</select>
+
+
+
+	<!-- 根据小说名查询所有信息 -->
+	<select id="nnamegetAll" resultType="Novel" parameterType="Novel">
+		select *
+		from novel where nname=#{nname}
+	</select>
+
+	<!-- 查询小说所有名字 -->
+	<select id="getAllnname" resultType="Novel">
+		select nname,nid
+		from novel where standby_1='通过'
+	</select>
+
+	<!-- 根据id查询小说所有信息 -->
+	<select id="idgetAllnname" resultType="Novel" parameterType="Novel">
+		select * from novel where nid=#{nid} and standby_1='通过'
+	</select>
+
+	<!-- 根据id查询小说对应的作者 -->
+	<select id="idgetauthor" resultMap="NovelMap" parameterType="Novel">
+		select a.*
+		from novel n
+		inner join author a
+		on n.aid=a.aid
+		where
+		n.nid=#{nid}
+	</select>
+
+	<!-- 根据类型显示数据 -->
+	<select id="typegetAllnname" resultMap="NovelTypeMap"
+		parameterType="NovelType">
+		select *
+		from novel_type novelType
+		inner join novel n
+		on novelType.tid=n.tid
+		inner join author a
+		on a.aid=n.aid
+		where novelType.tname=#{novelType.tname} and n.standby_1='通过'
+	</select>
+
+
+	<!-- 根据id查询最新小说信息 -->
+	<select id="newChapter" resultType="NovelChapter" parameterType="Novel">
+		select cname from novel_chapter where nid=#{nid} having max(cid) ;
+	</select>
+	
+	<!-- 根据id查询小说的信息包括小说类型 -->
+	<select id="TNovelBynid" resultMap="NovelTypeBynid" parameterType="Novel">
+		select
+		nid,novel_type.tid,novel_type.tname,nname,npicture,ndescription,nstatus
+		from novel_type
+		inner join novel
+		on novel_type.tid=novel.tid
+		where nid=#{nid} and novel.standby_1='通过'	
+	</select>
+	
+	<!-- 根据作者id查找他写的小说 -->
+	<select id="findNovelByaid" parameterType="Novel" resultType="Novel" >
+		select * from novel where aid=#{aid} 
+	</select>
+
+	
+	<!-- 更新小说信息 -->
+	<update id="updateNovel" parameterType="Novel" useGeneratedKeys="true">
+		update novel
+		set nname=#{nname},npicture=#{npicture},nstatus=#{nstatus},tid=#{tid}
+		where nid=#{nid}
+	</update>
+
+	<!-- 根据类型查询小说信息 -->
+	<resultMap type="Novel" id="NovelTypeMap">
+		<id property="nid" column="nid" />
+		<result property="tid" column="tid" />
+		<result property="nname" column="nname" />
+		<result property="npicture" column="npicture" />
+		<result property="ndescription" column="ndescription" />
+		<result property="nstatus" column="nstatus" />
+		<result property="pan_name" column="pan_name" />
+		<association property="novelType" javaType="NovelType">
+			<result property="tname" column="tname" />
+		</association>
+		</resultMap>	
+			<!-- 根据类型查询小说信息 
+	<resultMap type="Novel" id="NovelTypeMap">
+		<result property="nname" column="nname" />
+		<association property="novelType" javaType="NovelType">
+			<result property="tname" column="tname" />
+		</association>
+	</resultMap>-->
+			
+	<!-- 查询所有待审核的小说 -->
+	<select id="findAllUncheckNovel" parameterType="Novel" resultMap="NovelResultMap">
+		select * from novel where novel.standby_1='待审核'
+	</select>
+	<!-- 查询待审核的小说 -->
+	<select id="uncheckNovel" parameterType="Novel" resultMap="NovelResultMap">
+		select nid,novel_type.tname,author.aname,author.pan_name,nname,npicture,ndescription,nstatus,novel.standby_1
+			from novel_type
+			inner join novel
+			on novel_type.tid=novel.tid
+			inner join author
+			on author.aid=novel.aid
+			where novel.standby_1='待审核' 
+			limit #{start},#{end}
+	</select>
+	
+	<!-- 通过待审查的小说 -->
+	<update id="passNovel" parameterType="Novel">
+		update novel set standby_1='通过' where nid in (#{nid});
+	</update>
+	
+	<!-- 不通过待审查的小说 -->
+	<update id="unpassNovel" parameterType="Novel">
+		update novel set standby_1='未通过' where nid in (#{nid});
+	</update>
+	
+	
+	<!-- 显示作品推荐区的数据 -->
+	<select id="novelrecommand"  parameterType="Novel" resultMap="NovelResultMap">
+		select nid,novel_type.tid,novel_type.tname,author.pan_name,nname
+		from novel_type
+		inner join novel
+		on novel_type.tid=novel.tid
+		inner join author
+		on author.aid=novel.aid
+		where nid>=( (select max(nid) from novel)-(select min(nid) from novel)  )*RAND()
+		+( select min(nid) from novel ) and novel.standby_1='通过'  limit 9;
+	</select>
+	
+	<select id="recommand"  parameterType="Novel" resultMap="NovelResultMap">
+		select nid,novel_type.tid,novel_type.tname,author.pan_name,nname,npicture,ndescription
+		from novel_type
+		inner join novel
+		on novel_type.tid=novel.tid
+		inner join author
+		on author.aid=novel.aid
+		where nid>=( (select max(nid) from novel)-(select min(nid) from novel)  )*RAND()
+		+( select min(nid) from novel ) and novel.standby_1='通过' limit 4;
+	</select>
+	
+
+
+	<!-- 根据小说id查询作者信息 -->
+	<resultMap type="Novel" id="NovelMap">
+		<id property="nid" column="nid" />
+		<!-- property是写的bean类的别名,javaType是bean的名字 -->
+		<association property="author" javaType="Author">
+			<id property="aid" column="aid" />
+			<result property="aname" column="aname" />
+			<result property="uid" column="uid" />
+			<result property="pan_name" column="pan_name" />
+			<result property="aage" column="aage" />
+			<result property="agrade" column="agrade" />
+			<result property="acard" column="acard" />
+			<result property="atel" column="atel" />
+		</association>
+	</resultMap>
+	
+	<!-- 分页查询小说 -->
+	<resultMap type="Novel" id="NovelResultMap">
+		<id property="nid" column="nid" />
+		<result property="tid" column="tid" />
+		<result property="aid" column="aid" />
+		<result property="tname" column="tname" />
+		<result property="aname" column="aname" />
+		<result property="pan_name" column="pan_name" />
+		<result property="nname" column="nname" />
+		<result property="npicture" column="npicture" />
+		<result property="ndescription" column="ndescription" />
+		<result property="nstatus" column="nstatus" />
+		<result property="standby_1" column="standby_1" />
+	</resultMap>
+
+
+	<resultMap type="Novel" id="NovelTypeBynid">
+		<id property="nid" column="nid" />
+		<result property="tid" column="tid" />
+		<result property="aid" column="aid" />
+		<result property="tname" column="tname" />
+		<result property="nname" column="nname" />
+		<result property="npicture" column="npicture" />
+		<result property="ndescription" column="ndescription" />
+		<result property="nstatus" column="nstatus" />
+	</resultMap>
+
+</mapper>

@@ -1,0 +1,61 @@
+<link href="css/showadailytalk.css" type="text/css"
+	rel="stylesheet">
+<script type="text/javascript" language="javascript"
+	src="js/showhistoryadailytalk.js"></script>
+<script type="text/javascript" language="javascript"
+	src="js/findcheckinginfo.js"></script>
+	<link rel="stylesheet" href="css/szindex.css" type="text/css"></link>
+<script type="text/javascript" src="js/checking.js"></script>
+<script type="text/javascript" src="js/dateChoose.js"></script>
+	<script src="http://lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.js"></script>
+<script type="text/javascript">
+!window.jQuery && document.write('<script src=js/jquery-1.9.1.js><\/script>');
+</script>
+<body>
+	<center>
+		<table width="860" border="0" cellpadding="0" cellspacing="0">
+			<tr align="center" height="60">
+				<td colspan="4" align="center" valign="middle"></td>
+			</tr>
+			<tr height="20">
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td width="10%" class="fontColor">学期编号：</td>
+				<td width="16%"><select name="semester" id="semester">
+						<option value="0">--请选择--</option>
+						<option value="S1">S1</option>
+						<option value="S2">S2</option>
+						<option value="S3">S3</option>
+				</select>
+				</td>
+				<td width="74%" class="fontColor linefontsize">查询日期： <input
+						type="text" id="startDate" name="startDate" readonly="readonly"
+						onclick="fPopCalendar(event,this,this)" onfocus="this.select()" />&nbsp;
+						到 &nbsp;<input type="text" id="endDate" name="endDate" readonly="readonly"
+						onclick="fPopCalendar(event,this,this)" onfocus="this.select()" />&nbsp;&nbsp;&nbsp;&nbsp;
+					<select name="dateTime" id="dateTime" class='select2'>
+						<option value="0" selected="selected">--请选择--</option>
+						<option value="上午">上午</option>
+						<option value="下午">下午</option>
+						<option value="晚上">晚上</option>
+				</select>
+				</td>
+				<td class="fontColor linefontsize" align="right"><input
+					name="btnView" type="button" class="inp_L1" id="btnView"
+					onClick="findCheckingInfoByMe()"
+					onMouseOver="this.className='inp_L2'"
+					onMouseOut="this.className='inp_L1'" value="查询" />
+				</td>
+			</tr>
+		</table>
+		<br />
+		<hr size="2" color="blue" width="80%" />
+		<br />
+		<div id="showresultInfo">
+			<br /> <br /> <span class="fontColor"
+				style="color:red;font-weight:bold;font-size:18px;">提示：请在上面选择您的查询条件后，点击查询!</span>
+		</div>
+	</center>
+</body>
+

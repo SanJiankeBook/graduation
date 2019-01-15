@@ -1,0 +1,78 @@
+    
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+    <link rel="stylesheet" href="../../css/szindex.css" type="text/css"></link>
+    <!-- <script src="http://lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.js"></script> -->
+<script type="text/javascript">
+!window.jQuery && document.write('<script src=../../js/jquery-1.9.1.js><\/script>');
+</script>
+ 	<script type="text/javascript" src="../../js/listclass.js"></script>
+  
+
+  </head>
+  
+ <body>
+<form id="frmClass" name="frmClass" method="post" >
+<table width="90%" align="center" border="0" cellpadding="0" cellspacing="0">
+  <tr>
+    <td height="65" align="center">
+      <img src="images/t03.gif" width="595" height="33" alt=""/></td>
+  </tr>
+  <tr>
+    <td>
+      <table width="90%" align="center" border="0px" cellspacing="0" cellpadding="0">
+        <tr>
+          <td>
+           <table width="90%" align="center" height="36" border="0px" cellpadding="0" cellspacing="0">
+              <tr>
+            		<td width="15%" height="36">
+              			<label  align="left"  class="fontColor">学期名称：</label>
+              		</td>	
+              		<td  width="30%" >
+              		 	<input  id="semesterS1" name="semester"  type="radio"    value="S1"  checked    onClick="changeSemester(this.value);">S1
+              		 	<input  id="semesterS2" name="semester"  type="radio"    value="S2"  onClick="changeSemester(this.value);">S2
+              		 	<input  id="semesterS3" name="semester"  type="radio"    value="S3"  onClick="changeSemester(this.value);">S3
+              		 </td>	
+              		 
+              		 <td width="36%">
+              		 	<span id="message" class="fontColor">查询到  个班级</span>
+              		 </td>
+	            </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+      <br>
+      <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td id="delete_text">
+            <table width="90%" align="center" border="0" align="center" cellpadding="1" bordercolor="#FFFFFF" cellspacing="0">
+            <thead>
+              <tr>
+	                <th bordercolor="#7EA6DC">班级名称</th>
+	                <th bordercolor="#7EA6DC">班级描述</th>
+	                <th bordercolor="#7EA6DC">考生数量</th>
+	                <th bordercolor="#7EA6DC">开班日期</th>
+	                <th bordercolor="#7EA6DC">结束日期</th>
+	                <th bordercolor="#7EA6DC">信息</th>
+					<th bordercolor="#7EA6DC">操作</th>
+              </tr>
+             
+              </thead>
+              <tbody id="showlist">
+                </tbody>
+            </table>
+          </td>
+        </tr>
+      </table>
+      <table height="30" width="90%" align="center" border="0px" cellspacing="0" cellpadding="0">
+        <c:if test="${pageNum!=0}">
+          <tr height="40">
+            <td>&nbsp;</td>
+          </tr>
+        </c:if>
+      </table>
+    </td>
+  </tr>
+</table>
+</form>
+

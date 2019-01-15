@@ -1,0 +1,97 @@
+<link rel="stylesheet" href="../../../css/szindex.css" type="text/css"></link>
+<!-- <script src="http://lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.js"></script> -->
+<script type="text/javascript">
+!window.jQuery && document.write('<script src=../../../js/jquery-1.9.1.js><\/script>');
+</script>
+<script type="text/javascript" src="../../../js/updateAuthorityN.js"></script>
+
+<body>
+	<form method="post">
+		<table width="630" height="253" border="0" cellpadding="0"
+			cellspacing="0">
+			<tr>
+				<td height="60">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<table width="630" height="191" border="0" cellpadding="0"
+						cellspacing="0">
+						<!-- <tr>
+							<td>
+								<table width="100%" height="30" border="0" cellpadding="0"
+									cellspacing="0">
+									<tr>
+										<td class="fontColor" width="11%">用户角色：</td>
+										<td align="left" width="13%">
+											1为管理员 <input type="radio" name="userRole" value="2"
+											id="urole2" checked="checked" /> 管理员</td>
+										<td width="72%"><input type="radio" name="userRole"
+											value="1" id="urole1" /> 教员</td>
+									</tr>
+								</table></td>
+						</tr> -->
+						<tr>
+							<td>
+								<table width="100%" height="93" border="0" cellpadding="0"
+									cellspacing="0">
+									<tr>
+										<td width="11%" height="32" class="fontColor">用户名：</td>
+										<td height="32"><label id="username"></label></td>
+										<td width="60%" height="32" align="left">
+										<input type="hidden" id="uid"/>
+										<input type="hidden" id="urole"/>
+										<span id="user_Span">&nbsp;</span></td>
+									</tr>
+									<tr>
+										<td height="32" class="fontColor">旧密码：</td>
+										<td height="32"><input name="password" type="password"
+											id="oldpassword" " /></td>
+										<td width="60%" height="32" align="left"><span
+											class="prompt" id="pass_Span_1">*</span></td>
+									</tr>
+									<tr>
+										<td height="32" class="fontColor">新密码：</td>
+										<td height="32"><input name="password" type="password"
+											id="txtPass" onblur="checkPassword();" /></td>
+										<td width="60%" height="32" align="left"><span
+											class="prompt" id="pass_Span">*</span></td>
+									</tr>
+									<tr>
+										<td height="32" class="fontColor">确认密码：</td>
+										<td height="32"><input name="confirm" type="password"
+											id="txtConfirm" onBlur="checkConfirm();" /></td>
+										<td width="60%" height="32" align="left"><span
+											class="prompt" id="confirm_Span">*</span></td>
+									</tr>
+								</table></td>
+						</tr>
+						<tr>
+							<td>
+								<table width="100%" border="0" cellspacing="0" cellpadding="0">
+									<tr>
+										<td width="19%" align="center"><input type="button"
+											class="inp_L1" onClick="updateUser()" value="修 改"
+											onMouseOver="this.className='inp_L2'"
+											onMouseOut="this.className='inp_L1'" />
+										</td>
+										<td width="21%" height="34" align="center"><label></label>
+											<input name="reset" type="button" class="inp_L1" value="重 置"
+											onMouseOver="this.className='inp_L2'"
+											onMouseOut="this.className='inp_L1'" onClick="resetForm()" />
+										</td>
+
+										<td width="60%"><span id="span_info"></span>
+										</td>
+									</tr>
+								</table></td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+						</tr>
+					</table></td>
+			</tr>
+		</table>
+	</form>
+	<p>&nbsp;</p>
+</body>

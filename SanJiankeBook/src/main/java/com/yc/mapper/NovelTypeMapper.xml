@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.yc.mapper.NovelTypeMapper">
+	<!-- 检验用户登录 <select id="userLogin" parameterType=""> select uname,upassword 
+		from user where uname=#{uname} and upassword=#{upassword} </select> -->
+
+	<select id="getAllNovelType" resultType="NovelType">
+		select * from novel_type
+	</select>
+
+	<!-- 查询所有类型 -->
+	<select id="getAllType" resultType="NovelType">
+		select tname from
+		novel_type
+	</select>
+	
+	<!-- 根据类型名查询tid -->
+	<select id="getTid" resultType="NovelType">
+		select * from
+		novel_type where tname=#{tname} 
+	</select>
+
+</mapper>

@@ -1,0 +1,410 @@
+<link id="easyuiTheme" rel="stylesheet" type="text/css" href="../../jslib/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="../../jslib/themes/icon.css">
+<!-- <script type="text/javascript" src="http://lib.sinaapp.com/js/jquery/2.0/jquery.min.js"></script> -->
+<script type="text/javascript">
+	!window.jQuery
+			&& document
+					.write('<script src=../../jslib/jquery.min.js><\/script>');
+</script>
+<script type="text/javascript" src="../../jslib/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../jslib/jeasyui.common.js"></script>
+<link rel="stylesheet" href="../../css/szindex.css" type="text/css"></link>
+<script type="text/javascript" src="../../js/createoption.js"></script>
+<script type="text/javascript" src="../../js/ajax.js"></script>
+<script type="text/javascript" src="../../jslib/locale/easyui-lang-zh_CN.js"></script>
+
+
+
+<!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+<script type="text/javascript">
+	$(function() {
+		showEditiontName();
+		//showSubjectNames();
+	})
+
+	function showSubjectNames() {
+		$.post("/Examination2.0/chapter_subjectName.action", function(obj) {
+			//var obj = eval(json);// 转换后的JSON对象
+
+			for (var i = 0; i < obj.length; i++) {
+				$("#subject_subjectName").append(
+						"<option value='" + (i + 1) + "'>" + obj[i].subjectName
+								+ "</option>");
+
+			}
+		});
+	}
+
+	function showEditiontName() {
+		$
+				.post(
+						"/Examination2.0/course_edition.action",
+						function(obj) {
+							for (var i = 0; i < obj.length; i++) {
+								$("#subject_editionName").append(
+										"<option value='" + (i + 1) + "'>"
+												+ obj[i].editionName
+												+ "</option>");
+							}
+							$("#subject_editionName").get(0).selectedIndex = 1;
+							$('#back_kcwh_datagrid')
+									.datagrid(
+											{
+												url : '/Examination2.0/subject_showSubject.action',
+												queryParams : {
+													editionName : $(
+															"#subject_editionName")
+															.find(
+																	"option:selected")
+															.text()
+												},
+												fit : true,
+												border : true,
+												fitColumns : true,
+												pagination : true,
+												singleSelect : true,
+												sortOrder : 'asc', //排序规则
+												pageList : [ 5, 10, 15, 20, 30,
+														50, 100 ], //每页多少条
+												pageSize : 50, //默认每页多少条
+												rownumbers : true, //排序ID
+												singleSelect : true,
+
+												columns : [ [
+														{
+															filed : 'id',
+															title : '编号',
+															checkbox : true,
+														},
+														{
+															field : 'editionName',
+															title : '版本',
+															width : 100,
+															align : 'center',
+														},
+														{
+															field : 'semester',
+															title : '学期',
+															align : 'center',
+															sortable : true
+														//可排序
+														},
+														{
+															field : 'subjectName',
+															title : '科目名',
+															width : 150,
+															align : 'center',
+															editor : {
+																type : 'validatebox',
+															}
+														},
+														{
+															field : 'seq',
+															title : '排序',
+															align : 'center',
+															sortable : true,
+															editor : {
+																type : 'validatebox',
+															}
+														},
+														{
+															field : 'chapterCount',
+															title : '章节数',
+															sortable : true,
+															align : 'center',
+														},
+														{
+															field : 'action',
+															title : '操作',
+															width : 150,
+															align : 'center',
+															formatter : function(
+																	value,
+																	row_1,
+																	index) {
+																if (row_1.editing) {
+																	var s = '<a href="#" onclick="saverow('
+																			+ index
+																			+ ')">保存</a> ';
+																	var c = '<a href="#" onclick="cancelrow('
+																			+ index
+																			+ ')">取消</a>';
+																	return s
+																			+ c;
+																} else {
+																	var e = '<a href="#" onclick="editrow('
+																			+ index
+																			+ ')">编辑</a> ';
+																	//var d = '<a href="#" onclick="deleterow('
+																	//		+ index
+																	//		+ ')">删除</a>';
+																	//return e
+																	//		+ d;
+																	return e;
+																}
+															}
+
+														} ] ],
+
+												toolbar : [ {
+													text : '添加',
+													iconCls : 'icon-add',
+													handler : function() {
+														add();
+														showSubjectName();
+													}
+												}, '-', {
+													text : '取消',
+													iconCls : 'icon-cancel',
+													handler : cancelall
+												} ],
+												onBeforeEdit : function(index,
+														row_1) {
+													row_1.editing = true;
+													$('#back_kcwh_datagrid')
+															.datagrid(
+																	'refreshRow',
+																	index);
+													editcount++;
+												},
+												onAfterEdit : function(index,
+														row_1) {
+													row_1.editing = false;
+													$('#back_kcwh_datagrid')
+															.datagrid(
+																	'refreshRow',
+																	index);
+													editcount--;
+												},
+												onCancelEdit : function(index,
+														row_1) {
+													row_1.editing = false;
+													$('#back_kcwh_datagrid')
+															.datagrid(
+																	'refreshRow',
+																	index);
+													editcount--;
+												}
+											});
+						});
+	}
+
+	var editcount = 0;
+	var OsubjectName = "";
+	var Oremark = "";
+	function editrow(index) {
+		$('#back_kcwh_datagrid').datagrid('selectRow', index);
+		var rows = $('#back_kcwh_datagrid').datagrid('getChecked');
+		OsubjectName = rows[0].subjectName;
+		$('#back_kcwh_datagrid').datagrid('beginEdit', index);
+
+	}
+	function deleterow(index) {
+		$('#back_kcwh_datagrid').datagrid('selectRow', index);
+		var rows = $('#back_kcwh_datagrid').datagrid('getChecked');
+
+		$.messager.confirm('确认', '是否真的删除?', function(r) {
+			if (r) {
+				$('#back_kcwh_datagrid').datagrid('deleteRow', index);
+				var id = rows[0].id;
+				$.ajax({
+					url : '/Examination2.0/subject_deleteSubject.action',
+					data : {
+						sid : id
+					},
+					dataType : 'json',
+					success : function(obj) {
+						$("#back_kcwh_datagrid").datagrid('load', {});
+						$("#back_kcwh_datagrid").datagrid('clearSelections');
+					}
+				});
+			}
+		});
+	}
+	function saverow(index) {
+		$('#back_kcwh_datagrid').datagrid('endEdit', index);
+		$('#back_kcwh_datagrid').datagrid('selectRow', index);
+		var rows = $('#back_kcwh_datagrid').datagrid('getChecked');
+		var sid = rows[0].id;
+		var newSubName = rows[0].subjectName;
+		var seq=rows[0].seq;
+		if (newSubName == ""
+				|| newSubName == null) {
+			alert("课程名不能为空");
+			$('#back_kcwh_datagrid').datagrid('beginEdit', index);
+			return;
+		}
+
+		$.ajax({
+			url : '/Examination2.0/subject_updateSubject.action',
+			data : {
+				sid : sid,
+				newSubName : newSubName,
+				seq:seq,
+			},
+			method:'POST',
+			dataType : 'json',
+			success : function(obj) {
+				if (obj.responseCode == 1) {
+					alert(obj.errorMessage);
+				} else {
+					searchSubject();
+					//$("#back_kcwh_datagrid").datagrid('clearSelections');
+				}
+
+			}
+		});
+
+	}
+	function cancelrow(index) {
+		$('#back_kcwh_datagrid').datagrid('cancelEdit', index);
+		$('#back_kcwh_datagrid').datagrid('unselectRow', index);
+	}
+	function cancelall() {
+		$('#back_kcwh_datagrid').datagrid('rejectChanges');
+	}
+
+	function add() {
+		$('#subjectForm input').val('');
+		$('#addsubjectForm').dialog('open');
+	}
+
+	function searchSubject() {
+		var editionName = $("#subject_editionName").find("option:selected")
+				.text().trim();
+		var semester = $("#semester").find("option:selected").text().trim();
+		$('#back_kcwh_datagrid').datagrid('load', {
+			"editionName" : editionName,
+			"semester" : semester
+		});
+	}
+
+	function clearSubject() {
+		$("#subject_editionName").val("");
+		$("#semester").val("");
+		$("#subject_subjectName").val("");
+		$('#back_kcwh_datagrid').datagrid('load', {});
+	}
+
+	//当添加框一加载  就显示科目
+	function showSubjectName() {
+		$.post("/Examination2.0/course_edition.action", function(obj) {
+			$("#addEditionName").html("");
+			for (var i = 0; i < obj.length; i++) {
+				$("#addEditionName").append(
+						"<option value='" + (i + 1) + "'>" + obj[i].editionName
+								+ "</option>");
+			}
+		});
+	}
+	//添加科目
+	function chkAddsubject() {
+		var editionName = $("#addEditionName").find("option:selected").text();
+		var semester = $("#subject_semester").find("option:selected").text();
+		var subjectName = $("#addSubjectName").val();
+		var seq=$("#addSubjectSeq").val();
+		if (subjectName == null || subjectName == "") {
+			alert("科目名不能为空");
+			return;
+		}
+
+		$.post("/Examination2.0/subject_addSubject.action", {
+			editionName : editionName,
+			subjectName : subjectName,
+			semester : semester, 
+			seq:seq
+		}, function(obj) {
+			//var obj = $.parseJSON(json);
+			if (obj.responseCode == 0) {
+				alert("添加章节成功");
+				$("#addSubjectName").val("");
+				searchSubject();
+			} else if (obj.responseCode == 1) {
+				alert(obj.errorMessage);
+			}
+
+		});
+	}
+</script>
+
+
+
+<body>
+
+	<div id="cc" class="easyui-layout" style="width: 600px; height: 400px;" data-options="fit:true">
+
+		<div data-options="region:'north',title:'综合查询',split:true" style="height: 80px">
+			<form id="searchs">
+				<table>
+					<tr>
+						<td>版本</td>
+						<td><select id="subject_editionName">
+								<option value='0' selected></option>
+						</select></td>
+
+						<td>学期</td>
+						<td><select id="semester"><option value="0"></option>
+								<option value="1">S1</option>
+								<option value="2">S2</option>
+								<option value="3">S3</option>
+						</select></td>
+
+						<!--  
+						<td>科目名</td>
+						<td>
+							<select id="subject_subjectName" name="subjectName" ><option value="0"></option>
+						</select>
+						
+						</td>
+						-->
+
+
+						<td colspan="2"><a id="btn" href="#" onclick="searchSubject()" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a> <a id="btn1" href="#" onclick="clearSubject()"
+							class="easyui-linkbutton" data-options="iconCls:'icon-no'">清空</a></td>
+					</tr>
+				</table>
+			</form>
+		</div>
+
+		<div id="back_kcwh_datagrid_div" data-options="region:'center',title:'科目列表'">
+			<table id="back_kcwh_datagrid">
+
+			</table>
+		</div>
+
+		<div id="addsubjectForm" class="easyui-dialog" style="width: 700px; height: 120px;" data-options="title:'添加科目',closed:true">
+
+			<form id="subjectForm" method="post">
+				<table width="100%">
+					<thead>
+						<tr>
+							<th align="center" bgcolor="#CCCCCC" width="20%">版本</th>
+							<th align="center" bgcolor="#CCCCCC" width="20%">学期</th>
+							<th align="center" width="100px" width="30%">科目名称</th>
+							<th align="center" width="10%" >排序</th>
+							<th align="center" width="20%">操 作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><select name="subjectName" id="addEditionName" style="width: 100px"></select></td>
+
+							<td align="center" ><select name="semester" style="width: 100px" id="subject_semester">
+									<option value="0">S1</option>
+									<option value="1">S2</option>
+									<option value="2">S3</option>
+							</select></td>
+
+							<td align="center" ><input name="subjectName" type="text" style="width: 200px" class="text4" id="addSubjectName" size="8" maxlength="30" /></td>
+							<td align="center"><input name="seq" id="addSubjectSeq" type="text" /></td>
+							<td align="center" ><a id="btn_add_1" href="#" onclick="chkAddsubject()" class="easyui-linkbutton">添加</a></td>
+					</tbody>
+				</table>
+
+			</form>
+
+
+		</div>
+	</div>
+
+	<br>

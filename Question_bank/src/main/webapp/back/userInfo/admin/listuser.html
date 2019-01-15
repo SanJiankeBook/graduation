@@ -1,0 +1,147 @@
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" language="javascript"
+	src="../../../js/sendrequest.js"></script>
+
+<link rel="stylesheet" href="../../../css/extreme.css" type="text/css"></link>
+<!-- <script src="http://lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.js"></script> -->
+<script type="text/javascript">
+!window.jQuery && document.write('<script src=../../../js/jquery-1.9.1.js><\/script>');
+</script>
+<script type="text/javascript" src="../../../js/listUserN.js"></script>
+<style type="text/css">
+	#firstPage,#upPage,#downPage,#lastPage{
+		background-image: url(../../../images/bg_x.jpg);
+		background-repeat: no-repeat;
+		BORDER-TOP-WIDTH: 0px;
+		BACKGROUND-POSITION: -4px -4px;
+		BORDER-LEFT-WIDTH: 0px;
+		BORDER-BOTTOM-WIDTH: 0px;
+		COLOR: #464646;
+		WIDTH: 68px;
+		LINE-HEIGHT: 23px;
+		HEIGHT: 23px;
+		BORDER-RIGHT-WIDTH: 0px
+	}
+	#firstPage:hover,#upPage:hover,#downPage:hover,#lastPage:hover{
+		background-image: url(../../../images/bg_x.jpg);
+		background-repeat: no-repeat;
+		BORDER-TOP-WIDTH: 0px;
+		BACKGROUND-POSITION: -4px -30px;
+		BORDER-LEFT-WIDTH: 0px;
+		BORDER-BOTTOM-WIDTH: 0px;
+		COLOR: #464646;
+		WIDTH: 68px;
+		LINE-HEIGHT: 23px;
+		HEIGHT: 23px;
+		BORDER-RIGHT-WIDTH: 0px
+	}
+</style>
+<body>
+	<table width="630" height="195" border="0" cellpadding="0"
+		cellspacing="0">
+		<tr>
+			<td height="65" align="center"><br>
+			<br>
+			<br></td>
+		</tr>
+		<tr>
+			<td align="center">
+				<table width="80%" border="0" align="center" cellspacing="0">
+					<tr>
+						<td>
+							<table width="100%" border="0" cellspacing="0">
+								<tr>
+									<td width="15%" height="41">
+										<div align="left" class="fontColor">用户角色:</div></td>
+									<td width="38%">
+										<div align="left">
+											<select name="authorities" id="authorities">
+												<option>--请选择--</option>
+											</select>
+										</div></td>
+									<td class="fontColor"><span id="strPrompt"> </span></td>
+								</tr>
+								<tr>
+									<td height="37">
+										<div align="left"></div>
+										<div align="left">
+											<span class="fontColor">显示行数:</span>
+										</div></td>
+									<td width="38%"><input name="displayRows" type="text"
+										class="text4" id="displayRows" onKeyUp="inputIsNaN(this)"
+										value="" size="20" maxlength="5"></td>
+									<td width="47%"><input name="search" id="search"
+										type="button" class="inp_L1" value="搜索"
+										onMouseOver="this.className='inp_L2'"
+										onMouseOut="this.className='inp_L1'" /></td>
+								</tr>
+								<tr>
+									<td height="16">&nbsp;</td>
+									<td colspan="2"><font color="red"> <span
+											id="strPrompt"></span> </font></td>
+								</tr>
+							</table></td>
+					</tr>
+					<tr>
+						<td>
+							<table width="100%" border="0" align="center" cellspacing="0"
+								id="tab_showWritingPaper">
+
+								<tr>
+								</tr>
+								<tr>
+									<td>
+										<table width="100%" border="1" align="center" cellpadding="1"
+											bordercolor="#FFFFFF" cellspacing="1" id="tbPapershowInfo">
+
+
+
+										</table></td>
+								</tr>
+							</table>
+					<tr>
+						<td>
+							<table width="630" height="40" border="0" cellpadding="0"
+								cellspacing="0">
+								<tr height="40">
+									<td>
+										<table width="630" border="0" cellspacing="0" cellpadding="0">
+											<tr>
+												<td><br> 第 <span id="tabCurrentPage"></span> 页
+														&nbsp; 共<span id="tabTotalPage"></span> 页 &nbsp;
+														<input id="firstPage" type="button"  value="首页"
+														onClick="skipToPageNum('first')"></input> &nbsp; <input
+														id="upPage" type="button"  value="上一页" onClick="skipToPageNum('up')"></input>
+														&nbsp; <input id="downPage" type="button"  value="下一页"
+														onClick="skipToPageNum('down')"></input> &nbsp;<input value="末页"
+														type="button" id="lastPage" onClick="skipToPageNum('last')"></input>
+														&nbsp;转到第:<input name="pageNum" type="text"
+														class="text4" id="pageNume" onkeyup="inputIsNaN(this)"
+														size="5">页<input type="hidden"
+														value="${sumPage}" name="sumPage" /></td>
+													<td><br> <input name="go" type="button"
+													class="inp_L1" onMouseOver="this.className='inp_L2'"
+													onMouseOut="this.className='inp_L1'" id="searchGo"
+													value="GO" /></td>
+											</tr>
+											<tr>
+												<td>&nbsp;</td>
+											</tr>
+											<tr align="center">
+												<td><font color="red"> <span id="gradePrompt"></span>
+												</font></td>
+											</tr>
+										</table></td>
+								</tr>
+								<tr>
+									<td align="center"><font color="red"> <span
+											id="gradePaperPrompt">&nbsp;</span> </font></td>
+								</tr>
+							</table></td>
+					</tr>
+				</table></td>
+		</tr>
+	</table>
+	</form>
+</body>

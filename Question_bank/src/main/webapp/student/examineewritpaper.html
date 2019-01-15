@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>考生笔试答卷</title>
+		<link href="/Examination2.0/css/szindex.css" rel="stylesheet"
+			type="text/css">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<style type="text/css">
+<!--
+.style3 {
+	color: #FFFFFF
+}
+
+.style14 {
+	font-size: 11pt
+}
+
+.style16 {
+	color: #FFFFFF;
+	font-size: 12pt;
+	font-weight: bold;
+}
+
+.style17 {
+	font-size: 9pt
+}
+
+.style18 {
+	color: #FFFFFF;
+	font-size: 9pt;
+}
+
+body {
+	margin-left: 0px;
+	margin-right: 0px;
+}
+
+textarea {
+	overflow: hidden;
+}
+-->
+</style>
+		<script type="" language="javascript"
+			src="/Examination2.0/js/creatXML.js"></script>
+		
+		<script src="http://lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.js"></script>
+<script type="text/javascript">
+!window.jQuery && document.write('<script src=../js/jquery-1.9.1.js><\/script>');
+</script>
+		
+		<script type="text/javascript" src="../js/examineewritpaperN.js"></script>
+	</head>
+	<body >
+		<form name="form1">
+			<table width="800" border="0" cellspacing="0" cellpadding="0"
+				align="center">
+				<tr valign="bottom">
+					<td height="40" colspan="3" align="center" bgcolor="#0066FF">
+						<span class="style16" id="paperName"> 
+							</span>
+					</td>
+				</tr>
+				<tr>
+					<td width="385" align="center" valign="middle" bgcolor="#0066FF">
+					</td>
+					<td width="253" valign="middle" bgcolor="#0066FF">
+						<div align="center">
+						</div>
+						<span class="style3" >试卷编号:<span class="style18" id="paperId"></span>  </span>
+					</td>
+					<td width="162" bgcolor="#0066FF">
+						<img src="/Examination2.0/images/pen.gif"
+							width="133" height="41" alt="">
+					</td>
+				</tr>
+				<tr>
+					<td width="385" bgcolor="#0066FF">
+						<span class="style3" >&nbsp; &nbsp;考试班级: <span class="style18" id="examineeClass">
+							</span></span>
+					</td>
+					<td height="25" colspan="2" bgcolor="#0066FF">
+						<span class="style3" >考生姓名: <span class="style18" id="stuName"></span></span>
+					</td>
+				</tr>
+				<tr>
+					<td height="37" colspan="3">
+						<table width="100%" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td width="385" height="35" 
+									background="/Examination2.0/images/top03bg.gif">
+									<span class="style3" >&nbsp; &nbsp;此卷题目数量( 题 )：
+										<span class="style18" id="countOfQuestion"> &nbsp; </span> </span>
+									<br>
+								</td>
+								<td width="415"
+									background="/Examination2.0/images/top03bg.gif">
+									<span class="style3">规定答卷时间(分钟)：<span class="style18" id="timesConsume"></span>
+									</span>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3">
+						<table width="100%" border="1" cellspacing="0" cellpadding="0">
+							<tr>
+								<td width="15%" valign="top">
+									<table width="100%" border="0" cellspacing="0">
+										<tr>
+											<td height="0" id="tdTop">
+											</td>
+										</tr>
+										<tr>
+											<td id="tdTop">
+											</td>
+										</tr>
+										<tr>
+											<td height="100%">
+												<div id="divQuestionCounts" >
+												</div>
+											</td>
+										</tr>
+										<tr>
+											<td height="100%">
+												&nbsp;
+											</td>
+										</tr>
+									</table>
+									<div align="center">
+										<img src="/Examination2.0/images/bokefav.gif"
+											alt="">
+									</div>
+								</td>
+								<td width="85%" id="questionInfoTab">
+										
+									</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</body>
+</html>

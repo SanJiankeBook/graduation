@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link href="../css/szindex.css" type=text/css rel=stylesheet>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>考生笔试评卷结果</title>
+<script src="http://lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.js"></script>
+<script type="text/javascript">
+!window.jQuery && document.write('<script src=../js/jquery-1.9.1.js><\/script>');
+</script>
+<script type="text/javascript" src="../js/jsmathN.js"></script>
+<script type="text/javascript" src="../js/jscharts.js"></script>
+<script type="text/javascript" src="../js/showexamineewritinggradeN.js"></script>
+<style type="text/css">
+<!--
+th {
+	background-color: #0099CC;
+}
+
+.trOdd {
+	background-color: #FFFFFF;
+}
+
+.trEven {
+	background-color: #E3F2F4;
+}
+
+.STYLE3 {
+	color: #FFFFFF
+}
+-->
+</style>
+</head>
+
+
+<body>
+	<table width="630" border="0" align="left" cellpadding="0"
+		cellspacing="0">
+		<tr height="80">
+			<td align="center"><img src="../images/t03005.GIF"
+				width="595" height="33" /></td>
+		</tr>
+		<tr>
+			<td>
+				<table width="630" border="0" cellspacing="0" cellpadding="0">
+					<tr>
+						<td>
+							<table width="100%" height="77" border="0" cellpadding="0"
+								cellspacing="0">
+								<tr>
+									<td width="10%">
+										<div align="left" class="fontColor">试卷编号:</div></td>
+									<td width="40%"><label> <input name="paperId"
+											size="28" type="text" class="text4" id="paperId"
+											 readonly /> </label></td>
+									<td width="10%">
+										<div align="left" class="fontColor">考试班级:</div></td>
+									<td width="40%"><label> <input name="examClass"
+											type="text" class="text4" id="examineeClass"
+											 readonly /> </label></td>
+								</tr>
+								<tr>
+									<td height="44">
+										<div align="left">
+											<span class="fontColor">考生姓名</span>:
+										</div></td>
+									<td><label> <input name="examinee" size="28"
+											type="text" class="text4" id="examineeName"
+											 readonly /> </label></td>
+									<td>
+										<div align="left" class="fontColor">考生得分:</div></td>
+									<td><label> <input name="score" type="text"
+											class="text4" id="score"  readonly />
+									</label></td>
+								</tr>
+							</table></td>
+					</tr>
+					<tr>
+						<td>
+							<div align="left">
+								<table width="100%" height="50" border="0" cellpadding="0"
+									cellspacing="0">
+									<tr>
+										<td width="50%">
+											<p>&nbsp;</p>
+
+											<p>
+												<span class="fontColor">考生章节答对率统计图</span> <br /> <br />
+											</p></td>
+										<!-- <td width="50%" align="center"><input name="Submit"
+											class="inp_L1" type="button" value="浏览答卷"
+											onMouseOver="this.className='inp_L2'"
+											onMouseOut="this.className='inp_L1'" onclick="toShowWritingAnswerPage()" />
+										</td> -->
+									</tr>
+									<tr>
+										<td align="center" colspan="2">
+											<div align="center" id="bargraph">
+												
+											</div></td>
+									</tr>
+								</table>
+							</div></td>
+					</tr>
+					<tr>
+						<td height="20" align="right">
+							<table width="100%" border="0" cellspacing="0" cellpadding="0">
+								<tr>
+									<td width="67%">&nbsp;</td>
+									<td width="33%">
+										<div align="left"></div></td>
+								</tr>
+							</table> <label></label></td>
+					</tr>
+				</table> &nbsp;</td>
+		</tr>
+	</table>
+</body>
+</html>

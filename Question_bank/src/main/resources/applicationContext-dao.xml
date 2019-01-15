@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+
+
+	<import resource="batch.xml" />
+
+
+	<!-- spring batch <bean id="jobLauncher" class="org.springframework.batch.core.launch.support.SimpleJobLauncher"> 
+		<property name="jobRepository" ref="jobRepository" /> </bean> <bean id="jobRepository" 
+		class="org.springframework.batch.core.repository.suppor<context:property-placeholder location="classpath:connectionConfig.properties" />t.MapJobRepositoryFactoryBean"> 
+		</bean> <bean id="messagesItemProcessor" class="com.yc.biz.impl.MessagesItemProcessor" 
+		/> <bean id="messagesItemWriter" class="com.yc.biz.impl.MessagesItemWriter" 
+		/> -->
+
+	<aop:aspectj-autoproxy proxy-target-class="true" />
+
+
+	<!-- 启用aop注解支持 -->
+	<context:annotation-config />
+	<context:component-scan base-package="com.yc" />
+
+	<context:property-placeholder location="classpath:connectionConfig.properties" />
+
+	<!-- druid数据源 -->
+	<bean name="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
+		init-method="init" destroy-method="close">
+		<property name="url" value="${jdbc_url}" />
+		<property name="username" value="${jdbc_username}" />
+		<property name="password" value="${jdbc_password}" />
+
+		<!-- 初始化连接大小 -->
+		<property name="initialSize" value="10" />
+		<!-- 连接池最大使用连接数量 -->
+		<property name="maxActive" value="30" />
+		<!-- 连接池最大空闲 <property name="maxIdle" value="20" /> -->
+		<!-- 连接池最小空闲 -->
+		<property name="minIdle" value="15" />
+		<!-- 获取连接最大等待时间 -->
+		<property name="maxWait" value="6000" />
+
+		<!-- 是否缓存preparedStatement，也就是PSCache。PSCache对支持游标的数据库性能提升巨大，比如说oracle。在mysql下建议关闭 -->
+		<property name="poolPreparedStatements" value="false" />
+		<property name="maxPoolPreparedStatementPerConnectionSize"
+			value="33" />
+
+
+		<property name="validationQuery" value="${validationQuery}" />
+		<property name="testOnBorrow" value="false" />
+		<property name="testOnReturn" value="false" />
+		<property name="testWhileIdle" value="true" />
+
+		<!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+		<property name="timeBetweenEvictionRunsMillis" value="60000" />
+		<!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+		<property name="minEvictableIdleTimeMillis" value="25200000" />
+
+		<!-- 打开removeAbandoned功能 -->
+		<property name="removeAbandoned" value="true" />
+		<!-- 1800秒，也就是30分钟 3600秒 一小时 -->
+		<property name="removeAbandonedTimeout" value="3600" />
+		<!-- 关闭abanded连接时输出错误日志 -->
+		<property name="logAbandoned" value="true" />
+
+		<!-- 监控数据库 开启后，要在web.xml中配置以下，以启用druid <servlet> <servlet-name>DruidStatView</servlet-name> 
+			<servlet-class>com.alibaba.druid.support.http.StatViewServlet</servlet-class> 
+			</servlet> <servlet-mapping> <servlet-name>DruidStatView</servlet-name> <url-pattern>/druid/*</url-pattern> 
+			<servlet-mapping> -->
+		<!-- 配置监控统计拦截的filters, 监控统计："stat",防SQL注入："wall",组合使用： "stat,wall" -->
+		<property name="filters" value="stat" />
+	</bean>
+
+
+	<!-- tomcat中加入的配置 <Resource name="webexamJNDI" auth="Container" type="javax.sql.DataSource" 
+		maxActive="100" maxIdle="30" maxWait="10000" username="sa" password="a" driverClassName="com.microsoft.sqlserver.jdbc.SQLServerDriver" 
+		url="jdbc:sqlserver://192.168.20.15:1055;databaseName=examination"/> <bean 
+		id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean"> <property 
+		name="jndiName"> <value>java:comp/env/webexamJNDI</value> </property> </bean> -->
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">	<!-- 版本4 -->
+		<property name="dataSource" ref="dataSource" />
+		<property name="packagesToScan" value="com.yc.po"></property>
+
+		<property name="hibernateProperties">
+			<value>
+				hibernate.connection.pool_size=${hibernate.connection.pool_size}
+				hibernate.dialect=${hibernate.dialect}
+				hibernate.cache.use_second_level_cache=${hibernate.cache.use_second_level_cache}
+				hibernate.cache.region.factory_class=${hibernate.cache.region.factory_class}
+				hibernate.cache.use_query_cache=${hibernate.cache.use_query_cache}
+				hibernate.current_session_context_class=${hibernate.current_session_context_class}
+				hibernate.show_sql=${hibernate.show_sql}
+				hibernate.format_sql=${hibernate.format_sql}
+				hibernate.hbm2ddl.auto=${hibernate.hbm2ddl.auto}
+			</value>
+		</property>
+	</bean>
+
+
+	<!-- 配置事务管理器 -->
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<!-- aop配置切面 -->
+	<aop:config proxy-target-class="true">
+		<aop:pointcut id="productServiceMethods" expression="execution(* com.yc.biz.impl.*.*(..))" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="productServiceMethods" />
+	</aop:config>
+
+	<!-- 启用事务注解 -->
+	<tx:annotation-driven transaction-manager="transactionManager" />
+
+	<!-- 配置事务的增强 -->
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<!-- 配置哪些方法要加入事务，并配置事务的传播机制 -->
+			<tx:method name="add*" propagation="REQUIRED" />
+			<tx:method name="insert*" propagation="REQUIRED" />
+			<tx:method name="save*" propagation="REQUIRED" />
+			<tx:method name="remove*" propagation="REQUIRED" />
+			<tx:method name="del*" propagation="REQUIRED" />
+			<tx:method name="re*" propagation="REQUIRED" />
+			<tx:method name="update*" propagation="REQUIRED" />
+			<tx:method name="exeUpdate*" propagation="REQUIRED" />
+
+			<!-- <tx:method name="is*" propagation="REQUIRED" /> <tx:method name="get*" 
+				propagation="REQUIRED" /> <tx:method name="find*" propagation="REQUIRED" 
+				/> <tx:method name="search*" propagation="REQUIRED" /> <tx:method name="validate*" 
+				propagation="REQUIRED" /> -->
+			<!-- <tx:method name="get*" propagation="REQUIRED" /> -->
+			<!-- <tx:method name="get*" propagation="REQUIRED" /> -->
+			<tx:method name="*" propagation="REQUIRED" read-only="true" />
+			<!-- <tx:method name="*" propagation="REQUIRED" /> -->
+			<!-- <tx:method name="*" propagation="SUPPORTS" read-only="true" /> -->
+		</tx:attributes>
+	</tx:advice>
+
+	<!-- <bean id="transactionManager1" class="org.springframework.batch.support.transaction.ResourcelessTransactionManager"/> -->
+</beans>

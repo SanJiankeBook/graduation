@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>测评卷密码</title>
+
+<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+<meta http-equiv="description" content="this is my page">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+<link href="../css/szindex.css" type=text/css rel=stylesheet>
+
+<!-- <script src="http://lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.js"></script> -->
+<script type="text/javascript">
+!window.jQuery && document.write('<script src=../js/jquery-1.9.1.js><\/script>');
+</script>
+
+</head>
+<script type="text/javascript">
+	$(function() {
+		var url = window.location.search;
+		var arr = new Array();
+		var arr = url.split("=");
+		pid = arr[1].split("&")[0];
+		openPointPaper=arr[2];
+		$("#paperId3").val(pid);
+	});
+
+	//验证开卷密码
+	function openPintPaper() {
+		//得到试卷编号和密码文本框的值
+		var id = document.getElementById("paperId3").value;
+		var password = document.getElementById("textPassword").value;
+		var btnBeginExam = document.getElementById("btnBeginExam");
+		if (id == "" || password == "") {
+			return false;
+		}
+		btnBeginExam.setAttribute("disabled", "true");
+		document.getElementById("message").innerHTML = "正在打开试卷，请稍候...";
+
+		$.post("/Examination2.0/exam_checkPaperPassword.action?t=" + new Date(), {
+			myid : id,
+			mypwd : password,
+			pid:pid,
+			pwd:openPointPaper
+		}, function(data) {
+			if (data > 0) {
+				document.getElementById("message").innerHTML = ""; //清空
+				location.href = "/Examination2.0/student/doPointPaper.html?pid="+pid;
+			} else {
+				document.getElementById("message").innerHTML = ""; //清空
+				document.getElementById("message").appendChild(
+						document.createTextNode("编号或密码不正确"));
+				btnBeginExam.disabled = false; //必须这样写id.disabled = false，按钮可用
+			}
+		});
+	}
+
+</script>
+
+
+
+<body>
+	<table height="100%" align="center">
+		<tr>
+			<td valign="middle">
+				<table width="633" height="304" border="0" align="center"
+					cellpadding="0" cellspacing="0">
+					<tr>
+						<td colspan="2">
+							<table width="100%" height="415" border="0" align="center"
+								cellpadding="0" cellspacing="0">
+								<tr>
+									<td height="148" colspan="3">
+										<table width="100%" height="41%" border="0" cellspacing="0">
+											<tr>
+												<td width="11%" height="71">&nbsp;</td>
+												<td width="74%"
+													>
+													<div align="center" class="style8">考生登录笔试试卷</div></td>
+												<td width="15%">&nbsp;</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+								<tr>
+									<td width="21%" height="57" align="center" valign="top">
+										<p align="right" class="fontColor">温馨提示：</p>
+									</td>
+									<td align="center" colspan="2"><p align="left">◇
+											登录后请认真答题，交卷后不可以再次进入！</p>
+									</td>
+								</tr>
+								<tr>
+									<td height="30" colspan="3" align="center"><font
+										color="red">
+											<div id="message"></div> </font>
+									</td>
+								</tr>
+								<tr>
+									<td height="22" align="center">&nbsp;</td>
+									<td width="13%" align="center"><div align="left"
+											class="fontColor">测评卷编号:</div></td>
+									<td width="66%" height="22" align="center"><div
+											align="left">
+											<input name="paperId3" type="text" class="text4"
+												id="paperId3" size="40" />
+										</div></td>
+								</tr>
+								<tr>
+									<td height="52"><br></td>
+									<td height="52" class="fontColor">测评卷密码:</td>
+									<td height="52"><input name="textPassword"
+										id="textPassword" type="password" class="text4"></td>
+								</tr>
+								<tr>
+									<td colspan="3">&nbsp;</td>
+								</tr>
+								<tr>
+									<td colspan="2" align="right"></td>
+									<td align="center">
+										<div align="left">
+											<input id="btnBeginExam" name="btnBeginExam" type="button"
+												class="inp_L1" value="开评"
+												onMouseMove="this.className='inp_L2'"
+												onMouseOut="this.className='inp_L1'"
+												onClick="openPintPaper()">
+										</div> <a href="#"
+										onclick="script:window.close()">退出考试登录</a></td>
+								</tr>
+							</table></td>
+					</tr>
+					<tr>
+						<td width="356">&nbsp;</td>
+						<td width="277"></td>
+					</tr>
+				</table></td>
+		</tr>
+	</table>
+</body>
+</html>

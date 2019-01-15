@@ -1,0 +1,425 @@
+<link rel="stylesheet" href="../../css/szindex.css" type="text/css"></link>
+<script type="text/javascript" src="../../js/ajax.js"></script>
+<link id="easyuiTheme" rel="stylesheet" type="text/css" href="../../jslib/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="../../jslib/themes/icon.css">
+<!-- <script type="text/javascript" src="http://lib.sinaapp.com/js/jquery/2.0/jquery.min.js"></script> -->
+<script type="text/javascript">
+!window.jQuery && document.write('<script src=../../jslib/jquery.min.js><\/script>');
+</script>
+<script type="text/javascript" src="../../jslib/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../jslib/jeasyui.common.js"></script>
+<script type="text/javascript" src="../../js/createoption.js"></script>
+<script type="text/javascript" src="../../jslib/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../back/ckeditor/ckeditor.js"></script>
+<script type="text/javascript">
+	$(function() {
+		question=CKEDITOR.replace( 'question',{ height: '200px', width: '600px' } );
+		questionA=CKEDITOR.replace( 'questionA',{ height: '50px', width: '300px' } );
+		questionB=CKEDITOR.replace( 'questionB',{ height: '50px', width: '300px' } );
+		questionC=CKEDITOR.replace( 'questionC',{ height: '50px', width: '300px' } );
+		questionD=CKEDITOR.replace( 'questionD',{ height: '50px', width: '300px' } );
+		createVersionOption();
+		semester = $('input[name="semester"]:checked').val();
+		checkQuestionType(1);
+		version = $('#version').val();
+		createSelectOption(version, semester);
+		subjectId = $('#subject').val();
+		createChapterOption(subjectId);
+	});
+	function show(){
+		$('<div id="edit"/>').dialog({  
+		title: '编辑',   
+		width: 700,   
+		height: 600,
+		top:40,   
+		closed: false,   
+		closable:true,
+		content: '<iframe src=foundwritingquestion.html  frameborder=0 style=border:0;width:100%;height:99.5%;></iframe>',
+		modal: true ,
+		onClose:function(){
+				$(this).dialog('destroy');
+		}
+    });
+	}
+	
+	//记载创建了多少个文件选择框
+	var fileCount = 1;
+	//选择学期
+	/* function checkSemester(s) {
+		semester = s;
+		version = $('#version').val();
+		createSelectOption(version, semester);
+	} */
+	//选择版本
+	/* function changeVersion() {
+		semester = $('input[name="semester"]:checked').val();
+		version = $('#version').val();
+		createSelectOption(version, semester);
+	} */
+	//选择课程
+	function changeSubject() {
+		subjectId = $('#subject').val();
+		createChapterOption(subjectId);
+	}
+	function checkQuestionType(qType) {
+		if (qType == 1) {
+			$("#radioSpan").css("display", "block");
+			$("#checkboxSpan").css("display", "none");
+		} else if (qType == 2) {
+			$("#radioSpan").css("display", "none");
+			$("#checkboxSpan").css("display", "block");
+		}
+	}
+	//查找有没有重复的题目
+	function chkQuestionExist() {
+		var ie = getOs();
+		var queryQues = ""
+		var button = $('#btnView').val();
+
+		//没有选中则返回
+		if (ie == "Firefox") {
+			var textField = document.getElementById('question');
+			queryQues = getTextFieldSelection(textField);
+
+			if (queryQues == null || queryQues == "") {
+				$('#message').html("请先选中题目的一部分，再点查找")
+				return;
+			}
+		} else {
+			queryQues = JTrim(document.selection.createRange().text);
+			if (queryQues == null || queryQues == "") {
+				$('#message').html("请先选中题目的一部分，再点查找")
+				return;
+			}
+		}
+		if (button == "查看详情") {
+			if (window.localStorage) {
+				localStorage.setItem("queryQues", queryQues);
+			} else {
+				Cookie.write("queryQues", queryQues);
+			}
+			show();
+			//		window
+			//				.open('/WebExamination/Jsp/backoperation/foundwritingquestion.html');
+			return;
+		}
+		findQuestbyText(queryQues);
+	}
+
+	function findQuestbyText(queryQues) {
+
+		$.ajax({
+			url : "/Question_bank/qusetion_findQuestbyText.action",
+			type : "post",
+			data : {
+				"question" : queryQues
+			},
+			datatype : "json",
+			success : function(data) {
+				var Object = data;
+				if (Object.responseCode == 0) {
+					if (!isNaN(Object.obj)) {
+						$('#message').html("一共找到" + Object.obj + "题符合要求");
+					} else {
+						$('#message')
+								.html("一共找到" + Object.obj.length + "题符合要求");
+						$('#btnView').val("查看详情");
+					}
+				} else {
+					$('#message').html("没有相同的题目");
+				}
+			}
+		});
+	}
+
+	function resetInfo() {
+		$('#message').html("选中题目一部分，查找题目是否存在");
+		$('#btnView').val("查找");
+	}
+
+	
+	/* function createInputFile() {
+		fileCount++;
+		var spanImageObject = document.getElementById("spanImage");
+		var imagePathO = document.createElement("input");
+		imagePathO.setAttribute("type", "file");
+		imagePathO.setAttribute("name", "filePath");
+		imagePathO.setAttribute("size", "55");
+		imagePathO.onchange = function() {
+			displayImage(this);
+		};
+		spanImageObject.appendChild(document.createElement("br"));
+		spanImageObject.appendChild(document.createTextNode("选择上传图片:   "));
+		spanImageObject.appendChild(imagePathO);
+		spanImageObject.appendChild(document.createElement("br"));
+	} */
+
+	function uploadImage() {
+	
+		 $('#question').val(question.getData());
+		var strQuestion = $('#question').val();
+		$('#uquestion').val($('#question').val());
+		
+		 $('#questionA').val(questionA.getData());
+		var strQuestionA = $('#questionA').val();
+		$('#uoptionA').val($('#questionA').val())
+		
+		$('#questionB').val(questionB.getData());
+		$('#uoptionB').val($('#questionB').val());
+		var strQuestionB = $('#questionB').val();
+		
+		$('#questionC').val(questionC.getData());
+		$('#uoptionC').val($('#questionC').val());
+		var strQuestionC = $('#questionC').val();
+		
+		$('#questionD').val(questionD.getData());
+		$('#uoptionD').val($('#questionD').val());
+		var strQuestionD = $('#questionD').val();
+		
+		$('#usemester').val($('input[name="semester"]:checked').val())
+		$('#ueditionId').val($('#version').val());
+		$('#uquestionType').val($('input[name="type"]:checked').val());
+		var type = $('input[name="type"]:checked').val();
+		$('#udifficulty').val($('input[name="difficulty"]:checked').val());
+		$('#usubjectId').val($('#subject').val());
+		$('#uchapterId').val($('#chapter').val());
+		$('#remark').val($('#remark1').html());
+		var answer = "";
+		if (strQuestion == "" || strQuestionA == "" || strQuestionB == ""
+				|| strQuestionC == "" || strQuestionD == "") {
+			$('#strPrompt').html("输入的内容不完整，请重新输入再添加！");
+			return false;
+		}
+
+		if (type == 1) {
+			answer = $('input[name="radioAnswer"]:checked').val();
+		} else {
+			$('input[name="checkAnswer"]:checked').each(function() {
+				answer += $(this).val()
+			});
+
+			if (answer.length < 2) {
+				alert("复选题必须有两个或两个以上的答案");
+				return;
+			}
+		}
+		$('#uanswer').val(answer);
+		
+		
+		
+		var flag = false;
+		var tO = document.getElementById("fileTable");
+		var files = tO.getElementsByTagName("input");
+
+		document.getElementById('remark1').value = '';
+	/* 	document.getElementById('question').value = '';
+		document.getElementById('questionA').value = '';
+		document.getElementById('questionB').value = '';
+		document.getElementById('questionC').value = '';
+		document.getElementById('questionD').value = ''; */
+		question.setData("");
+		questionA.setData("");
+		questionB.setData("");
+		questionC.setData("");
+		questionD.setData("");
+		form2.submit();
+	}
+</script>
+
+
+<form name='frmQuestion' id="frmQuestion">
+	<div style="margin: 0 auto;width: 100%">
+		<table width="100%" border="0" cellspacing="0">
+					<tr>
+						<td width="6%" class="fontColor">&nbsp;&nbsp;&nbsp;&nbsp;科目名称:</td>
+						<td width="10%"><select name='subject' class='select2'
+							id='subject' onChange="changeSubject()">
+						</select>
+						</td>
+						<td width="3%" class="fontColor">章节:</td>
+						<td width="9%"><select name='chapter' class='select2' id='chapter'>
+						</select>
+						</td>
+						<td width="6%"><span class="fontColor">&nbsp;&nbsp;&nbsp;&nbsp;题目类型:</span>
+						</td>
+						<td width="12%"><input name="type" type="radio"
+							onClick="checkQuestionType(1)" value="1" checked /> 单选题
+							<input id="checkQuestionObject"
+							type="radio" name="type" value="2" onClick="checkQuestionType(2)" />
+							复选题</td>
+						<td width="5%" height="30" class="fontColor">难 易 度: &nbsp;</td>
+						<td  width="10%"><input type="radio" name="difficulty" value="1">
+							难 &nbsp;&nbsp; <input type="radio" name="difficulty" value="2"
+							checked="checked"> 中<input type="radio"
+							name="difficulty" value="3"> 易</td>
+						
+					</tr>
+				</table>
+	</div><hr/>
+	<div style="width: 90%">
+		<div style="width: 50%;float: left;">
+	<table width="90%" border="0" cellpadding="0" cellspacing="0">
+		<tr>
+			<td width="15%" height="43"><span class="fontColor">请在下面方框中输入题目内容:</span><span
+				class="prompt"> * </span>
+			</td>
+			<td width="10%" height="43"><input name="btnView" type="button"
+				title="你可以选中题目内容的一部分，点“查找”按钮，看此试题是否已经存在" class="inp_L1" id="btnView"
+				onClick="chkQuestionExist()" onMouseOver="this.className='inp_L2'"
+				onMouseOut="this.className='inp_L1'" value="查找"></td>
+			<td width="15%"><span class="fontColor" id="message">选中题目一部分，查找题目是否存在</span>
+			</td>
+			<td width="50%"></td>
+		</tr>
+		<tr>
+			<td colspan="3"><textarea name='question' cols='' rows='15'
+					class="content" onBlur="resetInfo()" id="question"></textarea> <!-- <input type="text" name='question'  class="content" onBlur="resetInfo()"
+							id="question"></input> -->
+			</td>
+		</tr>
+		</table>
+	</div><div style="width: 45%;float: right;">
+		<table>
+		<tr>
+			<td colspan="3" ><br /> <span class="fontColor">选项A描述:</span><span
+				class="prompt"> * </span><textarea name="questionA" cols="" rows=""
+					class="content" id="questionA"></textarea>
+			</td><td width="2%"></td>
+			<td colspan="3"><span class="fontColor"><br> 选项B描述:</span>
+				<span class="prompt">* </span> <textarea name="questionB" cols=""
+					rows="" class="content" id="questionB"></textarea> <!-- <input type="text" name="questionB"  class="content"
+							id="questionB">-->
+			</td>
+			
+		</tr>
+		<!-- <tr>
+			<td colspan="3"> <input type="text" name="questionA"  class="content"
+							id="questionA">
+			</td>
+		</tr> -->
+		
+		<tr>
+			<td colspan="3"><span class="fontColor"><br> 选项C描述:
+					<span class="prompt">* </span> </span> <textarea name="questionC" cols=""
+					rows="" class="content" id="questionC"></textarea> <!-- <input type="text" name="questionC" class="content"
+							id="questionC"> -->
+			</td>
+			<td width="2%"></td>
+			<td colspan="3"><span class="fontColor"><br> 选项D描述:</span>
+
+				<span class="prompt">* </span> <textarea name="questionD" cols=""
+					rows="" class="content" id="questionD"></textarea> <!-- <input type="text" name="questionD" class="content"
+							id="questionD"> -->
+			</td>
+		</tr>
+		<tr>
+			<td height="30" colspan="3"><br> <span class="fontColor">正确答案选项:</span>
+				<span id="radioSpan">&nbsp; &nbsp; &nbsp; &nbsp;
+					&nbsp;&nbsp;&nbsp; <input type="radio" name="radioAnswer" value="A"
+					checked> A &nbsp; <input type="radio" name="radioAnswer"
+					value="B"> B &nbsp; <input type="radio" name="radioAnswer"
+					value="C"> C &nbsp; <input type="radio" name="radioAnswer"
+					value="D"> D </span> <span id="checkboxSpan"><font
+					class="prompt">*</font>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;
+					&nbsp;&nbsp;&nbsp; <input name="checkAnswer" type="checkbox"
+					id="checkAnswer" value="A"> A&nbsp; <input
+					name="checkAnswer" type="checkbox" id="checkAnswerB" value="B">
+					B&nbsp; <input name="checkAnswer" type="checkbox" id="checkAnswerC"
+					value="C"> C &nbsp; <input name="checkAnswer"
+					type="checkbox" id="checkAnswerD" value="D"> D </span> <br> <span
+				id="spanH"></span>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<input type="hidden" id="imgs" value="无图片">
+			</td>
+		</tr>
+	</table>
+	</div>
+	</div>
+</form>
+<iframe id="upload" name="upload" frameborder="0" style="display: none"></iframe>
+<form target="upload" action='/Question_bank/qusetion_upload.action'
+	method='post' name='form2' enctype="multipart/form-data">
+	<input type="hidden" id="uqusetion" value="">
+							<input type="hidden" name="uquestion" id="uquestion" value="">
+							<input type="hidden" name="uoptionA" id="uoptionA" value="">
+							<input type="hidden" name="uoptionB" id="uoptionB" value="">
+							<input type="hidden" name="uoptionC" id="uoptionC" value="">
+							<input type="hidden" name="uoptionD" id="uoptionD" value="">
+							<input type="hidden" name="usemester" id="usemester" value="">
+							<input type="hidden" name="ueditionId" id="ueditionId" value="">
+							<input type="hidden" name="uquestionType" id="uquestionType" value="">
+							<input type="hidden" name="udifficulty" id="udifficulty" value="">
+							<input type="hidden" name="usubjectId" id="usubjectId" value="">
+							<input type="hidden" name="uchapterId" id="uchapterId" value="">
+							<input type="hidden" name="uanswer" id="uanswer" value="">
+							<input type="hidden" name="uremark" id="uremark" value="">
+	<table width="630">
+		<tr>
+			<td>
+				<table width="100%" border="0" align="right" cellspacing="0">
+					<tr>
+						<td height="25" colspan="3"><span class="fontColor">&nbsp;备注说明:</span>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="3"><textarea name="remark1" class="content"
+								id="remark1"></textarea></td>
+					</tr>
+					<tr>
+						<td colspan="3">出题备注:凡是带有 * 号的输入框必须正确添入,不可以为空!</td>
+					</tr>
+					<tr>
+						<td width="65%"><font color="red"> <span
+								id="strPrompt"></span> </font>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="4">
+				<table width="100%" border="0" cellspacing="0" cellpadding="0"
+					id="fileTable">
+					<tr>
+						<td height="25" colspan="2" align="center"><span
+							id="spanDisplayImage"> </span>
+						</td>
+					</tr>
+						<!-- <td colspan="2"><span id="spanImage" class="fontColor">
+								<table width="100%" border="0" cellspacing="0" cellpadding="0">
+									<tr>
+										<td width="82%" height="35"><span class="fontColor">选择上传图片:</span>
+											&nbsp; <input id="filePath" name="filePath" type="file"
+											size="55">
+										</td>
+										<td width="18%" height="35"><input type="button"
+											class="inp_L1" name="Submit2" value="添加图片"
+											onMouseOver="this.className='inp_L2'"
+											onMouseOut="this.className='inp_L1'"
+											onClick="createInputFile()">
+										</td>
+									</tr>
+								</table> </span>
+						</td> -->
+					<tr>
+						<td width="82%" align="center"><span id="uploadSpan"></span>
+							
+						</td>
+						<td width="18%">
+							<div align="left">
+								<input type="button" class="inp_L1" name="Submit3" value="添加题目"
+									onMouseOver="this.className='inp_L2'"
+									onMouseOut="this.className='inp_L1'" onClick="uploadImage()">
+							</div>
+						</td>
+					</tr>
+					
+				</table>
+			</td>
+		</tr>
+	</table>
+</form>
+

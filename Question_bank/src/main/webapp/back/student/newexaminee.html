@@ -1,0 +1,164 @@
+<link rel="stylesheet" href="../../css/szindex.css" type="text/css"></link>
+<!-- <script src="http://lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.js"></script> -->
+<script type="text/javascript">
+	!window.jQuery
+			&& document
+					.write('<script src=../../js/jquery-1.9.1.js><\/script>');
+</script>
+<script type="text/javascript" src="../../js/newexaminee.js"></script>
+
+
+</head>
+
+<body>
+	<form name="form1" method="post">
+		<table width="90%" align="center" border="0" cellpadding="0"
+			cellspacing="0">
+			<tr>
+				<td valign="middle" height="65" align="center"><img
+					src="images/t06.gif" width="595" height="33"></td>
+			</tr>
+			<tr>
+				<td>
+					<table width="90%" align="center" border="0" cellspacing="0"
+						cellpadding="0">
+						<tr>
+							<td>
+								<table width="90%" align="center" border="0" cellpadding="0"
+									cellspacing="0">
+									<tr>
+										<td width="13%">
+											<div align="left" class="fontColor">
+												学期编号: <br> <br>
+											</div>
+										</td>
+										<td>
+											<div align="left">
+												<input id="semesterS1" name="semester" type="radio"
+													value="S1" checked onClick="changeSemester(this.value);">S1
+												<input id="semesterS2" name="semester" type="radio"
+													value="S2" onClick="changeSemester(this.value);">S2
+												<input id="semesterS3" name="semester" type="radio"
+													value="S3" onClick="changeSemester(this.value);">S3
+												<br> <br>
+											</div>
+										</td>
+										<td width="39%" rowspan="3" valign="bottom"><img
+											src="images/p.jpg" width="47" height="42"></td>
+									</tr>
+									<tr>
+										<td>
+											<div align="left" class="fontColor">
+												班级编号: <br> <br>
+											</div>
+										</td>
+										<td>
+											<div align="left">
+												<label> <select name="className" id="className">
+
+												</select> <br> <br>
+												</label>
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<div align="left" class="fontColor">考生名：</div>
+										</td>
+										<td class="yellow" id="names_text">
+											<div align="left" class="fontColor">
+												<input name="idCard" type="text" class="text4"
+													id="examineeNames" size="30" maxlength="18"><span
+													class="prompt" id="examineeNamesHint">* </span>
+											</div></td>
+									</tr>
+									<tr>
+										<td><br> 
+											<div align="left" class="fontColor">身份证：</div></td>
+										<td><br> 
+											<div align="left" class="fontColor">
+												<input name="idCard" type="text" class="text4"
+													id="idCard" size="30" maxlength="18"><span
+													class="prompt" id="idCardHint">* </span>
+											</div></td>
+									</tr>
+									<tr>
+										<td><br> 
+											<div align="left" class="fontColor">手机号：</div></td>
+										<td><br> 
+											<div align="left" class="fontColor">
+												<input name="tel" type="text" class="text4"
+													id="tel" size="30" maxlength="11"><span
+													class="prompt" id="telHint">* </span>
+											</div></td>
+									</tr>
+									<tr>
+										<td><br> <br>
+											<div align="left" class="fontColor"></div></td>
+										<td colspan="2" valign="baseline"><br> <br> <span
+											class="yellow">(提示: 录入考生时,所有考生用同一个密码,考生登录后自行修改密码!默认密码为a,如有需求请自行修改!)</span></td>
+									</tr>
+									<tr>
+										<td><br>
+											<div align="left" class="fontColor">考生密码：</div></td>
+										<td width="48%">
+											<div align="left">
+												<label> <br> <input name="password1"
+													type="password" class="text4" id="password1" size="30"
+													maxlength="15" value="a"> <span class="prompt">* </span>
+												</label>
+											</div>
+										</td>
+										<td id="password_text"></td>
+									</tr>
+									<tr>
+										<td>
+											<div align="left" class="fontColor">
+												<br> 确认密码：
+											</div>
+										</td>
+										<td>
+											<div align="left">
+												<br> <label> <input name="password2"
+													type="password" class="text4" id="password2" size="30"
+													maxlength="15" value="a" onblur="judgePwd()"> <span
+													class="prompt">* </span>
+												</label>
+											</div>
+										</td>
+										<td id="password_b_text"></td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<table width="90%" align="center" border="0" cellspacing="0"
+									cellpadding="0">
+									<tr>
+										<td width="46%" height="30" class="style3" id="edit_text">
+											<br> <font color="red">
+												<div align="center" id="strSpan"></div>
+										</font>
+										</td>
+										<td width="16%" align="right"><br> <input name="add"
+											id="add" type="button" class="inp_L1" value="添 加"
+											onMouseOver="this.className='inp_L2'"
+											onMouseOut="this.className='inp_L1'" onClick="addExamClass()" />
+										</td>
+										<td width="16%" align="center"><label> </label></td>
+										<td width="22%"><label> <br> <input
+												name="rest" type="reset" id="rest" class="inp_L1"
+												value="重  置" onMouseOver="this.className='inp_L2'"
+												onMouseOut="this.className='inp_L1'" onClick="reset()" />
+										</label></td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+
+		</table>
+	</form>

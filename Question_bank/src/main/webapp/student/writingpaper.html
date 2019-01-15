@@ -1,0 +1,669 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>笔试卷</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<link href="../css/szindex.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+<!--
+.style3 {
+	color: #FFFFFF
+}
+
+.style14 {
+	font-size: 11pt
+}
+
+.style16 {
+	color: #FFFFFF;
+	font-size: 12pt;
+	font-weight: bold;
+}
+
+.style17 {
+	font-size: 9pt
+}
+
+.style18 {
+	color: #FFFFFF;
+	font-size: 9pt;
+}
+
+.show_time_five {
+	position: fixed;
+	top: 1px;
+	left: 1px;
+	color: red;
+	width: 230px;
+	height: 130px;
+	font-size: large;
+	background-color: #406293;
+}
+
+.textareaTest {
+	width: 600px;
+	min-height: 20px;
+	max-height: 600px;
+	_height: 120px;
+	padding: 3px;
+	outline: 0;
+	border: none;
+	font-size: 12px;
+	line-height: 24px;
+	padding: 2px;
+	word-wrap: break-word;
+	overflow-x: hidden;
+	overflow-y: auto;
+	font-weight:bold;
+	
+}
+
+#delete_rigth {
+	float: right;
+}
+
+body {
+	margin-left: 0px;
+	margin-right: 0px;
+}
+-->
+</style>
+<script type="text/javascript" language="javascript"
+	src="../js/creatXML.js"></script>
+
+<!-- <script src="http://lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.js"></script> -->
+<script type="text/javascript">
+!window.jQuery && document.write('<script src=../js/jquery-1.9.1.js><\/script>');
+</script>
+<script type="text/javascript" language="javascript">
+	//规定答卷时间
+	var examTime;
+	//剩余时间                                                                                                                                                                      
+	var timeRemain;
+	$(function(){
+		//取到writpapervalidate.html页面传过来的paperId
+		var url=window.location.search;
+		var startIndex=url.indexOf("?")+1;
+		var endIndex=url.length;
+		var paperId=url.substring(startIndex,endIndex);
+		//用$.getJSON方法向action请求数据
+		$.post("/Examination2.0/exam_beginExam.action",{paperId:paperId},function(data){
+			var data = eval("(" + data+ ")"); 
+			if(data!=null){
+				$.each(data,function(i,item){
+					console.info(data);
+					if(item[0]==undefined){
+						return true;
+					}
+					 var paperName=item[0].paper.writingPaper.paperName;
+					$("#paperName").html(paperName); 
+					 //考试班级
+					var examineeClass=item[0].paper.writingPaper.examineeClass;
+					$("#examineeClass").html("&nbsp; &nbsp;考试班级: "+examineeClass);
+					$("#aclas").val(examineeClass);
+					//试卷编号
+					var paperId=item[0].paper.writingPaper.id;
+					$("#paperId").html("试卷编号: "+paperId);
+					$("#aid").val(paperId);
+					//考生姓名
+					var examineeName=item[0].paper.examineeName;
+					$("#examineeName").html("考生姓名: "+examineeName);
+					$("#aname").val(examineeName);
+					//此卷题目数量
+					var countOfQuestion=item[0].paper.writingPaper.countOfQuestion;
+					$("#countOfQuestion").html("&nbsp; &nbsp;此卷题目数量："+countOfQuestion+"题<br> ");
+					//规定答卷时间
+					var timesConsume=item[0].paper.writingPaper.timesConsume;
+					$("#timesConsume").html("&nbsp; &nbsp;规定答卷时间："+timesConsume+"分钟<br>");
+					examTime=timesConsume;
+					//剩余时间
+					
+					var spareTime=item[0].paper.spareTime;
+					$("#spareTime").html("剩余时间: "+spareTime+"分<br>");
+					timeRemain=spareTime; 
+					//左边的提示栏
+					var strQuestion='';
+					strQuestion+='<font color="red" size="2" face="黑体">剩余时间: <span id="overTime2">&nbsp;</span></font>';
+					
+					//循环显示题目
+					//1.先计算题目适量
+					var str='';
+					var questionNum=item[0].questionList.length;
+					
+					for(var i=0;i<questionNum;i++){
+						//取出题目编号和题目内容
+						//var id=item[0].questionList[i].id;
+						var question=item[0].questionList[i].question;
+						//alert(id+" "+question);
+						//$("#question").html(id+". "+question);
+						//取出题目插图
+						var image=item[0].questionList[0].image;
+						//alert(image);
+						/* if(image==",添加图片;"){
+							$("#image").html();
+						}else{
+							$("#image").html("<img src='/ExamModule/images/writing/"+id+"/"+image+"'>");
+							$("#image").html("&nbsp;<span class='fontColor'>图片说明:</span><br><div align='center'><img src='/ExamModule/images/writing/"+id+"/"+image+"'></div>")
+						} */
+						var questiontype=item[0].questionList[i].questionType;
+						//左边的提示栏
+						strQuestion+='<br />&nbsp;<a href="#Food+'+(i+1)+'">&nbsp; 第'+(i+1)+'题 </a><span id="span'+(i+1)+'"></span>';
+					
+						//A选项
+						var optionA=item[0].questionList[i].optionA;
+						//$("#optionA").html(optionA);
+						//B选项
+						var optionB=item[0].questionList[i].optionB;
+						//$("#optionB").html(optionB);
+						//C选项
+						var optionC=item[0].questionList[i].optionC;
+						//$("#optionC").html(optionC);
+						//D选项
+						var optionD=item[0].questionList[i].optionD;
+						//$("#optionD").html(optionD);
+						if(questiontype=="1"){
+							str+='<table width="100%" border="0" cellspacing="0" cellpadding="0" id="table'+(i+1)+'">';
+							str+='<tr>';
+							str+='<td width="8%">';
+							str+='<p align="center">&nbsp;</p>';
+							str+='</td>';
+							str+='<td height="27" colspan="3">&nbsp;</td>';
+							str+='</tr>';
+							str+='<tr>';
+							str+='<td height="5%" valign="top">&nbsp;</td>';
+							str+='<!-- 显示题目 -->';
+							str+='<td height="10%" colspan="3" rowspan="2">';
+							str+='<a name="Food+'+(i+1)+'"></a><span class="style14">'+(i+1)+'. 单选题</span>';
+							str+='<div class="textareaTest" name="text'+(i+1)+'" contenteditable="false">'+question+'</div>';
+							//str+='<textarea col="80%" name="text'+(i+1)+'" rows="80%" redonly="true"  class=""  onpropertychange="this.style.posHeight=this.scrollHeight">'+question+'</textarea>';
+							str+='</td>';
+							str+='</tr>';
+							str+='<tr>';
+							str+='<td height="100%">&nbsp;</td>';
+							str+='</tr>';
+							str+='<tr>';	
+							str+='<td></td>';
+							str+='<!-- 显示插图 -->';
+							str+='<td colspan="3" valign="top" id="image">';
+							if(image==",添加图片;"){
+								str+='';
+							}else if(image=="无图片"){
+								str+='';
+							}else{
+								//alert(id);
+								//console.info(id);
+								str+='<span class="fontColor"> 图片说明:</span><br>';
+								str+='<div align="center"><img src="/WebExamination/images/writing/'+id+'/'+image+'"/></div>';
+							}
+							str+='<table width="100%" border="0">';
+							str+='<tr>';
+							str+='<!-- A选项 -->';
+							str+='<td width="8%" valign="top">';
+							str+='<input name="answer+'+(i+1)+'" type="radio" id="answerA" value="A" onclick="setValue(\''+(i+1)+'\',\''+paperId+'\',this)" /> ';
+							str+='</td>';
+							str+='<td width="92%" colspan="2">';
+/* 							str+='<textarea name="textfield" rows="1" class="txaNoneBorder" readonly="readonly" type="_moz" id="optionA">'+optionA+'</textarea>';
+ */							str+='<div class="textareaTest" name="textfield" contenteditable="false">A.  '+optionA+'</div>';
+							str+='</td>';
+							str+='</tr>';
+							str+='<tr>';
+							str+='<!-- B选项 -->';
+							str+='<td valign="top">';
+							str+='<input type="radio" name="answer+'+(i+1)+'" id="answerB" value="B" onclick="setValue(\''+(i+1)+'\',\''+paperId+'\',this)" /> ';
+							str+='</td>';
+							str+='<td colspan="2">';
+/* 							str+='<textarea name="textfield" rows="1" class="txaNoneBorder" readonly="readonly" type="_moz" id="optionB">'+optionB+'</textarea>';
+ */						    str+='<div class="textareaTest" name="textfield" contenteditable="false"> B.  '+optionB+'</div>';
+							str+='</td>';
+							str+='</tr>';
+							str+='<tr>';
+							str+='<!-- C选项 -->';
+							str+='<td valign="top">';
+							str+='<input type="radio" name="answer+'+(i+1)+'" id="answerC" value="C" onclick="setValue(\''+(i+1)+'\',\''+paperId+'\',this)" /> ';
+							str+='</td>';
+							str+='<td colspan="2">';
+/* 							str+='<textarea name="textfield"  rows="1" class="txaNoneBorder" readonly="readonly" type="_moz" id="optionC">'+optionC+'</textarea>';
+ */							  str+='<div class="textareaTest" name="textfield" contenteditable="false"> C. '+optionC+'</div>';
+							str+='</td>';
+							str+='</tr>';
+							str+='<tr>';
+							str+='<!-- D选项 -->';
+							str+='<td valign="top">';
+							str+='<input type="radio" name="answer+'+(i+1)+'" id="answerD" value="D" onclick="setValue(\''+(i+1)+'\',\''+paperId+'\',this)" /> ';
+							str+='</td>';
+							str+='<td colspan="2">';
+/* 							str+='<textarea name="textfield"  rows="1" class="txaNoneBorder" readonly="readonly" type="_moz" id="optionD">'+optionD+'</textarea>';
+ */							  str+='<div class="textareaTest" name="textfield" contenteditable="false"> D. '+optionD+'</div>';
+							str+='</td>';
+							str+='</tr>';
+							str+='</table>';
+							str+='</td>';
+							str+='</tr>';
+							str+='<tr>';
+							str+='<td height="100%">&nbsp;</td>';
+							str+='<td height="100%"></td>';
+							str+='<td width="10%" height="100%" colspan="">&nbsp;</td>';
+							str+='<td width="76%" valign="bottom"><a href="#top">TOP</a>';
+							str+='</td>';
+							str+='</tr>';
+							str+='</table>';
+						}else{
+							str+='<table width="100%" border="0" cellspacing="0" cellpadding="0" id="table'+(i+1)+'">';
+							str+='<tr>';
+							str+='<td width="8%">';
+							str+='<p align="center">&nbsp;</p>';
+							str+='</td>';
+							str+='<td height="27" colspan="3">&nbsp;</td>';
+							str+='</tr>';
+							str+='<tr>';
+							str+='<td height="5%" valign="top">&nbsp;</td>';
+							str+='<!-- 显示题目 -->';
+							str+='<td height="10%" colspan="3" rowspan="2">';
+							str+='<a name="Food+'+(i+1)+'"></a><span class="style14">'+(i+1)+'. 多选题 </span>';
+							str+='<div class="textareaTest" name="text'+(i+1)+'" contenteditable="false">'+question+'</div>';
+							//str+='<textarea col="80%" name="text'+(i+1)+'" rows="10" class=""  onpropertychange="this.style.posHeight=this.scrollHeight">'+question+'</textarea>';
+							str+='</td>';
+							str+='</tr>';
+							str+='<tr>';
+							str+='<td height="100%">&nbsp;</td>';
+							str+='</tr>';
+							str+='<tr>';	
+							str+='<td></td>';
+							str+='<!-- 显示插图 -->';
+							str+='<td colspan="3" valign="top" id="image">';
+							if(image==",添加图片;"){
+								str+='';
+							}else if(image=="无图片"){
+								str+='';
+							}else{
+								//alert(id);
+								//console.info(id);
+								str+='<span class="fontColor"> 图片说明:</span><br>';
+								str+='<div align="center"><img src="/WebExamination/images/writing/'+id+'/'+image+'"/></div>';
+							}
+							str+='<table width="100%" border="0">';
+							str+='<tr>';
+							str+='<!-- A选项 -->';
+							str+='<td width="8%" valign="top">';
+							str+='<input name="answerA" type="checkbox" id="answerA" value="A" onclick="setValue(\''+(i+1)+'\',\''+paperId+'\',this)" /> ';
+							str+='</td>';
+							str+='<td width="92%" colspan="2">';
+						/* 	str+='<textarea name="textfield" rows="1" class="txaNoneBorder" readonly="readonly" type="_moz" id="optionA">'+optionA+'</textarea>'; */
+							str+='<div class="textareaTest" name="textfield" contenteditable="false">A.  '+optionA+'</div>';
+							str+='</td>';
+							str+='</tr>';
+							str+='<tr>';
+							str+='<!-- B选项 -->';
+							str+='<td valign="top">';
+							str+='<input type="checkbox" name="answerB" id="answerB" value="B" onclick="setValue(\''+(i+1)+'\',\''+paperId+'\',this)" />  ';
+							str+='</td>';
+							str+='<td colspan="2">';
+/* 							str+='<textarea name="textfield" rows="1" class="txaNoneBorder" readonly="readonly" type="_moz" id="optionB">'+optionB+'</textarea>';
+ */							str+='<div class="textareaTest" name="textfield" contenteditable="false"> B. '+optionB+'</div>';
+							str+='</td>';
+							str+='</tr>';
+							str+='<tr>';
+							str+='<!-- C选项 -->';
+							str+='<td valign="top">';
+							str+='<input type="checkbox" name="answerC" id="answerC" value="C" onclick="setValue(\''+(i+1)+'\',\''+paperId+'\',this)" />  ';
+							str+='</td>';
+							str+='<td colspan="2">';
+							/* str+='<textarea name="textfield"  rows="1" class="txaNoneBorder" readonly="readonly" type="_moz" id="optionC">'+optionC+'</textarea>'; */
+							str+='<div class="textareaTest" name="textfield" contenteditable="false"> C. '+optionC+'</div>';
+							str+='</td>';
+							str+='</tr>';
+							str+='<tr>';
+							str+='<!-- D选项 -->';
+							str+='<td valign="top">';
+							str+='<input type="checkbox" name="answerD" id="answerD" value="D" onclick="setValue(\''+(i+1)+'\',\''+paperId+'\',this)" /> ';
+							str+='</td>';
+							str+='<td colspan="2">';
+/* 							str+='<textarea name="textfield"  rows="1" class="txaNoneBorder" readonly="readonly" type="_moz" id="optionD">'+optionD+'</textarea>';
+ */							str+='<div class="textareaTest" name="textfield" contenteditable="false">D. '+optionD+'</div>';
+							str+='</td>';
+							str+='</tr>';
+							str+='</table>';
+							str+='</td>';
+							str+='</tr>';
+							str+='<tr>';
+							str+='<td height="100%">&nbsp;</td>';
+							str+='<td height="100%"></td>';
+							str+='<td width="10%" height="100%" colspan="">&nbsp;</td>';
+							str+='<td width="76%" valign="bottom"><a href="#top">TOP</a>';
+							str+='</td>';
+							str+='</tr>';
+							str+='</table>';
+						}
+					}
+					str+='<p>';
+					str+='<span class="fontColor">';
+					str+='此卷已到尾,请认真检查是否还有漏答的题目，确认每道题都点了"确定"按钮</span><input type="submit"';
+					str+='name="Submit" class="inp_L1" value="交卷"';
+					str+='onClick="handInPaper()" onMouseMove="this.className=\'inp_L2\'"';
+					str+='onMouseOut="this.className=\'inp_L1\'" />';
+					str+='</p>';
+					str+='<p>';
+					str+='<br>';
+					str+='</p>';
+					//左边的提示栏
+					$("#divQuestion").html(strQuestion);
+					
+					//循环显示习题
+					$("#mytable").html(str);
+					divScroll();
+					loadData(spareTime);
+				});
+			}
+		});
+	});
+	
+	//设置层随滚动条移动
+ 	window.onscroll=divScroll;
+ 	window.onresize=divScroll;
+ 	//还剩余多少时间，后面每分钟刷新一次本值
+ 	//var myTimeRemain = $("#spareTime").html();
+ 	//var timeRemain = myTimeRemain.substr("剩余时间: ".length,myTimeRemain.length);
+ 	//var timeRemain = spareTime;
+ 	//alert(timeRemain);
+ 	//$("#spareTime").html("剩余时间: "+spareTime+"分钟<br>");
+ 	//考试总时间
+ 	//var examTime = ${requestScope.examTime};
+ 
+ 
+	function divScroll() {
+    	var divQuestion = document.getElementById("divQuestion");
+    	divQuestion.style.top = document.body.scrollTop + 148;
+	}
+	
+	//页面加载时,设置时间跳动，倒计时
+	function loadData(times){
+  		displayOverTime(times);
+  		var tea = document.getElementsByTagName("textarea");
+  		for(var i=0;i<tea.length;i++){
+    		tea[i].rows = tea[i].value.split("\r\n").length+1;
+  		}
+	}
+var timeRemain;
+	function displayOverTime(val){
+ 		//赋值给一个全局变量
+  		timeRemain = val;
+ 		if(val<0){
+ 			alert("考试时间已经用完");
+ 			window.close();
+ 		}
+ 		if(val=="0"){
+ 			window.close();
+ 		}
+  		//alert(timeRemain);
+  		if(i=="0"){
+    		val = eval(val-1);
+    		i=60;
+    		//1分钟写入一次
+    		updateSpareTime(val);  //不再1分钟写入一次  采用提交试卷时再提交
+  		}
+  		i=i-1;
+  		$("#spareTime").html("剩余时间: "+val+" 分 "+i+" 秒<br>");
+  		//overTime.innerHTML=val+" 分 "+i+" 秒";
+  		//在试卷左侧的答题卡顶部也显示“剩余时间”
+  		$("#overTime2").html(val+"分"+i+"秒");
+  		//overTime2.innerHTML=val+"分"+i+"秒";
+  		if(val==5 && i=="0"){
+  			var show_time_five=$("#show_time_five");
+  			var Str="<div id='delete_rigth'><img src='img/1.png' onclick='delete_label()'></div>";
+  			Str+='<br/><label>离交卷时间不足 5 分钟，交卷时间到后系统将自动交卷，并关闭窗口！ </label>'
+  			show_time_five.html(Str);
+  			show_time_five.addClass("show_time_five");
+  			//alert("离交卷时间还有 5 分钟，请保存你的答案，保证每道题都按了确定按钮。交卷时间到后系统将自动交卷，并关闭窗口！ ") ;
+  		}
+  		if(val==0 && i=="0"){
+			
+			var paperId=$("#aid").val();
+		var examineeClass=$("#aclas").val();
+		var examineeName=$("#aname").val();
+		
+		if(paperId!=null&&paperId!=""&&examineeClass!=null&&examineeClass!=""&&examineeName!=null&&examineeName!=""){
+			//$("#tijiao").attr("action","/Examination2.0/exam_handInPaper.action?paperId="+paperId+"&examineeClass="+examineeClass+"&examineeName="+examineeName+""); 
+			//frmWriting.submit();
+			
+			$.post("/Examination2.0/exam_handInPaper.action",{paperId:paperId,examineeClass:examineeClass,examineeName:examineeName},function(data){
+				if(data==1){
+					//data为1，表示交卷成功
+					//alert("提交成功");
+					alert("时间已到，已自动交卷！");
+					window.opener.location.reload();
+					window.close();
+				}else if(data==0){
+					alert("提交失败");
+					window.opener.location.reload();
+					window.close();
+					return;
+				}
+			});
+		}else{
+			alert("提交出错");
+			window.opener.location.reload();
+			window.close();
+		}
+			
+  		}
+  		//设置时间跳动
+  		var myTime=setTimeout("displayOverTime('"+val+"')", 1000);
+	}
+	
+	function delete_label(){
+		$("#show_time_five").removeClass("show_time_five");
+		$("#show_time_five").html("");
+	}
+
+	//后台进入还剩余多少时间的字符串
+	function updateSpareTime(spareTime) {
+		//var xmlRequest = createXml();
+		var myPaperId = $("#paperId").html();
+		var paperId = myPaperId.substr("试卷编号: ".length,myPaperId.length);
+		var myExamineeClass = $("#examineeClass").html();
+		var examineeClass = myExamineeClass.substr("&nbsp; &nbsp;考试班级: ".length,myExamineeClass.length);
+		var myExamineeName = $("#examineeName").html();
+		var examineeName = myExamineeName.substr("考生姓名: ".length,myExamineeName.length);
+		//alert(spareTime+","+paperId+","+examineeName);
+		$.post("/Examination2.0/exam_updateSpareTime.action",{paperId:paperId,examineeName:examineeName,spareTime:spareTime});
+  		/* var url = "/ExamModule/examservlet?jspPage=updateSpareTime&paperId="+paperId+
+  		"&examineeName="+examineeName+"&examineeClass="+examineeClass+"&spareTime=" + spareTime;
+ 	 	xmlRequest.open("POST",url,true);
+  		//判断服务器的状态是否为正常的
+  		xmlRequest.onreadystatechange = function(){
+    		if(xmlRequest.readyState == 4){
+      			if(xmlRequest.status != 200) {
+        			alert("服务器出现异常，请联系老师！错误代码：" + xmlRequest.status);
+      			}
+    		}
+  		}
+  		xmlRequest.send(null); */
+	}
+	
+	//答题，第三个参数代表自己
+	function setValue(quIndex,paperId,sender){
+ 		//考生姓名不再从会话中得到，如果服务器掉了，还可以继续考试
+ 		var myExamineeName = $("#examineeName").html();
+ 		var examineeName = myExamineeName.substr("考生姓名: ".length,myExamineeName.length);
+ 		//alert(quIndex+","+paperId+","+sender+";"+examineeName);
+  		//第多少道题
+  		//var spanA = document.getElementById("span"+quIndex);
+  		//得到几个复选框
+  		var ans = document.getElementById("table"+quIndex).getElementsByTagName("input");
+  		var str = "";
+  		for(var i=0;i<ans.length;i++){
+    		if(ans[i].checked){
+      			str += ans[i].value;
+    		}
+  		}
+  		//没选中，则返回
+  		if(str==""){
+    		str=" ";
+  		}
+  		//后台提交每一题的答案，题号加答案
+  		strAnswer = quIndex+","+str;//1,a或者多选1,ab
+  		
+  		//将答案显示到右侧导航栏
+  		$("#span"+quIndex).html(str);
+  		//alert(examineeName);
+  		//将所选择的答案发送到后台action，然后存到数据库
+  		$.post("/Examination2.0/exam_examAnswer.action",{paperId:paperId,examineeName:examineeName,answer:strAnswer},function(){
+  			
+  		});
+  		/* var xmlRequest = createXml();
+  		//将请求发送到Servlet中去参数对应Servlet页面中的参数
+  		var url = "/ExamModule/examservlet?jspPage=examAnswer&paperId="+paperId+
+  		"&examineeName="+examineeName+"&answer="+strAnswer;
+  		xmlRequest.open("POST",url,true);
+  		//判断服务器的状态是否为正常的
+  		xmlRequest.onreadystatechange = function(){
+    		if(xmlRequest.readyState == 4){
+      			if(xmlRequest.status == 200){
+        			//拆分请求到的数据放入数组
+        			var a = xmlRequest.responseText;
+        			if(a=="1"){
+          				spanA.innerHTML=str;
+        			}else{
+          				spanA.innerHTML="";
+        			}
+      			}else {
+       	 			alert("服务器出现异常，请联系老师！错误代码：" + xmlRequest.status);
+      			}
+      			sender.disabled = false;
+    		}else {
+      			//在服务器没有正常回来之前，确定按钮暂时不可用，以免学员多次点击
+    			sender.disabled = true;
+    		}
+  		}
+  		xmlRequest.send(null); */
+	}
+	
+	//交卷
+	function handInPaper(){
+  		//考试不足考试时间的40%，不给交卷。
+  		//var handTime = parseInt(examTime * 0.4);
+ 		//if(handTime >= examTime-timeRemain) {
+  		//alert("必须过了" + handTime + "分钟之后才可以交卷，请认真检查！");
+  		//return;
+ 		//}
+		//关闭窗口，提示真的要交吗？                      					
+		if(!confirm("真的要交卷吗？交卷之后将不能再进入考试。“请确认所有的答题都点了确定按钮”")) {
+			return;
+		}
+		updateSpareTime(timeRemain)
+		var paperId=$("#aid").val();
+		var examineeClass=$("#aclas").val();
+		var examineeName=$("#aname").val();
+		
+		if(paperId!=null&&paperId!=""&&examineeClass!=null&&examineeClass!=""&&examineeName!=null&&examineeName!=""){
+			//$("#tijiao").attr("action","/Examination2.0/exam_handInPaper.action?paperId="+paperId+"&examineeClass="+examineeClass+"&examineeName="+examineeName+""); 
+			//frmWriting.submit();
+			
+			$.post("/Examination2.0/exam_handInPaper.action",{paperId:paperId,examineeClass:examineeClass,examineeName:examineeName},function(data){
+				if(data==1){
+					//data为1，表示交卷成功
+					alert("提交成功");
+					//window.opener.location.reload();
+					window.close();
+				}else if(data==0){
+					alert("提交失败");
+					return;
+				}
+			});
+		}else{
+			alert("提交出错");
+		}
+	}
+	
+	/* window.onbeforeunload = function(){
+		//window.opener.location.href = window.opener.location.href;
+		window.opener.location.href=window.opener.location.href;window.close();
+	}; */
+</script>
+
+</head>
+
+<body>
+	<!-- <form name="frmWriting" method="post" id="tijiao"
+		action=""> -->
+	<a name="top"></a>
+	<table width="800" border="0" cellspacing="0" cellpadding="0"
+		align="center">
+		<tr valign="bottom">
+			<td height="40" colspan="3" align="center" bgcolor="#0066FF"><span
+				class="style16" id="paperName"></span></td>
+		</tr>
+		<tr>
+			<td width="378" align="center" valign="middle" bgcolor="#0066FF">
+			</td>
+			<td width="262" valign="bottom" bgcolor="#0066FF">
+				<div align="center"></div> <span class="style3" id="paperId"><input
+					type="hidden" name="paperId" value="${paper.id}" id="paperId" /> </span>
+			</td>
+			<td width="160" bgcolor="#0066FF"><img src="../images/pen.gif"
+				width="133" height="41" alt=""></td>
+		</tr>
+		<tr valign="bottom">
+			<td width="378" bgcolor="#0066FF"><span class="style3"
+				id="examineeClass"><input type="hidden" name="examineeClass"
+					value="${paper.examineeClass}" id="examineeClass" /> </span></td>
+			<td height="23" colspan="2" bgcolor="#0066FF"><span
+				class="style3" id="examineeName"></span></td>
+		</tr>
+		<tr>
+			<td width="378" valign="bottom" background="../images/top03bg.gif"><span
+				class="fontColor style3" id="countOfQuestion"></span> <span
+				class="style3"><span class="style18" id="timesConsume"></td>
+			<td width="262" height="35" background="../images/top03bg.gif"
+				class="style3" id="spareTime"></td>
+			<td width="160" background="../images/top03bg.gif"><input
+				type="button" name="Submit" class="inp_L1" value="交卷"
+				onClick="handInPaper()" onMouseMove="this.className='inp_L2'"
+				onMouseOut="this.className='inp_L1'" /></td>
+		</tr>
+		<tr>
+			<td colspan="3">
+				<!-- <% //从request中得到答案，从PaperServlet中来 String
+					answer = (String) request.getAttribute("answer"); HashMap<String
+						, String> mapAns = new HashMap<String , String>();
+					if (answer != null) { mapAns = ExamUtil.answerStringToMap(answer);
+					} %> -->
+				<table width="100%" border="1" cellspacing="0" cellpadding="0">
+					<tr>
+						<td width="15%" valign="top">
+							<table width="100%" border="0" cellspacing="0">
+								<tr>
+									<td height="0" id="tdTop"></td>
+								</tr>
+								<tr>
+									<td id="tdTop"></td>
+								</tr>
+								<tr>
+									<td height="100%">
+										<div id="divQuestion"
+											style="width: 140px; position: absolute; left: 2px; top: 148px; border: 1px #6666FF solid; background-color: #FFFFCC; padding-bottom: 20px; height: 320px; overflow: auto;">
+
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td height="100%">&nbsp;</td>
+								</tr>
+							</table>
+							<div align="center">
+								<img src="../images/bokefav.gif" alt="">
+							</div>
+						</td>
+						<td width="85%" id="mytable"></td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+	<div id="show_time_five"></div>
+	<!-- </form> -->
+	<input id="aid" type="hidden">
+	<input id="aclas" type="hidden">
+	<input id="aname" type="hidden">
+</body>
+</html>

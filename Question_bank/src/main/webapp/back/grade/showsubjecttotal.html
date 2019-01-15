@@ -1,0 +1,53 @@
+
+<META http-equiv=Content-Type content="text/html; charset=utf-8">
+<link href="../../css/szindex.css" type=text/css rel=stylesheet>
+
+<!-- <script src="http://lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.js"></script> -->
+<script type="text/javascript">
+	!window.jQuery
+			&& document
+					.write('<script src=../../js/jquery-1.9.1.js><\/script>');
+</script>
+<script type="text/javascript" src="../../js/showsubjecttotalN.js"></script>
+
+<body>
+	<table width="680" border="0" cellpadding="0" cellspacing="0">
+		<tr>
+			<td height="100" align="center"></td>
+		</tr>
+		<tr>
+			<td>
+				<table width="100%" border="0" cellspacing="0" cellpadding="0">
+					<tr height="50">
+						<td align="center" width="10%" class="fontColor">学期:</td>
+						<td width="25%"><input type="radio" checked="checked"
+							name="semseter" value="S1" id="semseter1"
+							onClick="createSelectOption('S1')" />S1 &nbsp;&nbsp;<input
+							type="radio" name="semseter" value="S2" id="semseter2"
+							onClick="createSelectOption('S2')" />S2 &nbsp;&nbsp;<input
+							type="radio" name="semseter" value="S3" id="semseter3"
+							onClick="createSelectOption('S3')" />S3</td>
+						<td align="center" width="10%" class="fontColor">班级:</td>
+						<td width="15%"><select class="text4" name="examclassid"
+							id="examclassid" onChange="changeSemsetere()">
+
+						</select> <span class="prompt"> * </span></td>
+					</tr>
+
+				</table> <br />
+				<table width="680" border="1" align="center" cellpadding="1"
+					bordercolor="#FFFFFF" cellspacing="0">
+					<tr>
+						<th width="15%">编号</th>
+						<th width="15%">测评班级</th>
+						<th width="25%">课程名称</th>
+						<th width="15%">参评人数</th>
+						<th width="15%">总分</th>
+						<th width="15%">平均分</th>
+					</tr>
+				</table>
+
+				<div id="paperanswerinfo"></div></td>
+		</tr>
+	</table>
+</body>

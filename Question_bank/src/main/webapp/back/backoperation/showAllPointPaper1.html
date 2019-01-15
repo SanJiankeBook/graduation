@@ -1,0 +1,95 @@
+<style type="text/css">
+
+body {
+	background-repeat: no-repeat;
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+}
+
+</style>
+<script type="text/javascript" language="javascript">
+
+	$(function(){
+		var str='';
+		//请求数据
+		$.post("/Examination2.0/exam_myselfexam.action",function(data){
+			console.info(data)
+			$.each(data,function(i,item){
+				console.info(item[0])
+				 if(item[0]==undefined || item[0]==0){
+						return false;
+					}
+				 
+				//循环出来的结果：openPointPaper试卷结果
+				for(var i=0,len=item[0].openPointPaper.length;i<len;i++){
+					console.info(item[0].openPointPaper)
+					str+='<tr>';
+					str+='<th align="center">试卷编号</th><th align="center">名称</th><th align="center">班级</th><th align="center">考试日期</th><th align="center">试卷状态</th><th align="center">考试登录</th></tr>';
+					str+='<tr id="'+(i+1)+'" bgcolor="#EDECEB" onMouseOver="this.bgColor=\'#93BBDF\';" onMouseOut="this.bgColor=\'#DEDCDA\';">';
+					str+='<td align="center">'+(i+1)+'</td>';
+					str+='<td align="center">'+item[0].openPointPaper[i].pname+'</td>';
+					str+='<td align="center">'+item[0].openPointPaper[i].examineeClass.remark+'</td>';
+					str+='<td align="center">'+item[0].openPointPaper[i].pdate.substr(0,10)+'</td>';
+					str+='<td align="center">';
+					if("1"==item[0].openPointPaper[i].pstatus){
+						str+='未评';
+					}else if("2"==item[0].openPointPaper[i].pstatus){
+						str+='自评中';
+					}else if("3"==item[0].openPointPaper[i].pstatus){
+						str+='己评';
+					}
+					str+='</td><td align="center">';
+					str+='<a href="javascript:openPaper('+(i+1)+','+item[0].openPointPaper[i].pid+')" title="开始测评">[开始测评]</a>';
+					x=item[0].openPointPaper[i].paperPwd;
+					str+='</td></tr>';
+				}
+				$("#mytable").html(str);
+			});
+		});
+	});
+
+
+
+	//打开登录考试页面
+	function openPaper(rowid, pid) {
+		$("#" + rowid + " a").eq(0).removeAttr("href").css("color", "black");
+		window.open("/Examination2.0/student/pointPaperPwd.html?pid=" + pid+"&x="+x, "自评", "fullscreen=yes,scrollbars=yes");
+	}
+</script>
+
+
+
+<body>
+	<p>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  &nbsp;
+</p>
+<table width="630" border="0" align="center" cellspacing="0">
+  <tr>
+    <td height="44">
+    </td>
+  </tr>
+  <tr>
+    <td height="55"><font class="fontColor">温馨提示：</font><br>
+    　　对于已经参加过的考试试卷你将无法看到。如果你没有考试过而看不到试卷，请联系老师。</td>
+  </tr>
+  <tr>
+    <td>
+      <table width="660" border="1" cellspacing="0" bordercolor="#FFFFFF" id="mytable">
+       
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td>    <p>&nbsp;</p>
+    <p>&nbsp;</p></td>
+  </tr>
+</table>
+

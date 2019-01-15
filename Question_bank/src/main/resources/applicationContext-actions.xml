@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context" 
+	    xmlns:task="http://www.springframework.org/schema/task"   
+       xmlns:p="http://www.springframework.org/schema/p" 
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.0.xsd 
+http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+
+	    <task:executor id="executor" pool-size="5" />  
+		<task:scheduler id="scheduler" pool-size="10" />  
+		<task:annotation-driven executor="executor" scheduler="scheduler" />
+
+	<!-- 手动注释 <bean id="codepic" class="com.yc.webexam.actions.CodePicAction" 
+		scope="prototype"> </bean> -->
+	<bean id="initsystem" class="com.yc.webexam.actions.InitSystemAction"
+		scope="prototype">
+	</bean>
+
+	<bean id="assessment" class="com.yc.webexam.actions.AssessmentAction"
+		scope="prototype">
+	</bean>
+
+
+	<bean id="course" class="com.yc.webexam.actions.CourseAction"
+		scope="prototype">
+	</bean>
+
+	<bean id="subject" class="com.yc.webexam.actions.SubjectAction"
+		scope="prototype">
+	</bean>
+
+	<bean id="chapter" class="com.yc.webexam.actions.ChapterAction"
+		scope="prototype">
+	</bean>
+
+	<bean id="examineeclass" class="com.yc.webexam.actions.ExamineeClassAction"
+		scope="prototype">
+	</bean>
+	
+	<bean id="work" class="com.yc.webexam.actions.WorkAction"
+		scope="prototype">
+	</bean>
+
+
+	<bean id="login" class="com.yc.webexam.actions.LoginAction" scope="prototype"></bean>
+	<bean id="exam" class="com.yc.webexam.actions.ExamAction" scope="prototype"></bean>
+	<bean id="validateuser" class="com.yc.webexam.actions.ValidateuserAction"
+		scope="prototype"></bean>
+
+	<bean id="checking" class="com.yc.webexam.actions.CheckingAction"
+		scope="prototype"></bean>
+
+	<bean id="upload" class="com.yc.webexam.actions.UploadAction"
+		scope="prototype"></bean>
+
+	<bean id="dataarraylist" class="com.yc.webexam.actions.DataarraylistAction"
+		scope="prototype"></bean>
+
+	<bean id="paper" class="com.yc.webexam.actions.PaperAction" scope="prototype"></bean>
+
+
+	<bean id="writingPaper" class="com.yc.webexam.actions.WritingPaperAction"
+		scope="prototype"></bean>
+	<bean id="initData" class="com.yc.webexam.actions.InitDataAction"
+		scope="prototype"></bean>
+
+	<bean id="examarrangement" class="com.yc.webexam.actions.ExamArrangementAction"
+		scope="prototype">
+	</bean>
+	<bean id="pointAnswer" class="com.yc.webexam.actions.PointAnswerAction"
+		scope="prototype">
+	</bean>
+	<bean id="pointPaper" class="com.yc.webexam.actions.PointPaperAction"
+		scope="prototype">
+	</bean>
+	<bean id="temp" class="com.yc.webexam.actions.TempAction" scope="prototype">
+	</bean>
+	<bean id="systemUser" class="com.yc.webexam.actions.SystemUserAction"
+		scope="prototype">
+	</bean>
+	<bean id="writingAnswer" class="com.yc.webexam.actions.WritingAnswerAction"
+		scope="prototype">
+	</bean>
+
+	<bean id="assessmentpaper" class="com.yc.webexam.actions.AssessmentPaperAction"
+		scope="prototype">
+	</bean>
+	<bean id="showstudentassessment" class="com.yc.webexam.actions.ShowStudentAssessmentAction"
+		scope="prototype">
+	</bean>
+	
+	<bean id="qusetion" class="com.yc.webexam.actions.QuestionAction"
+		scope="prototype">
+	</bean>
+	<bean id="dataarray" class="com.yc.webexam.actions.DataarrayAction"
+		scope="prototype"></bean>
+
+
+	<!-- 手动注释 <bean id="exportWord" class="com.yc.webexam.actions.ExportWordAction" 
+		scope="prototype"></bean> -->
+
+	<bean id="isLogin" class="com.yc.webexam.actions.IsLoginAction"
+		scope="prototype"></bean>
+
+	<!-- <bean id="uploadExcel" class="com.yc.webexam.actions.UploadExcelAction" 
+		scope="prototype"></bean> -->
+
+	<!-- 排课系统bean -->
+	<bean id="teachScheduleAction" class="com.yc.webexam.actions.TeachScheduleAction"
+		scope="prototype"></bean>
+		<!-- 满意度调查表 -->
+		<bean id="satisfactionAction" class="com.yc.webexam.actions.SatisfactionAction"
+		scope="prototype"></bean>
+		
+	<!-- 满意度调查细节表 -->
+	<bean id="satisfactionDetailAction" class="com.yc.webexam.actions.SatisfactionDetailAction"
+	scope="prototype"></bean>
+	
+		<!-- 导出Excel -->
+	<bean id="CurriToExcel" class="com.yc.webexam.actions.CurriToExcel"
+		scope="prototype"></bean>
+		
+		<!-- 月度课时导出Excel -->
+	<bean id="teachSeduceExcel" class="com.yc.webexam.actions.teachSeduceToExcel"
+		scope="prototype"></bean>
+		
+		<!-- 访谈记录的action -->
+	<bean id="examinInterviewRecord" class="com.yc.webexam.actions.ExaminInterviewRecordAction"
+		scope="prototype"></bean>
+		
+	
+</beans>

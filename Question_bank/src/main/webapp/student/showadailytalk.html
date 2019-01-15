@@ -1,0 +1,234 @@
+<script type="text/javascript" language="javascript"
+	src="js/showadailytalk.js"></script>
+<script type="text/javascript">
+	$(function() {
+		$.getJSON("/Examination2.0/checking_talkByFpc.action", function(data) {
+			$.each(data,function(i,item){
+				//var uname=item[0].uname;
+				//由于回传的数据会有两段  obj:所需数据 ,respCode 状态码 【0,1】
+				if(i=="obj"){
+					var a='';
+					a+='<option value="0" selected="selected" id="opentionName">--请选择--</option>';
+					for(var i=0;i<item[0].stuNameList.length;i++){
+						a+='<option value='+item[0].stuNameList[i]+' id="opentionName">'+item[0].stuNameList[i]+'</option>';
+					}
+					$("#stuname").html(a);
+				}
+			});
+		});
+	
+	
+		$('#back_yhgl_datagrid').datagrid({
+			url : '/Examination2.0/checking_talk.action',
+			fit : true,
+			fitColumns : true,
+			border : true,
+			pagination : true,
+			singleSelect : true,
+			checkOnSelect : true,
+			sortName : 'name', //排序方式
+			sortOrder : 'asc', //排序规则
+			idField : 'id', //标识列
+			pageList : [ 5, 10, 15, 20, 30, 50, 100 ], //每页多少条
+			pageSize : 50, //默认每页多少条
+			rownumbers : true, //排序ID
+			columns : [ [ {
+				field : 'id',
+				title : '编号',
+				width : 150,
+				align : 'center',
+				checkbox : true
+			}, {
+				field : 'name',
+				title : '讲解学生',
+				width : 150,
+				align : 'center',
+				sortable : true, //可排序
+			}, {
+				field : 'knowledge',
+				title : '讲解内容',
+				width : 150,
+				align : 'center',
+			}, {
+				field : 'assessment',
+				title : '教员评价',
+				width : 150,
+				align : 'center',
+			}, {
+				field : 'speakdate',
+				title : '开讲日期',
+				width : 150,
+				align : 'center',
+			}, {
+				field : 'status',
+				title : '操作',
+				width : 150,
+				align : 'center',
+				hidden : true,
+			}, {
+				field : 'sta',
+				title : '操作',
+				width : 150,
+				align : 'center',
+			}, {
+				field : 'uname',
+				title : '操作',
+				width : 150,
+				align : 'center',
+				hidden : true,
+			} ] ],
+
+			toolbar : [ {
+				text : '上传',
+				iconCls : 'icon-arrow-up',
+				handler : function() {
+					upload();
+				}
+			}, '-', {
+				text : '下载',
+				iconCls : 'icon-arrow-down',
+				handler : function() {
+					down();
+				}
+			}]
+		});
+	});
+	
+	function upload(){
+		//取出选定的行
+		var rows = $('#back_yhgl_datagrid').datagrid('getChecked');
+		//判断
+		if (rows.length <= 0) {
+			//跳出错误框
+			$.messager.show({
+				title : '错误提示',
+				msg : '请至少选定一行进行操作',
+				timeout : 5000,
+				showType : 'slide'
+			});
+			return;
+		}
+		var id=rows[0].id;
+		var status=rows[0].status;
+		var uname=rows[0].uname;
+		var name=rows[0].name;
+		
+		if(status==1){
+			$.messager.show({
+				title : '错误提示',
+				msg : '该知识点还未开讲',
+				timeout : 5000,
+				showType : 'slide'
+			});
+			return;
+		}
+		if(status==3){
+			$.messager.show({
+				title : '错误提示',
+				msg : '该知识点已经上传，请前往下载',
+				timeout : 5000,
+				showType : 'slide'
+			});
+			return;
+		}
+		if(uname!=name){
+			$.messager.show({
+				title : '错误提示',
+				msg : '请上传自己讲解的资料',
+				timeout : 5000,
+				showType : 'slide'
+			});
+			return;
+		}
+		window.open("/Examination2.0/student/upload.html?id=" + id);
+		//$("#iframe").src="/Examination2.0/student/upload.html?id=" + id;
+		//$('#dd').dialog('refresh', 'upload.html');
+		//$('#dlg').dialog('open') ;
+	}
+	
+	function down(){
+		//取出选定的行
+		var rows = $('#back_yhgl_datagrid').datagrid('getChecked');
+		//判断
+		if (rows.length <= 0) {
+			//跳出错误框
+			$.messager.show({
+				title : '错误提示',
+				msg : '请至少选定一行进行操作',
+				timeout : 5000,
+				showType : 'slide'
+			});
+			return;
+		}
+		var id=rows[0].id;
+		var status=rows[0].status;
+		if(status==1){
+			$.messager.show({
+				title : '错误提示',
+				msg : '该知识点还未开讲',
+				timeout : 5000,
+				showType : 'slide'
+			});
+			return;
+		}
+		if(status==2){
+			$.messager.show({
+				title : '错误提示',
+				msg : '该知识点资料还未上传',
+				timeout : 5000,
+				showType : 'slide'
+			});
+			return;
+		}
+		$.getJSON("/Examination2.0/checking_download.action?t=" + new Date(), {
+			id : id
+		}, function(data) {
+			$.each(data, function(i, item) {
+				window.open(item[0].local);
+			});
+		});
+	}
+	
+</script>
+
+	<center>
+		
+		<div id="cc" class="easyui-layout" style="width:600px;height:490px;"
+			data-options="fit:true">
+			<div data-options="region:'north',title:'综合查询',split:false"
+				style="height:100px;">
+				<form id="back_yhgl_searchFrom">
+					<table>
+						<td width="60%" align="left" class="fontColor linefontsize">讲解日期：
+					<input type="text" id="startDate" name="startDate" readonly="readonly"
+					onclick="fPopCalendar(event,this,this)" onfocus="this.select()" />&nbsp;
+					到 &nbsp;<input type="text" id="endDate" name="endDate" readonly="readonly"
+					onclick="fPopCalendar(event,this,this)" onfocus="this.select()" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				</td>
+				<td width="20%" align="left" class="fontColor linefontsize">讲解学员：
+					<select name='stuname' class='select2' id='stuname'>
+						
+				</select>
+				</td>
+				
+						<tr>
+							<td colspan="2"><a id="btnView" href="#" class="easyui-linkbutton"
+								data-options="iconCls:'icon-search'"  onClick="findKonwledgeInfoByAll()">查询</a>
+								
+								<a id="btn" href="#" class="easyui-linkbutton"
+								data-options="iconCls:'icon-no'" onClick="clearForm()">清空</a></td>
+		
+						</tr>
+					</table>
+				</form>
+			</div>
+			<div id="back_yhgl_datagrid_div"
+				data-options="region:'center',title:'讲解信息'" >
+				<table id="back_yhgl_datagrid">
+		
+				</table>
+			</div>
+		</div>
+	<!-- <div id="dlg" class="easyui-dialog" title="Basic Dialog" data-options="iconCls:'icon-save'" style="width:400px;height:200px;padding:10px">
+		The dialog content.
+	</div>   -->

@@ -1,0 +1,61 @@
+<link rel="stylesheet" href="../../css/szindex.css" type="text/css"></link>
+<!-- <script src="http://lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.js"></script> -->
+<script type="text/javascript">
+!window.jQuery && document.write('<script src=../../js/jquery-1.9.1.js><\/script>');
+</script>
+<script type="text/javascript" src="../../js/edition_New.js"></script>
+
+
+		<form>
+			<table width="630" border="0" cellpadding="0" cellspacing="0">
+				
+				<tr>
+					<td height="60" align="center">
+						<img
+							src="../../images/edition/edition.gif"
+							width="595" height="33" />
+					</td>
+				</tr>
+				
+				<tr>
+					<td align="center">
+					<br />
+						<table width="400" border="0px" cellspacing="2" cellpadding="2">
+							<thead>
+							<tr>
+								<th align="center">
+									编号
+								</th>
+								<th align="center">
+									版本名称
+								</th>
+								<th align="center">
+									默认
+								</th>
+								<th align="center" bgcolor="#CCCCCC">
+									修改	</th>
+								<!--  
+								<th align="center">
+									删除
+								</th>
+								-->
+							</tr>
+							</thead>
+							<tbody  id="showEdition">
+								
+								</tbody>
+					  </table>
+						<br />
+
+						新版本名称：
+						<input name="txtNewEditionName" type="text" class="text4"
+							id="txtNewEditionName" />
+						&nbsp;&nbsp;&nbsp;
+						<input name="act" type="button" class="inp_L1" id="addEdition" onclick="return chkForm(this)"
+							value="增 加" onmouseover="this.className='inp_L2'"
+							onmouseout="this.className='inp_L1'" />
+					</td>
+				</tr>
+			</table>
+		</form>
+

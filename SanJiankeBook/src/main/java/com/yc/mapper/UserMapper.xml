@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yc.mapper.UserMapper">
+	
+	<insert id="addUser" parameterType="User" useGeneratedKeys="true" keyProperty="uid">
+		insert into user(uname,u_number,upassword,usex)
+		values(#{uname},#{u_number},#{upassword},#{usex})
+	</insert>
+	
+	<insert id="addUserInfo" parameterType="User">
+		insert into user(uname,u_number,upassword,standby_1)
+		values(#{uname},#{u_number},#{upassword},#{standby_1})
+	</insert>
+	
+
+	<!-- 检验用户登录 -->
+	<select id="userLogin" parameterType="User" resultMap="UserResultMap">
+		select uname,upassword from user where uname=#{uname} and upassword=#{upassword}
+	</select>
+	<!-- 用户注册前的检验 -->
+	<select id="finduserinfo" parameterType="User" resultType="User">
+		select * from user
+			<where>
+				<if test="u_number != null">
+					 u_number =#{u_number}
+				</if>
+				<if test="uname != null ">
+					and  uname=#{uname} 
+				</if>
+			</where>
+	</select>
+	
+	<!-- 查询所有用户 -->
+	<select id="findAllUser" parameterType="User" resultMap="UserResultMap">
+		select uid,uname,u_number,upassword,usex from user
+	</select>
+	
+	<!-- 查询用户通过id -->
+	<select id="findUserById" parameterType="User" resultMap="UserResultMap">
+		select uid,uname,u_number,upassword,usex from user where uid=#{uid}
+	</select>
+	
+	<!-- 分页查询 -->
+	<select id="findUserByPage" parameterType="User" resultMap="UserResultMap">
+		select uid,uname,u_number,upassword,usex from user limit #{start},#{end}
+	</select>
+	
+	
+	<!-- 删除用户 -->
+	<delete id="delUser" parameterType="User">
+		delete from user where uid in (#{uid})
+	</delete>
+	<!-- 修改密码 -->
+	<update id="updatepassword" parameterType="User">
+	 update user set upassword=#{upassword} where u_number=#{u_number}
+	</update>
+	
+	<update id="updateUserInfo" parameterType="User">
+	 update user set uname=#{uname},usex=#{usex},standby_1=#{standby_1} where u_number=#{u_number}
+	</update>
+	
+	<!-- 通过用户名查询用户信息 -->
+	<select id="findUserByName" parameterType="User" resultType="User">
+		select * from user where u_number=#{u_number}
+	</select>
+	
+	<resultMap type="User" id="UserResultMap">
+		<id property="uid" column="uid" />
+		<result property="uname" column="uname"/>
+		<result property="u_number" column="u_number"/>
+		<result property="upassword" column="upassword"/>
+		<result property="usex" column="usex"/>
+	</resultMap>
+
+</mapper>

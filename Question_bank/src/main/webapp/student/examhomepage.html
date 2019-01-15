@@ -1,0 +1,115 @@
+<style type="text/css">
+body {
+	background-repeat: no-repeat;
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+}
+</style>
+<script type="text/javascript" language="javascript">
+	$(function() {
+		var paperType = "writ";
+		var str = "";
+		$.post("/Examination2.0/examArrangement_examType.action",
+						{
+							type : paperType
+						},
+						function(data) {
+							if (data != null) {
+								$.each(data.obj,function(i, item) {
+													if (item.arr != "") {
+														var arrlength = item.arr.length;
+														for (var j = 0; j < arrlength; j++) {
+															var paperType = item.paperType;
+															var arr = item.arr;
+															$("#" + paperType)
+																	.attr(
+																			"checked",
+																			true);
+															if (arr != "") {
+																var paperStatus;
+																if (arr[j][4] == 1) {
+																	paperStatus = "未考";
+																} else if (arr[j][4] == 2) {
+																	paperStatus = "未评";
+																} else if (arr[j][4] == 3) {
+																	paperStatus = "已评";
+																} else if (arr[j][4] == 4) {
+																	paperStatus = "考试中";
+																}
+
+																str += "<tr><td align='center'>"
+																		+ arr[j][0]
+																		+ "</td><td align='center'>"
+																		+ arr[j][1]
+																		+ "</td><td align='center'>"
+																		+ arr[j][2]
+																		+ "</td><td align='center'>"
+																		+ arr[j][3]
+																		+ "</td><td align='center'>"
+																		+ paperStatus
+																		+ "</td><td align='center'><a href='javascript:void(0) ' onClick=\"javascript:openPaper('"
+																		+ arr[j][0]
+																		+ "','"
+																		+ paperType
+																		+ "')\">开考此卷</a></td></tr>";
+																$("#mytbody")
+																		.html(
+																				str);
+															}
+														}
+													} else {
+														var a = '';
+														a += '<td height="55"><font class="fontColor">温馨提示：</font><br>	现在还没有安排考试，可以去查看其它内容。</td>'
+														$("#table_1").html(a);
+													}
+												});
+							}
+						});
+	});
+	//打开登录考试页面
+	function openPaper(paperId, type) {
+		  window.open("/Examination2.0/student/writpapervalidate.html?paperId="
+				+ paperId, "笔试考试", "fullscreen=no,scrollbars=yes");  
+				//window.location.href='/Examination2.0/student/writpapervalidate.html?paperId='+ paperId;
+	}
+</script>
+<table width="90%" align="center" border="0" align="center"
+	cellspacing="0" id="table_1">
+	<tr>
+		<td align="center">
+			<table width="100%" cellspacing="0" cellpadding="0" border="0"
+				height="113">
+				<tbody>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td height="55"><font class="fontColor">温馨提示：</font>
+			对于已经参加过的考试试卷你将无法看到。如果你没有考试过而看不到试卷，请联系老师。</td>
+	</tr>
+	<tr>
+		<td>
+			<table width="90%" align="center" border="1" cellspacing="0"
+				bordercolor="#FFFFFF">
+				<tr>
+					<th>试卷编号</th>
+					<th>名称</th>
+					<th>班级</th>
+					<th>考试日期</th>
+					<th>试卷状态</th>
+					<th>考试登录</th>
+				</tr>
+				<tbody id="mytbody">
+				</tbody>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<p>&nbsp;</p>
+			<p>&nbsp;</p>
+		</td>
+	</tr>
+</table>

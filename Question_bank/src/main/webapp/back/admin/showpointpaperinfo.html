@@ -1,0 +1,116 @@
+<link rel="stylesheet" href="../../css/szindex.css" type="text/css"></link>
+<link id="easyuiTheme" rel="stylesheet" type="text/css" href="../../jslib/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="../../jslib/themes/icon.css">
+
+<!-- <script type="text/javascript" src="http://lib.sinaapp.com/js/jquery/2.0/jquery.min.js"></script> -->
+<script type="text/javascript">
+!window.jQuery && document.write('<script src=../../jslib/jquery.min.js><\/script>');
+</script>
+
+<script type="text/javascript" src="../../jslib/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../jslib/jeasyui.common.js"></script>
+<script type="text/javascript" src="../../js/createoption.js"></script>
+<script type="text/javascript" src="../../jslib/locale/easyui-lang-zh_CN.js"></script>
+	<script type="text/javascript">
+	var pid=0;
+		$(function(){
+			pid= window.localStorage? localStorage.getItem("pid"): Cookie.read("pid");
+			showPointPaperInfo(pid);
+		});
+		
+		//根据pid查询试卷信息
+  		function showPointPaperInfo(pid){
+  		$.ajaxSettings.async = false; 
+  			$.ajax({
+  				url:"/Examination2.0/assessmentpaper_findPointPaper.action",
+  				type:"post",
+  				data:{"pid":pid},
+  				datatype:"json",
+  				success:function(data){
+  					var examineeClassList=data;
+  					for(var i=0;i<examineeClassList.obj.length;i++){
+  						$('#subjectName').html("科目名称：&nbsp;&nbsp;"+examineeClassList.obj[i].subjectName);
+  						$('#examDate').html("测评日期：&nbsp;&nbsp;"+examineeClassList.obj[i].date);
+  						$('#paperName').html("题目：&nbsp;&nbsp;"+examineeClassList.obj[i].pname);
+  						$('#className').html("测评班级：&nbsp;&nbsp;"+examineeClassList.obj[i].className);
+  						$('#paperdescript').html("描述：&nbsp;&nbsp;"+examineeClassList.obj[i].descript);
+  						var title=examineeClassList.obj[i].ptitle;
+  						showPointInfo(title);
+  					}
+  				}
+  			});
+  		}
+  		function showPointInfo(title){
+  			$.ajax({
+  				url:"/Examination2.0/assessmentpaper_showPointInfo.action",
+  				type:"post",
+  				data:{"ptitle":title},
+  				datatype:"json",
+  				success:function(data){
+  					var examineeClassList=data;
+  					var tablestr="";
+  					if(examineeClassList.responseCode==0){
+  						for(var i=0;i<examineeClassList.obj.length;i++){
+  							tablestr+="<tr id='"+(i+1)+"' bgcolor='#EDECEB' align='left'>";
+  							tablestr+="<td width='14%' >"+(i+1)+" </td>";
+  							tablestr+="<td>"+examineeClassList.obj[i]+" </td>";
+  							tablestr+="</tr>"
+  						}
+  					}else{
+  						tablestr+="<td height='60' colspan='3'><span class='fontColor'>暂无测评点信息</span></td>";
+  					}
+  					$("#pointInfo").html(tablestr);
+  				}
+  			});
+  		}
+  		function back(){
+  			window.location.href='/WebExamination/Jsp/assessment/admin/showpointpaper.html';
+  		}
+	</script>
+
+  
+ 
+ 
+	<table width="680" border="0" cellpadding="0" cellspacing="0">
+		<tr>
+			<td height="43" colspan="3">
+				<table width="100%" border="0" cellspacing="0">
+					<tr height="43">
+						<td width="40%" class="fontColor" id="subjectName">科目名称：&nbsp;&nbsp;</td>
+						<td width="20%" class="fontColor" id="className">测评班级：&nbsp;&nbsp;</td>
+						<td class="fontColor" id="examDate">测评日期：&nbsp;&nbsp;</td>
+					</tr>
+					<tr>
+						<td class="fontColor" id=paperName>题目：&nbsp;&nbsp;</td>
+						<td colspan="2" class="fontColor" id=paperdescript>描述：&nbsp;&nbsp;
+						</td>
+					</tr>
+					</table>
+				</td>
+		   </tr>
+	  </table>
+	  <hr/>
+	<table width="680" border="1" cellpadding="1" bordercolor="#FFFFFF" cellspacing="1" >
+		
+		<tr style="color: red;text-align: center;"><td colspan="3">如要查看自评结果及结果分析，请点 “测评结果管理“</td></tr>
+		<tr>
+			<td height="50" colspan="3" width="40%"><span class="fontColor">测试试题信息如下:</span></td>
+<!-- 			<td align="right"><input name="btnView" type="button" class="inp_L1" id="btnView" onClick="back()" onMouseOver="this.className='inp_L2'" onMouseOut="this.className='inp_L1'" value="返回"></td>
+ -->		</tr>
+		<tr>
+			<th bordercolor="#7EA6DC" width="14%">编号</th>
+			<th bordercolor="#7EA6DC" colspan="4">题目</th>
+		</tr>
+	</table>
+	<div id="showpointInfo">
+	<table width="680" border="1" cellpadding="1" bordercolor="#FFFFFF" cellspacing="1" id="pointInfo">
+		
+
+
+
+
+
+	</table>
+	</div>
+	<br/><br/>
+

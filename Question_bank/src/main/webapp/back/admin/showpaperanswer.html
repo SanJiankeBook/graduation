@@ -1,0 +1,171 @@
+<html>
+<head>
+	<title>浏览自评试题</title>
+	 <META http-equiv=Content-Type content="text/html; charset=utf-8">
+	 <link href="../../css/szindex.css" type="text/css" rel="stylesheet">
+	<link href="../../css/dopointPaper.css" type="text/css" rel="stylesheet">
+	<script type="text/javascript" src="../../js/ajax.js"></script>
+<script type="text/javascript" src="../../jslib/jquery.min.js"></script>
+<script type="text/javascript" src="../../jslib/jquery.easyui.min.js"></script>
+<script type="text/javascript" language="javascript"
+	src="../../js/creatXML.js"></script>
+<script type="text/javascript">
+	$(function(){
+		//alert("b");
+		var answerIdeaArr;
+					// 从浏览器中取id（从localstorage或cookie中取）
+					var opid= window.localStorage? localStorage.getItem("opid"): Cookie.read("opid");
+					// alert("opid:"+opid);
+					// 根据id查找试卷信息
+					$.ajax({
+						url:"/Examination2.0/pointAnswer_findPoinAnswerInfoByOpid.action",
+						type:"post",
+						datatype:"json",
+						data:{"opid":opid},
+						success:showPointAnswerInfo
+						});
+					
+				});
+	
+		function showPointAnswerInfo(data){
+			var paperinfos =  data;
+			if(paperinfos.responseCode==0){
+				$.each(paperinfos.obj,function(idx,paperinfo){
+					var className=$.trim(paperinfo.pointPaper.examineeClass.className);
+					var subName=$.trim(paperinfo.pointPaper.subject.subjectName);
+					var studentName=$.trim(paperinfo.name);
+					var pdate=$.trim(paperinfo.pointPaper.pdate);
+					var pname=$.trim(paperinfo.pointPaper.pname);
+					var descript=$.trim(paperinfo.pointPaper.descript);
+					var ptitle=$.trim(paperinfo.pointPaper.ptitle);
+					var idea=$.trim(paperinfo.idea);
+					var answer=$.trim(paperinfo.answer);
+					if( answer.charAt(answer.length-1)==","){
+						answer=answer.substring(0,answer.length-1)
+						}else{
+							answer=answer;
+						}
+					var answerArr=answer.split(',');
+					answerIdeaArr=new Array();
+					for(var j=0;j<answerArr.length;j++){
+						answerIdeaArr[j]=answerArr[j].split('-')[1];
+					}
+					if( ptitle.charAt(ptitle.length-1)==","){
+						ptitle=ptitle.substring(0,ptitle.length-1)
+						}else{
+							ptitle=ptitle;
+						}
+					if(ptitle!=""){
+						ptitle="["+ptitle+"]";
+						$.ajax({
+							url:"/Examination2.0/pointAnswer_findAllPoinInfoByPids.action",
+							type:"post",
+							datatype:"json",
+							data:{"ptitle":ptitle},
+							success:showAllPointInfo
+							});	
+					}
+					
+					if(descript==""){
+						descript="无";
+					}
+					$("#className").text(className);
+					$("#subName").text(subName);
+					$("#studentName").text(studentName);
+					$("#pdate").text(pdate);
+					$("#pname").text(pname);
+					$("#descript").text(descript);
+					$("#messageinfo").text(idea);
+				});
+			}else{
+				alert("失败");
+			}
+		}
+	function showAllPointInfo(data){
+		var pointInfos =   data ;
+		var pointInfoStr='<tr bgcolor="#EDECEB" onmouseover="this.bgColor=\'#93BBDF\';" onmouseout="this.bgColor=\'#EDECEB\';" align="left" ><td height="60" colspan="3"><span class="fontColor">暂无测评知识点信息</span></td></tr>';
+		if(pointInfos.responseCode==0){
+			if(pointInfos.obj!=null&&pointInfos.obj.length>0){
+				pointInfoStr='';
+				$.each(pointInfos.obj,function(i,pointInfo){
+					var index=i+1;
+					pointInfoStr+='<tr id="'+index+'" bgcolor="#EDECEB" onmouseover="this.bgColor=\'#93BBDF\';" onmouseout="this.bgColor=\'#EDECEB\';" align="left">';
+					pointInfoStr+='<td align="center" width="10%">'+index+'</td>';
+					pointInfoStr+='<td width="80%">&nbsp;'+pointInfo.pcontent+'</td>';
+					pointInfoStr+='<td align="center" width="10%">'+answerIdeaArr[i]+'分</td></tr>';
+				});
+				$("#pointInfoMsg").html(pointInfoStr);
+			}else{
+				$("#pointInfoMsg").html(pointInfoStr);
+			}	
+		}else{
+			$("#pointInfoMsg").html(pointInfoStr);
+		}
+	}	
+	
+	function toShowStudentAnswer(){
+		window.location.href='/Examination2.0/back/grade/showstudentanswer.html';
+	}
+</script>
+</head>
+<body bgcolor="#fef4d9">
+	<center>
+	<table width="1000" border="0" cellpadding="0" cellspacing="0">
+		<tr align="center">
+			<td height="65" colspan="3" align="center" valign="middle"></td>
+		</tr>
+		<tr>
+			<td height="43" colspan="3">
+				<table width="100%" border="0" cellspacing="0">
+					<tr height="43">
+						<td width="20%" class="titlestyle">测评班级：<span id="className"></span></td>
+						<td width="25%" class="titlestyle">科目名称：<span id="subName"></span></td>
+						<td width="15%" class="titlestyle">考生名字：<span id="studentName"></span></td>
+						<td width="20%" class="titlestyle">测评日期：<span id="pdate"></span></td>
+					</tr>
+					<tr height="43">
+						<td class="titlestyle">题目：<span id="pname"></span></td>
+						<td colspan="3" class="titlestyle">描述：
+							<span id="descript">
+						</td>
+					</tr>
+					<tr>
+						 <td colspan="4" class="titlestyle" style="color:red">说明：完全没掌握：1分 &nbsp;&nbsp;&nbsp;&nbsp;掌握少部分：2分 &nbsp;&nbsp;&nbsp;&nbsp;基本已掌握 ：3分&nbsp;&nbsp;&nbsp;&nbsp;掌握大部分 ：4分&nbsp;&nbsp;&nbsp;&nbsp;完全没问题：5分</td>
+					</tr>
+					</table>
+				</td>
+		   </tr>
+	  </table>
+	  <hr/>
+	<table width="1000" border="1" cellpadding="1" bordercolor="#FFFFFF" cellspacing="1" >
+		<tr>
+			<th bordercolor="#7EA6DC" width="10%">编号</th>
+			<th bordercolor="#7EA6DC" width="80%">题目</th>
+			<th bordercolor="#7EA6DC" width="10%">评分</th>
+		</tr>
+	</table>
+	<div id="showpointInfo">
+	<table width="1000" border="1" cellpadding="1" bordercolor="#FFFFFF" cellspacing="1" id="pointInfoMsg">
+			
+		
+	</table>
+	</div>
+	<br/>
+	<table width="1000" border="0" cellpadding="0" cellspacing="0">
+		<tr>
+			<td width="8%"></td>
+			<td width="10%" style="color:red;font-size:14px;font-weight:bold">意见或建议:</td>
+			<td colspan="2" width="70%"><br><textarea name="messageinfo" cols="70" rows="4" class="text1" id="messageinfo" readonly="readonly"></textarea></td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr height="30"><td>&nbsp;</td></tr>
+		<!--  <tr height="43">
+			<td width="8%"></td>
+			<td colspan="2" width="80%"><span style="color:red;font-size:14px;font-weight:bold">&nbsp;</span></td>
+			<td align="center" ><input name="btnView" type="button" onClick="toShowStudentAnswer()" class="inp_L1" id="btnView" onMouseOver="this.className='inp_L2'" onMouseOut="this.className='inp_L1'" value="返回"></td>
+	    </tr>-->
+	</table>
+	<br/><br/>
+	</center>
+</body>
+</html>

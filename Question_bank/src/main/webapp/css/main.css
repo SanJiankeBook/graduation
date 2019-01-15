@@ -1,0 +1,369 @@
+*{
+    padding:0;
+    margin:0 auto;
+}
+body{
+    width:100%;
+    /*text-align: center;*/
+    height:100%;
+    font-family:"Helvetica Neue","Lucida Grande","Microsoft YaHei",
+    Arial,"Liberation Sans",FreeSans,"Hiragino Sans GB",sans-serif;
+}
+ul li{
+    list-style: none;
+}
+nav{
+    width:100%;
+    height:80px;
+    /*border:1px solid #000;*/
+    background: #333;
+    text-align: center;
+}
+nav .nav_content{
+    width: 80%;
+    padding-top: 20px;
+    height: 100%;
+}
+nav .nav_content .classSel{
+    width: 150px;
+    float: left;
+    margin-right: 6%;
+}
+nav .nav_content .classSel a{
+    cursor: pointer;
+    font-size: 13px;
+    border: 1px solid #f0efee;
+    color: #f0efee;
+    border-radius: 4px;
+    text-decoration: none;
+    width: 100%;
+    display: block;
+    height:22px;
+    line-height: 22px;
+}
+nav .nav_content .classSel .classche{
+    display:none;
+    position: relative;
+    right:20px;
+    top:8px;
+    width:300px;
+    padding:20px;
+    color: #000;
+    -webkit-border-radius:5px;
+    -moz-border-radius:5px;
+    border-radius:5px;
+    z-index: 10;background: #0099CC;
+}
+nav .nav_content .classSel .classche span{
+    color: #fff;
+}
+nav .nav_content .classSel .classche a{
+    border: 1px solid #fff;
+    color: #fff;
+}
+nav .classSel .trangle{
+    position:absolute;
+    margin-top: -30px;
+    margin-left: -20px;
+    width:0;
+    height:0;
+    border-left:10px solid transparent;
+    border-right:10px solid transparent;
+    border-bottom:10px solid #0099CC;
+    z-index:-1;
+}
+nav .weekSel{
+    float: left;height: 22px;
+    margin-right: 6%;
+    color: #f0efee;
+    border: 1px solid #f0efee;border-radius: 4px;
+}
+nav .weekSel select{
+    width: 150px;color: #f0efee;
+    border: none;
+    background: none;
+}
+nav .timeSel{
+    float: left;height: 22px;
+}
+nav .timeSel input{
+    width: 150px;
+    border: 1px solid #f0efee;
+    color: #f0efee;
+    background: none;
+    border-radius: 4px;
+}
+nav button{
+    width: 150px;
+    margin-left: 6%;
+    height: 22px;
+    border: 1px solid #f0efee;
+    border-radius: 4px;
+    background: none;
+    color: #f0efee;
+}
+article{
+    position: absolute;
+    top:110px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+article table{
+    width: 70%;
+    float: left;
+    margin-left: 10%;
+    height: 550px;
+    border: 1px solid #000000;
+    text-align: center;
+    margin-bottom: 20px;
+}
+article table tr{
+    border: 1px solid #000000;
+    height: 8%;
+}
+article table tbody tr:nth-child(2){
+    height: 4%;
+}
+article table tbody tr:nth-child(3){
+    height: 4%;
+}
+article table td{
+    border: 1px solid #000000;
+    width: 12.5%;
+}
+article table td p{
+    text-align: center;
+    line-height: 50%;
+}
+.insertchoose{
+    background: #333;
+    position: fixed;
+    top: 110px;
+    right: -250px;
+    width: 250px;
+    /*border: 1px solid #000;*/
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    text-align: inherit;
+    overflow-y:auto;
+}
+.accordion {
+    width: 80%;
+    background: none;
+    /*max-width: 360px;*/
+    margin: 15px auto 20px;
+    /*background: #FFF;*/
+    z-index:2;
+
+}
+
+.accordion .link {
+    cursor: pointer;
+    display: block;
+    padding: 12px 15px 15px 42px;
+    color: #f0efee;
+    font-size: 14px;
+    font-weight: 700;
+    border-bottom: 1px solid #CCC;
+    position: relative;
+    -webkit-transition: all 0.4s ease;
+    -o-transition: all 0.4s ease;
+    transition: all 0.4s ease;
+
+}
+.accordion li.open .link {
+    color: #b63b4d;
+}
+.accordion li.open i {
+    color: #b63b4d;
+}
+/**
+ * Submenu
+ -----------------------------*/
+.submenu {
+	 z-index:2;
+    display: none;
+    background: #444359;
+    font-size: 14px;
+    height: 200px;
+    overflow-y:auto;
+    border-radius: 0 0 5px 5px;
+}
+
+.submenu li {
+    border-bottom: 1px solid #4b4a5e;
+}
+.submenu li:last-child{
+    border: none;
+}
+.submenu label{
+    width: 100%;
+}
+.submenu li i{
+    width:20px;
+    height: 20px;
+    border: 1px solid #f0f0f0;
+    float: left;
+    margin-left: 12px;
+    margin-top: 5px;
+    margin-right:15px;
+}
+.submenu li a {
+    display: block;
+    text-decoration: none;
+    color: #d9d9d9;
+    padding: 6px;
+    padding-left: 42px;
+    -webkit-transition: all 0.25s ease;
+    -o-transition: all 0.25s ease;
+    transition: all 0.25s ease;
+}
+.submenu li input{
+    float: left;
+    width: 20px;
+    height:20px;
+    margin-left: 10px;
+    /*padding-top: 6px;*/
+}
+.submenu a:hover {
+    background: #b63b4d;
+    color: #FFF;
+}
+.insertfinish{
+    display: inline-block;
+    padding-left: 40%;
+    color: #f0f0f0;
+    font-size: 16px;
+    margin-top: 20px;
+    cursor: pointer;
+}
+.delete{
+    display: inline-block;
+    float: right;
+    color: #f0f0f0;
+    font-size: 14px;
+    margin-top: 20px;
+    cursor: pointer;
+    padding-top: 15px;
+}
+.statistics{
+    background:#333;
+    position: fixed;
+    bottom: 5px;
+    right: 0px;
+    width: 250px;
+    /*border: 1px solid #000;*/
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    text-align: inherit;
+    overflow-y:auto;
+    cursor: pointer;
+}
+.black{
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    left:0;
+    top:0;
+    display: none;
+    background: rgba(255,255,255,0.6);
+    z-index:20000;
+}
+.black  .black_content{
+    width: 85%;
+    height:80%;
+    background: rgba(0,0,0,0.4);
+    margin-left: 7.5%;
+    margin-top: 100px;
+    color: #f0f0f0;
+    font-size: 18px;
+    text-align: center;
+}
+.black  .black_content .chooseSel{
+    width: 60%;
+    /*border: 1px solid #f0f0f0;*/
+    position: absolute;
+    top:45%;
+    left:20%;
+}
+.black  .black_content .chooseSel .teaChoose{
+    margin-right: 20px;
+}
+.black  .black_content .chooseSel  .teasel{
+    width: 150px;
+    color: #f0efee;
+    background: none;
+    height: 30px;
+    line-height: 30px;
+    border: 1px solid #f0efee;border-radius: 4px;
+}
+.black .chooseSel .teaTable{
+    display: inline-block;
+    width: 260px;
+    color: #f0efee;
+    background: none;
+    height: 30px;
+    line-height: 30px;
+    border: 1px solid #f0efee;border-radius: 4px;
+    margin-top: 30px;
+    cursor: pointer;
+}
+.black .deleteIcon{
+    position: absolute;
+    right:30px;
+    top:30px;
+    width: 60px;
+    height:60px;
+    /*border: 1px solid #000;*/
+    background: url("../images/red.png") no-repeat;
+    background-size: cover;
+    display: inline-block;
+    cursor: pointer;
+}
+.table_content  table{
+	font-size:12px;
+	margin-top:3%;
+	 width: 80%;
+    float: left;
+    margin-left: 10%;
+    height: 400px;
+    border: 1px solid #f0efee;
+    text-align: center;
+    margin-bottom: 20px;
+}
+.table_content  table tr{
+    border: 1px solid #f0efee;
+    height: 2%;
+}
+.table_content  table tbody tr:nth-child(1){
+    height:1%;
+}
+.table_content  table tbody tr:nth-child(2){
+    height: 1%;
+}
+.table_content  table td{
+    border: 1px solid  #f0efee;
+    width: 12.5%;
+}
+.table_content  table td p{
+    text-align: center;
+    line-height: 50%;
+}
+.table_content  #toback{
+	float:right;
+	margin-top:20px;
+	padding-right:20px;
+	cursor:pointer;
+	
+}
+
+.insertcancel{
+	display: inline-block;
+    color: #f0f0f0;
+    margin-top:30px;
+    float:right;
+    cursor: pointer;
+    font-size: 14px;
+}

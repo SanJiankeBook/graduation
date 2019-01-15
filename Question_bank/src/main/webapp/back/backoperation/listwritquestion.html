@@ -1,0 +1,316 @@
+<link rel="stylesheet" href="../../css/szindex.css" type="text/css"></link>
+<link id="easyuiTheme" rel="stylesheet" type="text/css" href="../../jslib/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="../../jslib/themes/icon.css">
+<!-- <script type="text/javascript" src="http://lib.sinaapp.com/js/jquery/2.0/jquery.min.js"></script> -->
+<script type="text/javascript">
+!window.jQuery && document.write('<script src=../../jslib/jquery.min.js><\/script>');
+</script>
+<script type="text/javascript" src="../../jslib/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../jslib/jeasyui.common.js"></script>
+<script type="text/javascript" src="../../js/createoption.js"></script>
+<script type="text/javascript" src="../../jslib/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript">
+	$(function() {
+		/* createVersionOption();
+		createSubjectOption(version, semester); */
+		showPaperQuestion();
+		createSelectOption();
+		changeSubject();
+	});
+		function createSubjectOption(version, semester) {
+		$.ajaxSettings.async = false;
+		$.ajax({
+					url : "/Question_bank/initData_subject.action",
+					type : "post",
+					data : {
+						"editionId" : version,
+						"semester" : semester
+					},
+					datatype : "json",
+					success : function(data) {
+						var examineeClassList =data;
+						var optionstr = "<option value='0'>---本学期全部课程---</option>";
+						if (semester == null || semester == "") {
+							$("#subject").html(optionstr);
+							return;
+						}
+						if (examineeClassList.responseCode != 1) {
+							for ( var i = 0,len=examineeClassList.obj.length; i <len ; i++) {
+								optionstr += "<option value='"+examineeClassList.obj[i].id+"'>"
+										+ examineeClassList.obj[i].subjectName
+										+ "</option>";
+							}
+						} 
+
+						$("#subject").html(optionstr);
+					}
+				});
+	}
+	function cretsubject() {
+		semester = $('input[name="semester"]:checked').val();
+		version = $('#version').val();
+		createSubjectOption(version, semester);
+		 find();
+	}
+	function showPaperQuestion(){
+		$('#back_writingquestion_datagrid').datagrid({
+			url : "/Question_bank/dataarray_searchAllPaper.action",
+			fit : true,
+			pagination : true,
+			border : true,
+			fitColumns : true,
+			singleSelect : true,
+			pageList : [ 5, 10, 15, 20, 30, 50, 100 ], //每页多少条
+			pageSize : 50, //默认每页多少条
+			sortName : 'id', //排序方式
+			sortOrder : 'asc', //排序规则
+			rownumbers : false, //排序ID
+			columns:[[   
+       			 {field:'idinfo',width:100,checkbox :true,sortable:true}, 
+       			 {field:'id',title:'题目编号',width:50,sortable:true}, 
+       			 {field:'subjectName',title:'科目',width:100,sortable:true},
+       			 {field:'chapterName',title:'章节',width:150,sortable:true},
+       			 {field:'type',title:'类型',width:50,sortable:true},   
+        		 {field:'question',title:'题目',width:700,sortable:true}  
+    		]],
+    		toolbar: [{
+					text:'题目管理',
+					iconCls: 'icon-add',
+					handler: function(){
+						search();
+					}
+				}/* ,'-',{
+					text:'删除',
+					iconCls: 'icon-edit',
+					handler: function(){
+						remove();
+					}
+				} */]   
+			
+		});
+	}
+	//删除
+	function remove(){
+		var rows=$("#back_writingquestion_datagrid").datagrid('getChecked');
+		if(rows.length<=0){
+			$.messager.show({
+				title:'错误',
+				msg:'请至少选定一行',
+				timeout:3000,
+				showType:'slide'
+			});
+			return;
+		}
+		
+		$.messager.confirm('确认删除吗?','是否删除该操作不可恢复?',function(r){
+				if(r){
+					var ids="";
+					for(var i=0;i<rows.length;i++){
+						//ids.push(rows[i].pid);
+						ids+=rows[i].id+",";
+					}
+				$.ajax({
+						url:'/Question_bank/dataarray_delQuestions.action',
+						data:{
+							"ids":ids
+						},
+						dataType:'json',
+						success:function(obj){
+						
+						if (obj.responseCode != 1) {
+							$.messager.show({
+							title:'提示',
+							msg:'删除成功',
+							timeout:3000,
+							showType:'slide'
+							});
+							$("#back_writingquestion_datagrid").datagrid('load',{});
+							$("#back_writingquestion_datagrid").datagrid('clearSelections');
+						}else{
+							$.messager.show({
+							title:'提示',
+							msg:'删除失败',
+							timeout:3000,
+							showType:'slide'
+							});
+						}
+						}
+					});
+				}
+		});
+		
+	}
+	//查看
+	function search(){
+			var rows=$("#back_writingquestion_datagrid").datagrid('getChecked');
+				if(rows.length<=0){
+					$.messager.show({
+						title:'错误',
+						msg:'请至少选定一行',
+						timeout:3000,
+						showType:'slide'
+					});
+					return;
+				}
+			var quid=rows[0].id;
+			var subject=rows[0].subjectName;
+			if (window.localStorage) {
+ 	   			 localStorage.setItem("quid", quid);
+ 	   			 localStorage.setItem("subject", subject);
+ 			} else {
+ 	    		 Cookie.write("quid",quid);	
+ 	    		 Cookie.write("subject",subject);	
+ 			}	
+			$('<div id="edit"/>').dialog({  
+				title: '题目管理',   
+				width: 700,   
+				height: 600,
+				top:40,   
+				closed: false,   
+				closable:true,
+				content: '<iframe src=updatewritingquestion.html  frameborder=0 style=border:0;width:100%;height:99.5%;></iframe>',
+				modal: true ,
+				onClose:function(){
+						$(this).dialog('destroy');
+				}
+    		});
+	}
+	function find(){
+		/* var version=$('#version').val();//版本号
+		var semester=$('input[name="semester"]:checked').val();//学期 */
+		var difficult=$('input[name="difficult"]:checked').val();//难易度
+		var questionType=$('input[name="questionType"]:checked').val();//题目类型
+		var subject=$('#subject').val();//科目编号
+		var chapter=$('#chapter').val();//章节目录
+		var txtQuestion=$('#txtQuestion').val();//关键字
+		var sname=$("#subject option:selected").text();//关键字
+		var cname=$("#chapter option:selected").text();//关键字
+		$('#back_writingquestion_datagrid').datagrid('load',{
+			"chapterId":chapter,
+			"difficult":difficult,
+			"questionType":questionType,
+			"subject":subject,
+			"txtQuestion":txtQuestion,
+			"sname":sname,
+			"cname":cname
+		});
+	}
+	function changeVersion(){
+		semester = $('input[name="semester"]:checked').val();
+		version = $('#version').val();
+		createSubjectOption(version, semester);
+		//showPaperQuestion();
+		find();
+	}
+	//选择课程
+	function changeSubject() {
+		subjectId = $('#subject').val();
+		createChapterOption(subjectId);
+	}
+</script>
+	<div id="listwritingquestion_layout" data-options="fit:true" class="easyui-layout" style="width:950px;height:600px;">
+		<!-- <div data-options="region:'north',title:'查询',split:true" style="height:180px;">
+		</div> -->
+	  	<div data-options="region:'center',title:'浏览笔试题'" style="padding-bottom: 70px;background:#eee;">
+	  		<table width="100%"  border="0" cellpadding="0"
+						cellspacing="0">
+						<tr height="32px">
+							<!-- <td width="109" height="32" class="fontColor">版本号:</td>
+							<td height="32" width="109"><select name='version' class='select'
+								id='version'  onChange="changeVersion()">
+							</select></td>
+							<td width="70" height="32"><span class="fontColor">学期名称:</span>
+							</td>
+							<td width="296" align="left"><input name="semester" type="radio"
+								value="S1" id="s1" onClick="cretsubject()"> S1
+								&nbsp;&nbsp;&nbsp; <input type="radio" name="semester"
+								value="S2" id="s2" onClick="cretsubject()"> S2
+								&nbsp;&nbsp;&nbsp; <input type="radio" name="semester"
+								value="S3" id="S3" onClick="cretsubject()"> S3
+								&nbsp;&nbsp;&nbsp; <input type="radio" name="semester"
+								value="0" id="all" onClick="cretsubject()" checked="checked"  > 全部
+							</td> -->
+							<td height="32"><span class="fontColor">科目名称:</span></td>
+							<td height="32"><select name="subject" id="subject" onChange="changeSubject()">
+							<td height="32" class="fontColor">章节:</td>
+							<td height="32"><select name='chapter' class='select2' id='chapter'>
+							<td height="32"><span class="fontColor">难易度:</span></td>
+							<td height="32"><input name="difficult" type="radio"
+								value="1" checked> 难 &nbsp;&nbsp;&nbsp; <input
+								name="difficult" type="radio" value="2">
+								中&nbsp;&nbsp;&nbsp; <input type="radio" name="difficult"
+								value="3"> 易 &nbsp;&nbsp;&nbsp; <input type="radio"
+								name="difficult" value="4" checked="checked" > 全部</td>
+							
+								
+						</tr>
+						<tr height="32px">
+							
+							
+							<td height="32"><span class="fontColor">题目类型:</span></td>
+							<td height="32"><input name="questionType" type="radio"
+								value="1" checked> 单选题 <input type="radio"
+								name="questionType" value="2"> 复选题 <input type="radio"
+								name="questionType" value="3" checked="checked" > 全部</td>
+
+							</select></td>
+							</td>
+							<td height="32" class="fontColor">题目关键字或者题目编号:</td>
+							<td height="32"><input name="txtQuestion" type="text"
+								class="text4" id="txtQuestion" size="10" maxlength="15" value="">
+							</td>
+							<td height="32" colspan="2"><input type="button"
+								class="inp_L1" id="search" name="search" value="查询"
+								onMouseOver="this.className='inp_L2'"
+								onMouseOut="this.className='inp_L1'"
+								onclick="find()"></td>
+						</tr>
+					</table>
+	  		<table id="back_writingquestion_datagrid">
+	  		
+	  		</table>
+	  	</div>  
+	</div>
+	
+		
+				<!-- 	<table width="100%" cellpadding="2" cellspacing="2">
+						<thead>
+							<tr>
+								<th bordercolor="#7EA6DC">编号</th>
+								<th bordercolor="#7EA6DC">科目</th>
+								<th bordercolor="#7EA6DC">章节</th>
+								<th bordercolor="#7EA6DC">类型</th>
+								<th bordercolor="#7EA6DC">题目</th>
+								<th bordercolor="#7EA6DC" colspan="2">操作</th>
+							</tr>
+						</thead>
+						<tbody id="showTable">
+
+						</tbody>
+					</table>
+
+					<table height="30" width="100%" border="0" cellspacing="0"
+						cellpadding="0">
+
+						<tr height="40">
+							<td>第<span id="PageNumm"></span> 页 &nbsp; &nbsp; 共<span id="tabTotalPage"></span> 页
+								&nbsp; &nbsp; <a href="javascript:findWritingQuestion('frist')" >首页</a>
+								&nbsp;&nbsp; <a href="javascript:findWritingQuestion('up')" >上一页</a>
+								&nbsp;&nbsp; <a href="javascript:findWritingQuestion('down')">下一页</a>
+								&nbsp;&nbsp; <a href="javascript:findWritingQuestion('last')" >末页</a>&nbsp;&nbsp;
+
+								转到第: <input name="pageNum" type="text" class="text4"
+								onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)" size="5" id="pageNum"> 页</td>
+							<td><input name="delMulti" type="button" class="inp_L1"
+								onClick="deleteSelectedQues()"
+								onMouseOver="this.className='inp_L2'"
+								onMouseOut="this.className='inp_L1'" value="多项删除" /></td>
+							<td><input name="go" type="button" class="inp_L1"
+								onClick="findWritingQuestion('go')"
+								onMouseOver="this.className='inp_L2'"
+								onMouseOut="this.className='inp_L1'" value="GO" /></td>
+						</tr>
+					</table> </td>
+			</tr>
+		</table>
+ -->

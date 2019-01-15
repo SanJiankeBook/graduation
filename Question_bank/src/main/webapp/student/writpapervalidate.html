@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>笔试考卷密码</title>
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+<style type="text/css">
+<!--
+body {
+	background-image: url(../images/bjj.GIF);
+}
+
+.style8 {
+	font-size: 18px;
+	font-weight: bold;
+	color: #000000;
+}
+-->
+</style>
+</head>
+<link href="../css/szindex.css" rel="stylesheet" type="text/css">
+<script type="" language="javascript" src="../js/creatXML.js"></script>
+
+<!-- <script src="http://lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.js"></script> -->
+<script type="text/javascript">
+!window.jQuery && document.write('<script src=../js/jquery-1.9.1.js><\/script>');
+</script>
+
+<script type="text/javascript" language="javascript">
+	/*一进来就自动加载，window.location.search获取地址栏的值，然后记载填充到paperId3中*/
+	$(function (){
+		var url=window.location.search;
+		var startIndex=url.indexOf("=")+1;
+		var endIndex=url.length;
+		/*alert(startIndex+","+endIndex)
+		alert(url.substring(startIndex,endIndex));*/
+		$("#paperId3").val(url.substring(startIndex,endIndex));
+	});
+	
+	function operWritingPaper() {
+		var xmlRequest = createXml();
+		//得到试卷编号和密码文本框的值
+		var id = $("#paperId3").val();
+		var password = $("#textPassword").val();
+		var btnBeginExam = document.getElementById("btnBeginExam");
+		if (id == "" || password == "") {
+			return false;
+		}
+		btnBeginExam.setAttribute("disabled", "true");
+
+		document.getElementById("message").innerHTML = "正在打开试卷，请稍候...";
+		//将请求发送到Servlet中去，参数对应Servlet页面中的参数
+		//var url = "/Examination2.0/exam_loginPassWord.action";
+		//xmlRequest.open("POST", url, true);
+		$.post(	"/Examination2.0/exam_loginPassWord.action",
+						{
+							paperId : id,
+							password : password
+						},
+						function(data) {
+							if (data == "0") {
+								document.getElementById("message").innerHTML = ""; //清空
+								document.getElementById("message").appendChild(
+										document.createTextNode("编号或密码不正确"));
+								btnBeginExam.disabled = false; //必须这样写id.disabled = false，按钮可用
+								return false;
+							}
+							//否则成功打开屏页面
+							if (data == "1") {
+								location.href="writingpaper.html?"+id;
+								//frmValidate.submit();
+								document.getElementById("message").innerHTML = "";
+							}
+							if (data == "2") {
+								document.getElementById("message").innerHTML = "您已参加了本次考试，并已交了卷，不可以再次进入考试!<br>如果是出现了异常情况，请联系老师删除你的答卷，重新开始考试。";
+							}
+							if (data == "3") {
+								document.getElementById("message").innerHTML = "您所在班级不存在此考卷，请重新输入考卷编号!";
+								btnBeginExam.disabled = false;
+							}
+							if (data == "4") {
+								document.getElementById("message").innerHTML = "已过考试日期，你不能进入考试。如果要继续考试，请联系老师，修改试卷的状态。";
+							}
+							//有可能是异常、死机或点关闭按钮退出的，但这里是重新记时，要由管理员来处理
+							if (data == "5") {
+								document.getElementById("message").innerHTML = "再次进入考试……";
+								location.href="writingpaper.html?"+id;
+								//frmValidate.submit();
+							}
+							if (data == "6") {
+								document.getElementById("message").innerHTML = "你的时间已用完，不能进入考试!";
+							}
+						});
+		//判断服务器的状态是否为正常的
+	}
+</script>
+<body>
+	<form name="frmValidate" method="post"
+		action="writingpaper.html">
+		<table height="100%" align="center">
+			<tr>
+				<td valign="middle">
+					<table width="633" height="304" border="0" align="center"
+						cellpadding="0" cellspacing="0">
+						<tr>
+							<td colspan="2">
+								<table width="100%" height="415" border="0" align="center"
+									cellpadding="0" cellspacing="0">
+									<tr>
+										<td height="172" colspan="3">
+
+											<table width="100%" height="41%" border="0" cellspacing="0">
+												<tr>
+													<td width="11%" height="71">&nbsp;</td>
+													<td width="74%" background="../images/90.gif">
+														<div align="center" class="style8">考生登录笔试试卷</div>
+													</td>
+													<td width="15%">&nbsp;</td>
+												</tr>
+											</table></td>
+									</tr>
+									<tr>
+										<td width="21%" height="57" align="center" valign="top">
+											<p align="right" class="fontColor">温馨提示：</p></td>
+										<td align="center" colspan="2"><p align="left">
+												◇ 登录后请认真答题，交卷后不可以再次进入！<br>◇ <font color="red">笔试试卷请每做完一题点一下确定按钮</font>，以便随时保存每道题！考卷密码请询问老师。<br>◇
+												如果考试出现异常、死机的情况。重启后可再次进入接着考试，原答题内容不会丢失。<br>◇
+												如果进入试卷长时间不动，请点下面的&ldquo;退出考试登录&rdquo;再进入即可。<br>◇
+												每一份卷子都有规定的答题时间，到了时间系统将自动关闭窗口，不可以再次答题！<br>
+											</p></td>
+									</tr>
+									<tr>
+										<td height="60" colspan="3" align="center"><font
+											color="red"> <br />
+												<div id="message"></div> </font></td>
+									</tr>
+									<tr>
+										<td height="22" align="center">&nbsp;</td>
+										<td width="13%" align="center"><div align="left"
+												class="fontColor">笔试考卷编号:</div>
+										</td>
+										<td width="66%" height="22" align="center"><div
+												align="left">
+												<input name="paperId" read-only="true" disabled="disabled" type="text" class="text4"
+													id="paperId3" size="40" value="" />
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<td height="52"><br>
+										</td>
+										<td height="52" class="fontColor">笔试考卷密码:</td>
+										<td height="52"><input name="textPassword"
+											id="textPassword" type="password" class="text4">
+										</td>
+									</tr>
+									<tr>
+										<td colspan="3">&nbsp;</td>
+									</tr>
+									<tr>
+										<td colspan="2" align="right"></td>
+										<td align="center">
+											<div align="left">
+												<input id="btnBeginExam" name="Submit" type="button"
+													class="inp_L1" value="开考"
+													onMouseMove="this.className='inp_L2'"
+													onMouseOut="this.className='inp_L1'"
+													onClick="operWritingPaper()">
+											</div><img src="../images/f.gif" width="18" height="18"
+											alt=""><a href="#" onclick="script:window.close()">退出考试登录</a>
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td width="356">&nbsp;</td>
+							<td width="277"></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>
