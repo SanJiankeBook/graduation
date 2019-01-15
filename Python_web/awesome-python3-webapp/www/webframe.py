@@ -202,7 +202,7 @@ def add_route(app, fn):
 
 def add_routes(app, module_name):
     ' 自动把handler模块符合条件的函数注册 '
-    n = module_name.rfind('.')
+    n = module_name.rfind('.')   #-1 
     if n == (-1):
         # 没有匹配项时
         mod = __import__(module_name, globals(), locals())

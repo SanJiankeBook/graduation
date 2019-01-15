@@ -215,6 +215,24 @@ class Model(dict, metaclass=ModelMetaclass):
         rows = await execute(self.__update__, args)
         if rows != 1:
             logging.warn('failed to update by primary key : affected rows: %s' % rows)
+    '''一.通过def定义
+    需要至少传递一个参数,即self，这样定义的方法必须通过一个类的实例去访问，类似于c++中通过对象去访问；
+二.classmethod
+    这种类方法的特点就是可以通过类名去调用，但是也必须传递一个参数:cls, 即class，表示可以通过类名直接调用；
+三staticmethod
+    静态的类方法，类似于c++的静态函数，特点是参数可以为空，支持类名和对象两种调用方式；'''
+    @classmethod 
+    async def updateSql(cls,**kw): #实例方法，映射更新记录 
+        sql=kw.get('sqls')
+        kw.pop('sqls')
+        args=[]
+        args.append(kw.get('admin'))
+        args.append(kw.get('id'))
+        #args.append(self.getValue(self.__primary_key__))
+        rows = await execute(sql, args)
+        if rows != 1:
+            logging.warn('failed to update by primary key : affected rows: %s' % rows)
+        return rows
     async def remove(self): #实例方法，映射根据主键值删除记录
         args = [self.getValue(self.__primary_key__)]
         rows = await execute(self.__delete__, args)

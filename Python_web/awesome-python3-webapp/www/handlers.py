@@ -6,6 +6,7 @@ Created on Aug 2, 2018
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from aiohttp.client import request
+from django.contrib.admin.templatetags.admin_list import admin_actions
 
 
 ' url handlers '
@@ -349,6 +350,22 @@ async def apiDeleteUser(user_id, request):
     await user.remove()
     return dict(id=user_id)
 
+'''设置用户为管理员'''
+@post('/api/user/{user_id}/update')
+async def apiUpdateUser(user_id, request):
+    check_admin(request) #判断权限
+    sql='update users set `admin`=? where `id`=? '
+    map={'id':user_id,'admin':True}
+    count=await User.updateSql(sqls=sql,admin=True,id=user_id)
+#     user = await User.find(user_id)
+#     user.admin=True
+#     await user.update()
+    if count is None:
+        raise APIResourceNotFoundError('user')
+    
+   # await user.remove()
+    return dict(id=user_id)
+
 @get('/api/comments') #获取所有的评论
 async def apiGetComments(*, page='1'):
     page_index = get_page_index(page)
@@ -370,6 +387,7 @@ async def apiGetUsers(*, page='1'):
     for u in users:
         u.passwd = '******'
     return dict(page=p, users=users)
+
 
 # @get('/blog/create')#添加博客
 # async def addBlog():

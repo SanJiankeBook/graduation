@@ -23,7 +23,18 @@ function initVM(data) {
                         refresh();
                     });
                 }
-            }
+            },
+       	 update_user: function (user) {
+	            if (confirm('确认要修改“' + user.name + '”？修改后不可恢复！')) {
+	                postJSON('/api/user/' + user.id + '/update', function (err, r) {
+	                    if (err) {
+	                        return alert(err.message || err.error || err);
+	                    }
+	                    refresh();
+	                });
+	            }
+	        }
+        
         }
     });
 }
@@ -86,6 +97,7 @@ $(function() {
                     
                     <td>
                         <a href="#0" v-on="click: delete_user(user)"><i class="uk-icon-trash-o"></i>
+                        <a href="#0" v-on="click: update_user(user)" value="设置管理员">设置管理员
                     </td>
                 </tr>
             </tbody>
